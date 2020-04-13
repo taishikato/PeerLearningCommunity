@@ -1,0 +1,7 @@
+html, body, div#app, div#root {
+    height: 100%;
+}
+
+.list-individual:last-child {
+    border: none;
+}
