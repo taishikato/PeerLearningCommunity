@@ -1,10 +1,14 @@
 import React, { useState } from 'react'
 import Modal from 'react-modal'
 import PostModalContent from './PostModalContent'
+import SignupForm from './SignupForm'
+import LoginForm from './LoginForm'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false)
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false)
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const isLogin = false
   const isOpenDropDown = false
   const loginUser = {
@@ -75,13 +79,23 @@ const Navbar = () => {
         </div>
         <button
           className="bg-green-400 rounded-full font-bold text-white py-2 px-6 focus:outline-none"
-          onClick={() => setIsModalOpen(true)}>
+          onClick={() => setIsPostModalOpen(true)}>
           Add
+        </button>
+        <button
+          onClick={() => setIsSignupModalOpen(true)}
+          className="ml-3 bg-green-400 text-white py-2 px-6 font-semibold rounded-full focus:outline-none">
+          サインアップ
+        </button>
+        <button
+          onClick={() => setIsLoginModalOpen(true)}
+          className="ml-3 py-2 px-6 font-semibold rounded-full text-gray-600 hover:text-gray-900 focus:outline-none">
+          ログイン
         </button>
       </nav>
       <Modal
-        isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
+        isOpen={isPostModalOpen}
+        onRequestClose={() => setIsPostModalOpen(false)}
         ariaHideApp={false}
         style={{
           overlay: {
@@ -92,7 +106,7 @@ const Navbar = () => {
             width: '600px',
             maxWidth: '100%',
             position: 'absolute',
-            top: '50%',
+            top: '40%',
             left: '50%',
             transform: 'translateY(-50%)translateX(-50%)',
             border: 'none',
@@ -100,6 +114,52 @@ const Navbar = () => {
           },
         }}>
         <PostModalContent />
+      </Modal>
+      <Modal
+        isOpen={isSignupModalOpen}
+        onRequestClose={() => setIsSignupModalOpen(false)}
+        ariaHideApp={false}
+        style={{
+          overlay: {
+            zIndex: 100000,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          },
+          content: {
+            width: '600px',
+            maxWidth: '100%',
+            height: '450px',
+            position: 'absolute',
+            top: '40%',
+            left: '50%',
+            transform: 'translateY(-50%)translateX(-50%)',
+            border: 'none',
+            backgroundColor: 'white',
+          },
+        }}>
+        <SignupForm />
+      </Modal>
+      <Modal
+        isOpen={isLoginModalOpen}
+        onRequestClose={() => setIsLoginModalOpen(false)}
+        ariaHideApp={false}
+        style={{
+          overlay: {
+            zIndex: 100000,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          },
+          content: {
+            width: '600px',
+            maxWidth: '100%',
+            height: '450px',
+            position: 'absolute',
+            top: '40%',
+            left: '50%',
+            transform: 'translateY(-50%)translateX(-50%)',
+            border: 'none',
+            backgroundColor: 'white',
+          },
+        }}>
+        <LoginForm />
       </Modal>
     </>
   )
