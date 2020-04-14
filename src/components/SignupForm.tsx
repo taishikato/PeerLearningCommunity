@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-// import { ToastContainer, toast } from 'react-toastify'
+import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import getUnixTime from '../plugins/getUnixTime'
 import firebase from '../plugins/firebase'
@@ -42,11 +42,14 @@ const LoginForm: React.FC<IProps> = ({ closeModal }) => {
       closeModal()
     } catch (err) {
       if (err) {
-        console.log(err.code)
-        console.log(err.message)
         const code = err.code
-        if (code === 'auth/weak-password') setErrCode(WEAK_PW)
-        if (code === 'auth/email-already-in-use') setErrCode(DUPLICATED_EMAIL)
+        if (code === 'auth/weak-password') {
+          setErrCode(WEAK_PW)
+        } else if (code === 'auth/email-already-in-use') {
+          setErrCode(DUPLICATED_EMAIL)
+        } else {
+          toast('エラーが発生しました。時間をおいて再度お試しください', { type: toast.TYPE.ERROR })
+        }
       }
     } finally {
       setIsSubmitting(false)
@@ -54,7 +57,7 @@ const LoginForm: React.FC<IProps> = ({ closeModal }) => {
   }
   return (
     <>
-      {/* <ToastContainer /> */}
+      <ToastContainer autoClose={4000} />
       <div className="modal-content py-4 text-left px-6">
         <div className="flex justify-between items-center pb-3">
           <p className="text-2xl font-bold">サインアップ</p>
