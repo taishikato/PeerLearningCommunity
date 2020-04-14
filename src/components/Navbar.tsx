@@ -5,6 +5,7 @@ import SignupForm from './SignupForm'
 import LoginForm from './LoginForm'
 import IsLoginContext from '../contexts/IsLoginContext'
 import LoginUserContext from '../contexts/LoginUserContext'
+import userDefault from '../assets/images/user-default.svg'
 import firebase from '../plugins/firebase'
 import 'firebase/auth'
 
@@ -62,8 +63,12 @@ const Navbar = () => {
                 <div className="relative">
                   <button
                     onClick={handleDropDown}
-                    className="relative z-10 block h-10 w-10 rounded-full overflow-hidden border-2 border-gray-600 focus:outline-none focus:border-white">
-                    <img className="h-full w-full object-cover" src={loginUser.picture} alt={loginUser.displayName} />
+                    className="relative z-10 block h-10 w-10 rounded-full overflow-hidden focus:outline-none">
+                    {loginUser.picture === undefined ? (
+                      <img className="h-full w-full object-cover" src={userDefault} alt={loginUser.displayName} />
+                    ) : (
+                      <img className="h-full w-full object-cover" src={loginUser.picture} alt={loginUser.displayName} />
+                    )}
                   </button>
                   <div
                     className={`${
