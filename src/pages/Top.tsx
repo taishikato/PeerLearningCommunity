@@ -1,4 +1,5 @@
 import React from 'react'
+import SinglePostWrapper from '../components/SinglePostWrapper'
 
 const Top = () => {
   return (
@@ -7,6 +8,7 @@ const Top = () => {
         <div className="px-2 w-full md:w-7/12 lg:w-7/12">
           <h3 className="font-semibold text-xl mb-5">今日のみんなのタスク</h3>
           <div className="p-5 bg-white rounded">
+            {/* <SinglePostWrapper /> */}
             <div className="list-individual border-b border-gray-200">
               <div className="flex flex-wrap items-center">
                 <img src="https://jp.taishikato.com/photo.jpg" className="rounded-full" alt="taishi kato" width="40" />
@@ -34,22 +36,7 @@ const Top = () => {
         <div className="px-2 w-full mt-6 md:w-5/12 lg:w-5/12 md:mt-0 lg:mt-0">
           <h3 className="font-semibold text-xl mb-5">自分のタスク</h3>
           <div className="p-5 bg-white rounded">
-            <div>
-              <ul>
-                <li className="mt-1">
-                  <label className="inline-flex items-center">
-                    <input type="checkbox" className="form-checkbox h-6 w-6 text-green-500" />
-                    <span className="ml-3 text-lg">TOEICの勉強</span>
-                  </label>
-                </li>
-                <li className="mt-1">
-                  <label className="inline-flex items-center">
-                    <input type="checkbox" className="form-checkbox h-6 w-6 text-green-500" />
-                    <span className="ml-3 text-lg">Reactチュートリアルやる</span>
-                  </label>
-                </li>
-              </ul>
-            </div>
+            <SinglePostWrapper />
           </div>
         </div>
       </div>

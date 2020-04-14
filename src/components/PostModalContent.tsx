@@ -13,13 +13,16 @@ const generateUuid = () => uuidv4().split('-').join('')
 const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
   const loginUser = useContext(LoginUserContext)
   const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(true)
-  const [newTasks, setNewTasks] = useState<{ id: string; text: string }[]>([{ id: generateUuid(), text: '' }])
+  const [newTasks, setNewTasks] = useState<{ id: string; text: string; checked: boolean }[]>([
+    { id: generateUuid(), text: '', checked: false },
+  ])
   const handleAddForm = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     const copyTasks = [...newTasks]
     const newObj = {
       id: generateUuid(),
       text: '',
+      checked: false,
     }
     copyTasks.push(newObj)
     setNewTasks(copyTasks)
@@ -57,7 +60,8 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
       userId: loginUser.id,
       todos: newTasks,
       created: getUnixTime(),
-      createdDate: moment().tz('Asia/Tokyo').format(),
+      createdDateObj: moment().tz('Asia/Tokyo').format(),
+      createdDate: moment().tz('Asia/Tokyo').format('YYYYMMDD'),
     }
     console.log({ addPost })
     await db.collection('posts').add(addPost)
