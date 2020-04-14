@@ -1,5 +1,5 @@
 import React from 'react'
-import SinglePostWrapper from '../components/SinglePostWrapper'
+import MySinglePostWrapper from '../components/MySinglePostWrapper'
 
 const Top = () => {
   return (
@@ -36,7 +36,7 @@ const Top = () => {
         <div className="px-2 w-full mt-6 md:w-5/12 lg:w-5/12 md:mt-0 lg:mt-0">
           <h3 className="font-semibold text-xl mb-5">自分のタスク</h3>
           <div className="p-5 bg-white rounded">
-            <SinglePostWrapper />
+            <MySinglePostWrapper />
           </div>
         </div>
       </div>

@@ -30,7 +30,7 @@ const Navbar = () => {
     <>
       <nav
         style={{ boxShadow: '0px 6px 20px rgba(0, 0, 0, 0.06)' }}
-        className="flex items-center justify-between flex-wrap px-6 py-4 text-gray-800">
+        className="flex items-center justify-between flex-wrap px-6 py-4 text-gray-800 bg-white">
         <div className="flex items-center flex-shrink-0 mr-6">
           <a href="/" className="font-extrabold text-green-400">
             Peer Community
