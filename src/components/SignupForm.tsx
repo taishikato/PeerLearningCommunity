@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ToastContainer, toast } from 'react-toastify'
+// import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import getUnixTime from '../plugins/getUnixTime'
 import firebase from '../plugins/firebase'
@@ -28,6 +28,7 @@ const LoginForm: React.FC<IProps> = ({ closeModal }) => {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setErrCode('')
     try {
       // Firebase Auth
       const result = await firebase.auth().createUserWithEmailAndPassword(userData.email, userData.password)
@@ -39,7 +40,6 @@ const LoginForm: React.FC<IProps> = ({ closeModal }) => {
         created: getUnixTime(),
       })
       closeModal()
-      console.log({ result })
     } catch (err) {
       if (err) {
         console.log(err.code)
@@ -54,7 +54,7 @@ const LoginForm: React.FC<IProps> = ({ closeModal }) => {
   }
   return (
     <>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <div className="modal-content py-4 text-left px-6">
         <div className="flex justify-between items-center pb-3">
           <p className="text-2xl font-bold">サインアップ</p>

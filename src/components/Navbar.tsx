@@ -171,7 +171,7 @@ const Navbar = () => {
             backgroundColor: 'white',
           },
         }}>
-        <LoginForm />
+        <LoginForm closeModal={() => setIsLoginModalOpen(false)} />
       </Modal>
     </>
   )
