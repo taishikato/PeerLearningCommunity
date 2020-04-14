@@ -51,7 +51,7 @@ const Navbar = () => {
             <button
               className="bg-green-400 rounded-full font-bold text-white py-2 px-6 focus:outline-none"
               onClick={() => setIsPostModalOpen(true)}>
-              Add
+              今日のタスクを追加
             </button>
           )}
           <div
@@ -130,7 +130,7 @@ const Navbar = () => {
             backgroundColor: 'white',
           },
         }}>
-        <PostModalContent />
+        <PostModalContent closeModal={() => setIsPostModalOpen(false)} />
       </Modal>
       <Modal
         isOpen={isSignupModalOpen}
