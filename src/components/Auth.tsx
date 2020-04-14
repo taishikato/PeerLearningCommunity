@@ -6,7 +6,7 @@ import 'firebase/firestore'
 
 const db = firebase.firestore()
 
-const defaultLoginUser = { displayName: '', userName: '' }
+const defaultLoginUser = { id: '', displayName: '', userName: '' }
 
 const Auth: React.FC = props => {
   const [isLogin, setIsLogin] = useState(false)
@@ -19,7 +19,9 @@ const Auth: React.FC = props => {
       } else {
         const userData = await db.collection('users').doc(user.uid).get()
         setIsLogin(true)
-        setLoginUser(userData.data() as ILoginUser)
+        const userDatad = userData.data()
+        userDatad!.id = user.uid
+        setLoginUser(userDatad as ILoginUser)
       }
     })
   }, [setIsLogin, setLoginUser])
@@ -33,6 +35,7 @@ const Auth: React.FC = props => {
 export default Auth
 
 interface ILoginUser {
+  id: string
   displayName: string
   userName: string
 }

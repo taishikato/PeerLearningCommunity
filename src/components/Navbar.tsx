@@ -130,7 +130,7 @@ const Navbar = () => {
             backgroundColor: 'white',
           },
         }}>
-        <PostModalContent />
+        <PostModalContent closeModal={() => setIsPostModalOpen(false)} />
       </Modal>
       <Modal
         isOpen={isSignupModalOpen}

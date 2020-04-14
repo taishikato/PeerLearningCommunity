@@ -1,68 +1,112 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+import { v4 as uuidv4 } from 'uuid'
+import moment from 'moment-timezone'
+import getUnixTime from '../plugins/getUnixTime'
+import LoginUserContext from '../contexts/LoginUserContext'
+import firebase from '../plugins/firebase'
+import 'firebase/firestore'
 
-const PostModalContent = () => {
+const db = firebase.firestore()
+
+const generateUuid = () => uuidv4().split('-').join('')
+
+const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
+  const loginUser = useContext(LoginUserContext)
   const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(true)
-  const [newTasks, setNewTasks] = useState<{ [key: string]: string }>({ task1: '' })
+  const [newTasks, setNewTasks] = useState<{ id: string; text: string }[]>([{ id: generateUuid(), text: '' }])
   const handleAddForm = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    const copyTasks = { ...newTasks }
-    const keyName = `task${Object.keys(copyTasks).length + 1}`
-    copyTasks[keyName] = ''
+    const copyTasks = [...newTasks]
+    const newObj = {
+      id: generateUuid(),
+      text: '',
+    }
+    copyTasks.push(newObj)
     setNewTasks(copyTasks)
   }
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.target
-    const name: string = target.name
-    const copyTasks = { ...newTasks, [name]: target.value }
-    let disableFlg = true
-    Object.keys(copyTasks).some(key => {
-      if (copyTasks[key] !== '') {
-        disableFlg = false
+    const value = target.value
+    const todoId: string = target.name
+    const copyTasks = [...newTasks]
+    copyTasks.some(task => {
+      if (task.id === todoId) {
+        task.text = target.value
         return true
       }
       return false
     })
+    let disableFlg = true
+    if (value !== '') {
+      disableFlg = false
+    } else {
+      copyTasks.forEach(task => {
+        if (task.text !== '') {
+          disableFlg = false
+          return true
+        }
+        return false
+      })
+    }
     setIsAddButtonDisabled(disableFlg)
     setNewTasks(copyTasks)
+  }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const addPost = {
+      userId: loginUser.id,
+      todos: newTasks,
+      created: getUnixTime(),
+      createdDate: moment().tz('Asia/Tokyo').format(),
+    }
+    console.log({ addPost })
+    await db.collection('posts').add(addPost)
+    closeModal()
   }
   return (
     <div className="modal-content py-4 text-left px-6">
       <div className="flex justify-between items-center pb-3">
         <p className="text-2xl font-bold">今日は何する？</p>
       </div>
-      <form>
-        {Object.keys(newTasks).map(keyName => (
+      <form onSubmit={handleSubmit}>
+        {newTasks.map(task => (
           <input
-            key={keyName}
+            key={task.id}
             className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500 mb-2"
             id="inline-full-name"
             type="text"
             placeholder="TOEICの勉強する"
-            value={newTasks[keyName]}
+            value={task.text}
             onChange={e => handleFormChange(e)}
-            name={keyName}
+            name={task.id}
           />
         ))}
         <button onClick={e => handleAddForm(e)} className="my-2 focus:outline-none">
           フォーム追加
         </button>
-      </form>
 
-      <div className="flex justify-end pt-2">
-        {isAddButtonDisabled ? (
-          <button
-            disabled
-            className="px-6 p-2 rounded-lg text-white bg-green-200 mr-2 rounded-full font-bold cursor-not-allowed">
-            追加
-          </button>
-        ) : (
-          <button className="px-6 p-2 rounded-lg text-white bg-green-400 hover:bg-green-500 mr-2 rounded-full font-bold">
-            追加
-          </button>
-        )}
-      </div>
+        <div className="flex justify-end pt-2">
+          {isAddButtonDisabled ? (
+            <button
+              disabled
+              className="px-6 p-2 rounded-lg text-white bg-green-200 mr-2 rounded-full font-bold cursor-not-allowed">
+              追加
+            </button>
+          ) : (
+            <input
+              value="追加"
+              type="submit"
+              className="px-6 p-2 rounded-lg text-white bg-green-400 hover:bg-green-500 mr-2 rounded-full font-bold"
+            />
+          )}
+        </div>
+      </form>
     </div>
   )
 }
 
 export default PostModalContent
+
+interface IProps {
+  closeModal: () => void
+}

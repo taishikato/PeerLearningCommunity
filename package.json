@@ -11,12 +11,14 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "firebase": "^7.14.0",
+    "moment-timezone": "^0.5.28",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-modal": "^3.11.2",
     "react-scripts": "3.4.1",
     "react-toastify": "^5.5.0",
-    "typescript": "~3.7.2"
+    "typescript": "~3.7.2",
+    "uuid": "^7.0.3"
   },
   "scripts": {
     "tailwind:css": "tailwind build src/css/tailwind.src.css -c tailwind.config.js -o src/css/tailwind.css",
@@ -42,7 +44,9 @@
   },
   "devDependencies": {
     "@tailwindcss/custom-forms": "^0.2.1",
+    "@types/moment-timezone": "^0.5.13",
     "@types/react-modal": "^3.10.5",
+    "@types/uuid": "^7.0.2",
     "prettier": "^2.0.4",
     "tailwindcss": "^1.2.0"
   }
