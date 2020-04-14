@@ -136,7 +136,7 @@ const Navbar = () => {
             backgroundColor: 'white',
           },
         }}>
-        <SignupForm />
+        <SignupForm closeModal={() => setIsSignupModalOpen(false)} />
       </Modal>
       <Modal
         isOpen={isLoginModalOpen}
@@ -150,7 +150,7 @@ const Navbar = () => {
           content: {
             width: '600px',
             maxWidth: '100%',
-            height: '450px',
+            height: '400px',
             position: 'absolute',
             top: '40%',
             left: '50%',
