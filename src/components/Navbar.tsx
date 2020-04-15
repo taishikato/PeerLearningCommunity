@@ -5,7 +5,6 @@ import SignupForm from './SignupForm'
 import LoginForm from './LoginForm'
 import IsLoginContext from '../contexts/IsLoginContext'
 import LoginUserContext from '../contexts/LoginUserContext'
-import userDefault from '../assets/images/user-default.svg'
 import firebase from '../plugins/firebase'
 import 'firebase/auth'
 
