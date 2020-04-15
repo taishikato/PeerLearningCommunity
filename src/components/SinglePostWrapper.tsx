@@ -46,7 +46,7 @@ const SinglePostWrapper = () => {
       ) : (
         <>
           {posts.map(postObj => (
-            <div key={postObj.id} className="list-individual border-b border-gray-200">
+            <div key={postObj.post.id} className="list-individual border-b border-gray-200">
               <div className="flex flex-wrap items-center">
                 <img src={postObj.user.picture} className="rounded-full" alt={postObj.user.displayName} width="40" />
                 <div className="ml-4 font-semibold">{postObj.user.displayName}</div>

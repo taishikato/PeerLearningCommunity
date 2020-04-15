@@ -2,15 +2,15 @@ import React from 'react'
 import moment from 'moment-timezone'
 import Skeleton from 'react-loading-skeleton'
 import LoginUserContext from '../contexts/LoginUserContext'
-import firebase from '../plugins/firebase'
-import 'firebase/firestore'
-
-const db = firebase.firestore()
+import IsLoginContext from '../contexts/IsLoginContext'
+import { FirestoreContext } from './FirestoreContextProvider'
 
 const MySinglePostWrapper = () => {
   const [isLoading, setIsLoading] = React.useState(true)
   const [postData, setPostData] = React.useState<ITodoData>(defaultPostData)
   const loginUser = React.useContext(LoginUserContext)
+  const isLoggedIn = React.useContext(IsLoginContext)
+  const db = React.useContext(FirestoreContext)
   const handleChangeTodoStatus = async (e: React.ChangeEvent<HTMLInputElement>, todoId: string) => {
     const todos = [...postData.todos]
     todos.some(todo => {
@@ -24,6 +24,10 @@ const MySinglePostWrapper = () => {
     await db.collection('posts').doc(postData.id).update({ todos })
   }
   React.useEffect(() => {
+    if (!isLoggedIn) {
+      setIsLoading(false)
+      return
+    }
     const today = moment().tz('Asia/Tokyo').format('YYYYMMDD')
     const getTodo = async () => {
       const todo = await db
@@ -41,7 +45,7 @@ const MySinglePostWrapper = () => {
       setIsLoading(false)
     }
     getTodo()
-  }, [loginUser.id, setPostData, setIsLoading])
+  }, [loginUser.id, setPostData, setIsLoading, isLoggedIn, db])
   return (
     <div className="list-individual border-b border-gray-200">
       <div className="flex flex-wrap items-center">
