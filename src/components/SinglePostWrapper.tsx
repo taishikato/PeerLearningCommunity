@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react'
 import moment from 'moment-timezone'
 import Skeleton from 'react-loading-skeleton'
+import IsLoginContext from '../contexts/IsLoginContext'
 import LoginUserContext from '../contexts/LoginUserContext'
 import { FirestoreContext } from './FirestoreContextProvider'
 import asyncForEach from '../plugins/asyncForEach'
@@ -8,29 +9,16 @@ import asyncForEach from '../plugins/asyncForEach'
 const SinglePostWrapper = () => {
   const [isLoading, setIsLoading] = useState(true)
   const loginUser = useContext(LoginUserContext)
+  const isLoggedIn = React.useContext(IsLoginContext)
   const [posts, setPosts] = useState<IPost[]>(defaultPostData)
-  // const [myPost, setMyPost] = React.useState<ITodoData>(defaultMyPostData)
   const db = useContext(FirestoreContext)
-
-  // const handleChangeTodoStatus = async (e: React.ChangeEvent<HTMLInputElement>, todoId: string) => {
-  //   const todos = [...myPost.todos]
-  //   todos.some(todo => {
-  //     if (todo.id === todoId) {
-  //       todo.checked = e.target.checked
-  //       return true
-  //     }
-  //     return false
-  //   })
-  //   await db.collection('posts').doc(myPost.id).update({ todos })
-  // }
 
   React.useEffect(() => {
     const today = moment().tz('Asia/Tokyo').format('YYYYMMDD')
     const getPosts = async () => {
+      if (!isLoggedIn) return
       const postsFromDb = await db
         .collection('posts')
-        // .where('userId', '>', loginUser.id)
-        // .where('userId', '<', loginUser.id)
         .where('createdDate', '==', today)
         .orderBy('created', 'desc')
         .get()
@@ -49,12 +37,10 @@ const SinglePostWrapper = () => {
           user: user.data(),
         })
       })
-      // console.log({ postsData })
       setPosts(postsData)
       setIsLoading(false)
     }
-    getPosts()
-  }, [loginUser.id, db, setPosts, setIsLoading])
+  }, [isLoggedIn, setIsLoading, loginUser.id, setPosts])
   return (
     <>
       {isLoading ? (
@@ -78,7 +64,6 @@ const SinglePostWrapper = () => {
                           className="form-checkbox h-6 w-6 text-green-500 cursor-not-allowed"
                           checked={todo.checked}
                           disabled
-                          // onChange={e => handleChangeTodoStatus(e, todo.id)}
                         />
                         <span className="ml-3 text-lg">{todo.text}</span>
                       </label>
