@@ -9,28 +9,13 @@ const SinglePostWrapper = () => {
   const [isLoading, setIsLoading] = useState(true)
   const loginUser = useContext(LoginUserContext)
   const [posts, setPosts] = useState<IPost[]>(defaultPostData)
-  // const [myPost, setMyPost] = React.useState<ITodoData>(defaultMyPostData)
   const db = useContext(FirestoreContext)
-
-  // const handleChangeTodoStatus = async (e: React.ChangeEvent<HTMLInputElement>, todoId: string) => {
-  //   const todos = [...myPost.todos]
-  //   todos.some(todo => {
-  //     if (todo.id === todoId) {
-  //       todo.checked = e.target.checked
-  //       return true
-  //     }
-  //     return false
-  //   })
-  //   await db.collection('posts').doc(myPost.id).update({ todos })
-  // }
 
   React.useEffect(() => {
     const today = moment().tz('Asia/Tokyo').format('YYYYMMDD')
     const getPosts = async () => {
       const postsFromDb = await db
         .collection('posts')
-        // .where('userId', '>', loginUser.id)
-        // .where('userId', '<', loginUser.id)
         .where('createdDate', '==', today)
         .orderBy('created', 'desc')
         .get()
@@ -49,7 +34,6 @@ const SinglePostWrapper = () => {
           user: user.data(),
         })
       })
-      // console.log({ postsData })
       setPosts(postsData)
       setIsLoading(false)
     }
@@ -63,7 +47,6 @@ const SinglePostWrapper = () => {
         <>
           {posts.map(postObj => (
             <div key={postObj.id} className="list-individual border-b border-gray-200">
-              {console.log({ postObj })}
               <div className="flex flex-wrap items-center">
                 <img src={postObj.user.picture} className="rounded-full" alt={postObj.user.displayName} width="40" />
                 <div className="ml-4 font-semibold">{postObj.user.displayName}</div>
@@ -78,7 +61,6 @@ const SinglePostWrapper = () => {
                           className="form-checkbox h-6 w-6 text-green-500 cursor-not-allowed"
                           checked={todo.checked}
                           disabled
-                          // onChange={e => handleChangeTodoStatus(e, todo.id)}
                         />
                         <span className="ml-3 text-lg">{todo.text}</span>
                       </label>
