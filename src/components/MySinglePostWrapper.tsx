@@ -31,7 +31,10 @@ const MySinglePostWrapper = () => {
         .where('userId', '==', loginUser.id)
         .where('createdDate', '==', today)
         .get()
-      if (todo.empty) return
+      if (todo.empty) {
+        setIsLoading(false)
+        return
+      }
       const postDataForState = todo.docs[0].data()
       postDataForState.id = todo.docs[0].id
       setPostData(postDataForState as any)
