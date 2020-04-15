@@ -45,10 +45,9 @@ const MySinglePostWrapper = () => {
   return (
     <div className="list-individual border-b border-gray-200">
       <div className="flex flex-wrap items-center">
-        <img src="https://jp.taishikato.com/photo.jpg" className="rounded-full" alt="taishi kato" width="40" />
-        <div className="ml-4 font-semibold">taishi kato</div>
+        <img src={loginUser.picture} className="rounded-full" alt={loginUser.displayName} width="40" />
+        <div className="ml-4 font-semibold">{loginUser.displayName}</div>
       </div>
-      {console.log({ postData })}
       <div className="mt-6">
         {isLoading ? (
           <Skeleton count={3} />

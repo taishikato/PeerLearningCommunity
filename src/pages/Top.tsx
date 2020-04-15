@@ -10,7 +10,7 @@ const Top = () => {
           <h3 className="font-semibold text-xl mb-5">今日のみんなのタスク</h3>
           <div className="p-5 bg-white rounded">
             <SinglePostWrapper />
-            <div className="list-individual border-b border-gray-200">
+            {/* <div className="list-individual border-b border-gray-200">
               <div className="flex flex-wrap items-center">
                 <img src="https://jp.taishikato.com/photo.jpg" className="rounded-full" alt="taishi kato" width="40" />
                 <div className="ml-4 font-semibold">taishi kato</div>
@@ -31,7 +31,7 @@ const Top = () => {
                   </li>
                 </ul>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="px-2 w-full mt-6 md:w-5/12 lg:w-5/12 md:mt-0 lg:mt-0">

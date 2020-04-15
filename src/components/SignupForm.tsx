@@ -35,6 +35,7 @@ const LoginForm: React.FC<IProps> = ({ closeModal }) => {
       const user = result.user
       // Firestore
       await db.collection('users').doc(user!.uid).set({
+        picture: '/images/profile.png',
         displayName: userData.username,
         userName: userData.username,
         created: getUnixTime(),

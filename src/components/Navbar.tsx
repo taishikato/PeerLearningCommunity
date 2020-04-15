@@ -64,11 +64,7 @@ const Navbar = () => {
                   <button
                     onClick={handleDropDown}
                     className="relative z-10 block h-10 w-10 rounded-full overflow-hidden focus:outline-none">
-                    {loginUser.picture === undefined ? (
-                      <img className="h-full w-full object-cover" src={userDefault} alt={loginUser.displayName} />
-                    ) : (
-                      <img className="h-full w-full object-cover" src={loginUser.picture} alt={loginUser.displayName} />
-                    )}
+                    <img className="h-full w-full object-cover" src={loginUser.picture} alt={loginUser.displayName} />
                   </button>
                   <div
                     className={`${

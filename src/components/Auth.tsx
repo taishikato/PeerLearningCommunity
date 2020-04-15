@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import firebase from '../plugins/firebase'
+import userDefaultImage from '../assets/images/user-default.svg'
 import IsLoginContext from '../contexts/IsLoginContext'
 import LoginUserContext from '../contexts/LoginUserContext'
 import 'firebase/firestore'

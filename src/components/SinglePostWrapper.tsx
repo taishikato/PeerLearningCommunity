@@ -8,17 +8,31 @@ import asyncForEach from '../plugins/asyncForEach'
 const SinglePostWrapper = () => {
   const [isLoading, setIsLoading] = useState(true)
   const loginUser = useContext(LoginUserContext)
-  const [posts, setPosts] = useState<ITodoData[]>(defaultPostData)
+  const [posts, setPosts] = useState<IPost[]>(defaultPostData)
+  // const [myPost, setMyPost] = React.useState<ITodoData>(defaultMyPostData)
   const db = useContext(FirestoreContext)
+
+  // const handleChangeTodoStatus = async (e: React.ChangeEvent<HTMLInputElement>, todoId: string) => {
+  //   const todos = [...myPost.todos]
+  //   todos.some(todo => {
+  //     if (todo.id === todoId) {
+  //       todo.checked = e.target.checked
+  //       return true
+  //     }
+  //     return false
+  //   })
+  //   await db.collection('posts').doc(myPost.id).update({ todos })
+  // }
+
   React.useEffect(() => {
     const today = moment().tz('Asia/Tokyo').format('YYYYMMDD')
     const getPosts = async () => {
       const postsFromDb = await db
         .collection('posts')
+        // .where('userId', '>', loginUser.id)
+        // .where('userId', '<', loginUser.id)
         .where('createdDate', '==', today)
-        .where('userId', '>', loginUser.id)
-        .where('userId', '<', loginUser.id)
-        // .orderBy('created', 'desc')
+        .orderBy('created', 'desc')
         .get()
       if (postsFromDb.empty) {
         setIsLoading(false)
@@ -28,12 +42,14 @@ const SinglePostWrapper = () => {
       await asyncForEach(postsFromDb.docs, async doc => {
         const post = doc.data()
         post.id = doc.id
+        if (post.userId === loginUser.id) return
         const user = await db.collection('users').doc(post.userId).get()
         postsData.push({
           post,
           user: user.data(),
         })
       })
+      // console.log({ postsData })
       setPosts(postsData)
       setIsLoading(false)
     }
@@ -41,26 +57,28 @@ const SinglePostWrapper = () => {
   }, [loginUser.id, db, setPosts, setIsLoading])
   return (
     <>
-      {console.log({ posts })}
       {isLoading ? (
         <Skeleton count={3} />
       ) : (
         <>
-          {posts.map(post => (
-            <div key={post.id} className="list-individual border-b border-gray-200">
+          {posts.map(postObj => (
+            <div key={postObj.id} className="list-individual border-b border-gray-200">
+              {console.log({ postObj })}
               <div className="flex flex-wrap items-center">
-                <img src="https://jp.taishikato.com/photo.jpg" className="rounded-full" alt="taishi kato" width="40" />
-                <div className="ml-4 font-semibold">taishi kato</div>
+                <img src={postObj.user.picture} className="rounded-full" alt={postObj.user.displayName} width="40" />
+                <div className="ml-4 font-semibold">{postObj.user.displayName}</div>
               </div>
               <div className="mt-6">
                 <ul>
-                  {post.todos.map(todo => (
+                  {postObj.post.todos.map(todo => (
                     <li className="mt-1" key={todo.id}>
                       <label className="inline-flex items-center">
                         <input
                           type="checkbox"
-                          className="form-checkbox h-6 w-6 text-green-500"
+                          className="form-checkbox h-6 w-6 text-green-500 cursor-not-allowed"
                           checked={todo.checked}
+                          disabled
+                          // onChange={e => handleChangeTodoStatus(e, todo.id)}
                         />
                         <span className="ml-3 text-lg">{todo.text}</span>
                       </label>
@@ -78,16 +96,28 @@ const SinglePostWrapper = () => {
 
 export default SinglePostWrapper
 
+const defaultMyPostData = {
+  id: '',
+  created: 0,
+  createdDate: '',
+  createdDateObj: '',
+  todos: [],
+  userId: '',
+}
+
 const defaultPostData = [
   {
     id: '',
-    created: 0,
-    createdDate: '',
-    createdDateObj: '',
-    todos: [],
-    userId: '',
+    post: defaultMyPostData,
+    user: {},
   },
 ]
+
+interface IPost {
+  id: string
+  post: ITodoData
+  user: any
+}
 
 interface ITodoData {
   id?: string
