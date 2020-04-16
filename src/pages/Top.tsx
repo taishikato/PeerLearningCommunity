@@ -1,6 +1,7 @@
 import React from 'react'
 import SinglePostWrapper from '../components/SinglePostWrapper'
 import MySinglePostWrapper from '../components/MySinglePostWrapper'
+import dog from '../assets/images/dog.gif'
 
 const Top = () => {
   return (
@@ -15,9 +16,10 @@ const Top = () => {
           </div>
           <div className="px-2 w-full mt-6 md:w-5/12 lg:w-5/12 md:mt-0 lg:mt-0">
             <h3 className="font-semibold text-xl mb-5">自分のタスク</h3>
-            <div className="p-5 bg-white rounded">
+            <div className="p-5 bg-white rounded mb-4">
               <MySinglePostWrapper />
             </div>
+            <img src={dog} alt="Dog From Home" className="rounded" />
           </div>
         </div>
       </div>
