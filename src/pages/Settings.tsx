@@ -36,8 +36,6 @@ const Settings = () => {
   const [loading, setLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
   const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
-  // const loginUser = useContext(LoginUserContext)
-  console.log({ loginUser })
   const db = useContext(FirestoreContext)
   const [userData, setUserData] = useState({
     userName: loginUser.userName,

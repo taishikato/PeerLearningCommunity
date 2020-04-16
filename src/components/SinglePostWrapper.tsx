@@ -1,13 +1,14 @@
 import React, { useState, useContext } from 'react'
+import { useSelector } from 'react-redux'
 import moment from 'moment-timezone'
 import Skeleton from 'react-loading-skeleton'
-import LoginUserContext from '../contexts/LoginUserContext'
 import { FirestoreContext } from './FirestoreContextProvider'
 import asyncForEach from '../plugins/asyncForEach'
+import IInitialState from '../interfaces/IInitialState'
 
 const SinglePostWrapper = () => {
   const [isLoading, setIsLoading] = useState(true)
-  const loginUser = useContext(LoginUserContext)
+  const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
   const [posts, setPosts] = useState<IPost[]>(defaultPostData)
   const db = useContext(FirestoreContext)
 
