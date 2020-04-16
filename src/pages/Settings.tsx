@@ -77,6 +77,12 @@ const Settings = () => {
       console.error('項目を入れてください')
       return
     }
+    // User Nameチェック
+    const userByUserName = await db.collection('users').where('userName', '==', userData.userName).get()
+    if (!userByUserName.empty && loginUser.id !== userByUserName.docs[0].data().id) {
+      toast('このユーザーネームは既に使われています', { type: toast.TYPE.ERROR })
+      return
+    }
     const saveData: any = {}
     // Password
     if (updatePassword === 'ok') {
