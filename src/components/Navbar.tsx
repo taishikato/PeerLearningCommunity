@@ -1,11 +1,11 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import Modal from 'react-modal'
 import { Link } from 'react-router-dom'
 import PostModalContent from './PostModalContent'
 import SignupForm from './SignupForm'
 import LoginForm from './LoginForm'
-import IsLoginContext from '../contexts/IsLoginContext'
-import LoginUserContext from '../contexts/LoginUserContext'
+import IInitialState from '../interfaces/IInitialState'
 import firebase from '../plugins/firebase'
 import 'firebase/auth'
 
@@ -15,8 +15,8 @@ const Navbar = () => {
   const [isPostModalOpen, setIsPostModalOpen] = useState(false)
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false)
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
-  const isLogin = useContext(IsLoginContext)
-  const loginUser = useContext(LoginUserContext)
+  const isLogin = useSelector<IInitialState, IInitialState['isLogin']>(state => state.isLogin)
+  const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
   const handleDropDown = () => {
     setIsOpenDropDown(!isOpenDropDown)
   }

@@ -1,11 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import uploadImage from '@taishikato/firebase-storage-uploader'
 import { Upload } from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import 'antd/lib/upload/style/index.css'
-import LoginUserContext from '../contexts/LoginUserContext'
+import IInitialState from '../interfaces/IInitialState'
 import { FirestoreContext } from '../components/FirestoreContextProvider'
 import firebase from '../plugins/firebase'
 import 'firebase/auth'
@@ -34,7 +35,9 @@ const Settings = () => {
   const [updatePassword, setUpdatePassword] = useState('noNeed')
   const [loading, setLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
-  const loginUser = useContext(LoginUserContext)
+  const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
+  // const loginUser = useContext(LoginUserContext)
+  console.log({ loginUser })
   const db = useContext(FirestoreContext)
   const [userData, setUserData] = useState({
     userName: loginUser.userName,

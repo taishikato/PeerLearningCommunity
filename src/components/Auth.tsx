@@ -1,43 +1,27 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useContext } from 'react'
+import { useDispatch } from 'react-redux'
 import firebase from '../plugins/firebase'
-import IsLoginContext from '../contexts/IsLoginContext'
-import LoginUserContext from '../contexts/LoginUserContext'
-import 'firebase/firestore'
+import { loginUser, checkingLoginDone } from '../store/action'
+import { FirestoreContext } from './FirestoreContextProvider'
+import ILoginUser from '../interfaces/ILoginUser'
 
-const db = firebase.firestore()
-
-const defaultLoginUser = { id: '', displayName: '', userName: '', email: '' }
-
-const Auth: React.FC = props => {
-  const [isLogin, setIsLogin] = useState(false)
-  const [loginUser, setLoginUser] = useState<ILoginUser>(defaultLoginUser)
+const Auth: React.FC = ({ children }) => {
+  const db = useContext(FirestoreContext)
+  const dispatch = useDispatch()
   useEffect(() => {
     firebase.auth().onAuthStateChanged(async (user: any) => {
-      if (user === null) {
-        setIsLogin(false)
-        setLoginUser(defaultLoginUser)
-      } else {
+      if (user !== null) {
         const userData = await db.collection('users').doc(user.uid).get()
-        setIsLogin(true)
         const userDatad = userData.data()
         userDatad!.id = user.uid
         userDatad!.email = user.email
-        setLoginUser(userDatad as ILoginUser)
+        console.log({ userDatad })
+        dispatch(loginUser(userDatad as ILoginUser))
       }
+      dispatch(checkingLoginDone())
     })
-  }, [setIsLogin, setLoginUser])
-  return (
-    <IsLoginContext.Provider value={isLogin}>
-      <LoginUserContext.Provider value={loginUser}>{props.children}</LoginUserContext.Provider>
-    </IsLoginContext.Provider>
-  )
+  }, [db, dispatch])
+  return <>{children}</>
 }
 
 export default Auth
-
-interface ILoginUser {
-  id: string
-  displayName: string
-  userName: string
-  email: string
-}
