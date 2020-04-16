@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import uploadImage from '@taishikato/firebase-storage-uploader'
@@ -7,6 +7,7 @@ import { Upload } from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import 'antd/lib/upload/style/index.css'
 import IInitialState from '../interfaces/IInitialState'
+import { loginUser as loginUserAction } from '../store/action'
 import { FirestoreContext } from '../components/FirestoreContextProvider'
 import firebase from '../plugins/firebase'
 import 'firebase/auth'
@@ -31,6 +32,7 @@ const beforeUpload = (file: File) => {
 }
 
 const Settings = () => {
+  const dispatch = useDispatch()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [updatePassword, setUpdatePassword] = useState('noNeed')
   const [loading, setLoading] = useState(false)
@@ -87,6 +89,7 @@ const Settings = () => {
       }
     }
     // 画像
+    saveData.picture = loginUser.picture
     if (imageUrl !== '') {
       const imageUrlDb = await uploadImage(`${loginUser.id}.png`, imageUrl, firebase)
       saveData.picture = imageUrlDb
@@ -94,7 +97,9 @@ const Settings = () => {
     saveData.userName = userData.userName
     saveData.displayName = userData.displayName
     saveData.email = userData.email
+    saveData.id = loginUser.id
     await db.collection('users').doc(loginUser.id).update(saveData)
+    dispatch(loginUserAction(saveData))
     setIsSubmitting(false)
     toast('保存が正常に完了しました', { type: toast.TYPE.DEFAULT })
   }
