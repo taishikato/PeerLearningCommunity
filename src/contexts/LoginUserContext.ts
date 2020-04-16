@@ -1,6 +1,6 @@
 import React from 'react'
 
-const LoginUserContext = React.createContext<ILoginUser>({id: '', displayName: '', userName: ''})
+const LoginUserContext = React.createContext<ILoginUser>({id: '', displayName: '', userName: '', email: ''})
 
 export default LoginUserContext
 
@@ -9,4 +9,5 @@ interface ILoginUser {
   displayName: string
   userName: string
   picture?: string
+  email: string
 }

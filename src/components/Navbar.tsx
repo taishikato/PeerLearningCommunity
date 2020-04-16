@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react'
 import Modal from 'react-modal'
+import { Link } from 'react-router-dom'
 import PostModalContent from './PostModalContent'
 import SignupForm from './SignupForm'
 import LoginForm from './LoginForm'
@@ -31,9 +32,9 @@ const Navbar = () => {
         style={{ boxShadow: '0px 6px 20px rgba(0, 0, 0, 0.06)' }}
         className="flex items-center justify-between flex-wrap px-6 py-4 text-gray-800 bg-white">
         <div className="flex items-center flex-shrink-0 mr-6">
-          <a href="/" className="font-extrabold text-green-400">
+          <Link to="/" className="font-extrabold text-green-400">
             Peer Community
-          </a>
+          </Link>
         </div>
         <div className="block lg:hidden">
           <button
@@ -69,16 +70,16 @@ const Navbar = () => {
                     className={`${
                       isOpenDropDown ? 'show' : 'hidden'
                     } absolute z-40 right-0 mt-2 py-2 w-full md:w-48 lg:w-48 bg-white rounded-lg shadow-xl`}>
-                    <a
+                    {/* <a
                       href="/[username]"
                       className="block px-4 py-2 text-gray-800 cursor-pointer hover:bg-indigo-500 hover:text-white">
                       Profile
-                    </a>
-                    <a
-                      href="/settings"
+                    </a> */}
+                    <Link
+                      to="/settings"
                       className="block px-4 py-2 text-gray-800 cursor-pointer hover:bg-indigo-500 hover:text-white">
-                      Settings
-                    </a>
+                      設定
+                    </Link>
                     <a
                       onClick={logout}
                       href="/"
