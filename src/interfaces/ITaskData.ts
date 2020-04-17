@@ -1,4 +1,4 @@
-import ITodo from './ITodo'
+import ITodo, { defaultTodo } from './ITodo'
 
 export default interface ITaskData {
   id?: string
@@ -7,4 +7,13 @@ export default interface ITaskData {
   createdDateObj: string
   todos: ITodo[]
   userId: string
+}
+
+export const defaultTask = {
+  id: '',
+  created: 0,
+  createdDate: '',
+  createdDateObj: '',
+  todos: [defaultTodo],
+  userId: ''
 }

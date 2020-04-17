@@ -1,17 +1,16 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { v4 as uuidv4 } from 'uuid'
+import React, { useState, useContext } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import moment from 'moment-timezone'
 import getUnixTime from '../plugins/getUnixTime'
+import { FirestoreContext } from './FirestoreContextProvider'
+import generateUuid from '../plugins/generateUuid'
+import { setTask } from '../store/action'
 import IInitialState from '../interfaces/IInitialState'
-import firebase from '../plugins/firebase'
-import 'firebase/firestore'
-
-const db = firebase.firestore()
-
-const generateUuid = () => uuidv4().split('-').join('')
+import ITaskData from '../interfaces/ITaskData'
 
 const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
+  const db = useContext(FirestoreContext)
+  const dispatch = useDispatch()
   const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
   const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(true)
   const [newTasks, setNewTasks] = useState<{ id: string; text: string; checked: boolean }[]>([
@@ -57,7 +56,7 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
   }
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const addPost = {
+    const addPost: ITaskData = {
       userId: loginUser.id,
       todos: newTasks,
       created: getUnixTime(),
@@ -65,6 +64,14 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
       createdDate: moment().tz('Asia/Tokyo').format('YYYYMMDD'),
     }
     await db.collection('posts').add(addPost)
+    const today = moment().tz('Asia/Tokyo').format('YYYYMMDD')
+    const postByUserAndDate = await db
+      .collection('posts')
+      .where('createdDate', '==', today)
+      .where('userId', '==', loginUser.id)
+      .get()
+    addPost.id = postByUserAndDate.docs[0].data().id
+    dispatch(setTask(addPost))
     closeModal()
   }
   return (

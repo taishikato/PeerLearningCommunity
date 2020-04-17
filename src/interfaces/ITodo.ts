@@ -3,3 +3,9 @@ export default interface ITodo {
   text: string
   checked: boolean
 }
+
+export const defaultTodo = {
+  id: '',
+  text: '',
+  checked: false
+}

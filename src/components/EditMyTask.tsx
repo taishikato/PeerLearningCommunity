@@ -1,12 +1,31 @@
 import React, { useContext, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { setTask as seTaskAction } from '../store/action'
+import { FirestoreContext } from './FirestoreContextProvider'
+import generateUuid from '../plugins/generateUuid'
+import AddFormButton from './AddFormButton'
 import ITaskData from '../interfaces/ITaskData'
 import ITodo from '../interfaces/ITodo'
-import { FirestoreContext } from './FirestoreContextProvider'
 
-const EditMyTask: React.FC<IProps> = ({ task }) => {
+const EditMyTask: React.FC<IProps> = props => {
+  const dispatch = useDispatch()
   const db = useContext(FirestoreContext)
+  const [task, setTask] = useState(props.task)
   const [todos, setTodos] = useState<ITodo[]>(task.todos)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const addForm = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    const copiedTodos = [...todos]
+    const newTodo = {
+      id: generateUuid(),
+      text: '',
+      checked: false,
+    }
+    copiedTodos.push(newTodo)
+    setTodos(copiedTodos)
+    const copiedTask = { ...task, todos: copiedTodos }
+    setTask(copiedTask)
+  }
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
     const target = e.target
@@ -21,17 +40,21 @@ const EditMyTask: React.FC<IProps> = ({ task }) => {
       return false
     })
     setTodos(copyTodos)
+    setTask({ ...task, todos: copyTodos })
   }
   const deleteTodo = (e: React.MouseEvent<HTMLButtonElement>, todoId: string) => {
     e.preventDefault()
     const copyTodos = [...todos]
     const filteredTodos = copyTodos.filter(todoObj => todoObj.id !== todoId)
     setTodos(filteredTodos)
+    const copiedTask = { ...task, todos: filteredTodos }
+    setTask(copiedTask)
   }
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
     await db.collection('posts').doc(task.id).update({ todos })
+    dispatch(seTaskAction(task))
     setIsSubmitting(false)
   }
   return (
@@ -58,6 +81,9 @@ const EditMyTask: React.FC<IProps> = ({ task }) => {
                 </button>
               </li>
             ))}
+            <li className="mt-3">
+              <AddFormButton addForm={addForm} />
+            </li>
           </ul>
         </div>
         <div className="bg-gray-200 mt-6 p-3 border-t border-gray-300 flex justify-end">

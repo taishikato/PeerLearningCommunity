@@ -1,22 +1,24 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import moment from 'moment-timezone'
 import Skeleton from 'react-loading-skeleton'
 import { FirestoreContext } from './FirestoreContextProvider'
-import IInitialState from '../interfaces/IInitialState'
-import ITaskData from '../interfaces/ITaskData'
+import { setTask } from '../store/action'
 import Modal from 'react-modal'
 import EditMyTask from './EditMyTask'
+import IInitialState from '../interfaces/IInitialState'
+import ITaskData from '../interfaces/ITaskData'
 
 const MySinglePostWrapper = () => {
+  const dispatch = useDispatch()
   const [isLoading, setIsLoading] = React.useState(true)
-  const [postData, setPostData] = React.useState<ITaskData>(defaultPostData)
   const [isModalOpen, setIsModalOpen] = React.useState(false)
   const isLogin = useSelector<IInitialState, IInitialState['isLogin']>(state => state.isLogin)
   const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
+  const task = useSelector<IInitialState, IInitialState['myTask']>(state => state.myTask)
   const db = React.useContext(FirestoreContext)
   const handleChangeTodoStatus = async (e: React.ChangeEvent<HTMLInputElement>, todoId: string) => {
-    const todos = [...postData.todos]
+    const todos = [...task.todos]
     todos.some(todo => {
       if (todo.id === todoId) {
         todo.checked = e.target.checked
@@ -24,8 +26,8 @@ const MySinglePostWrapper = () => {
       }
       return false
     })
-    setPostData({ ...postData, todos })
-    await db.collection('posts').doc(postData.id).update({ todos })
+    dispatch(setTask({ ...task, todos }))
+    await db.collection('posts').doc(task.id).update({ todos })
   }
   React.useEffect(() => {
     if (!isLogin) {
@@ -45,11 +47,11 @@ const MySinglePostWrapper = () => {
       }
       const postDataForState = todo.docs[0].data()
       postDataForState.id = todo.docs[0].id
-      setPostData(postDataForState as any)
+      dispatch(setTask(postDataForState as ITaskData))
       setIsLoading(false)
     }
     getTodo()
-  }, [loginUser.id, setPostData, setIsLoading, isLogin, db])
+  }, [loginUser.id, setIsLoading, isLogin, db, dispatch])
   return (
     <>
       <div className="list-individual border-b border-gray-200">
@@ -58,28 +60,32 @@ const MySinglePostWrapper = () => {
             <Skeleton count={3} />
           ) : (
             <>
-              <ul>
-                {postData.todos.map(todo => (
-                  <li className="mt-1" key={todo.id}>
-                    <label className="inline-flex items-center">
-                      <input
-                        type="checkbox"
-                        className="form-checkbox h-6 w-6 text-green-500"
-                        onChange={e => handleChangeTodoStatus(e, todo.id)}
-                        checked={todo.checked}
-                      />
-                      <span className="ml-3 text-lg">{todo.text}</span>
-                    </label>
-                  </li>
-                ))}
-              </ul>
-              <div className="clearfix">
-                <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="flex rounded-full text-xs text-gray-800 float-right focus:outline-none hover:underline">
-                  タスクを編集
-                </button>
-              </div>
+              {task.todos[0].id !== '' && (
+                <>
+                  <ul>
+                    {task.todos.map(todo => (
+                      <li className="mt-1" key={todo.id}>
+                        <label className="inline-flex items-center">
+                          <input
+                            type="checkbox"
+                            className="form-checkbox h-6 w-6 text-green-500"
+                            onChange={e => handleChangeTodoStatus(e, todo.id)}
+                            checked={todo.checked}
+                          />
+                          <span className="ml-3 text-lg">{todo.text}</span>
+                        </label>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="clearfix">
+                    <button
+                      onClick={() => setIsModalOpen(true)}
+                      className="flex rounded-full text-xs text-gray-800 float-right focus:outline-none hover:underline">
+                      タスクを編集
+                    </button>
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>
@@ -107,19 +113,10 @@ const MySinglePostWrapper = () => {
             padding: '0',
           },
         }}>
-        <EditMyTask task={postData} />
+        <EditMyTask task={task} />
       </Modal>
     </>
   )
 }
 
 export default MySinglePostWrapper
-
-const defaultPostData = {
-  id: '',
-  created: 0,
-  createdDate: '',
-  createdDateObj: '',
-  todos: [],
-  userId: '',
-}

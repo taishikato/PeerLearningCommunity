@@ -15,7 +15,6 @@ const Auth: React.FC = ({ children }) => {
         const userDatad = userData.data()
         userDatad!.id = user.uid
         userDatad!.email = user.email
-        console.log({ userDatad })
         dispatch(loginUser(userDatad as ILoginUser))
       }
       dispatch(checkingLoginDone())
