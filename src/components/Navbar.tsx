@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import Modal from 'react-modal'
 import { Link } from 'react-router-dom'
 import PostModalContent from './PostModalContent'
+import EditMyTask from './EditMyTask'
 import SignupForm from './SignupForm'
 import LoginForm from './LoginForm'
 import IInitialState from '../interfaces/IInitialState'
@@ -10,19 +11,17 @@ import firebase from '../plugins/firebase'
 import 'firebase/auth'
 
 const Navbar = () => {
+  const isLogin = useSelector<IInitialState, IInitialState['isLogin']>(state => state.isLogin)
+  const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
+  const myTask = useSelector<IInitialState, IInitialState['myTask']>(state => state.myTask)
   const [isOpen, setIsOpen] = useState(false)
   const [isOpenDropDown, setIsOpenDropDown] = React.useState(false)
   const [isPostModalOpen, setIsPostModalOpen] = useState(false)
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false)
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
-  const isLogin = useSelector<IInitialState, IInitialState['isLogin']>(state => state.isLogin)
-  const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
-  const handleDropDown = () => {
-    setIsOpenDropDown(!isOpenDropDown)
-  }
-  const handleHumburger = () => {
-    setIsOpen(!isOpen)
-  }
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const handleDropDown = () => setIsOpenDropDown(!isOpenDropDown)
+  const handleHumburger = () => setIsOpen(!isOpen)
   const logout = async () => {
     await firebase.auth().signOut()
   }
@@ -47,11 +46,18 @@ const Navbar = () => {
           </button>
         </div>
         <div className="lg:flex lg:items-center">
-          {isLogin && (
+          {isLogin && myTask.todos.length === 0 && (
             <button
               className="bg-green-400 rounded-full font-bold text-white py-2 px-6 focus:outline-none"
               onClick={() => setIsPostModalOpen(true)}>
               今日のタスクを追加
+            </button>
+          )}
+          {isLogin && myTask.todos.length > 0 && (
+            <button
+              className="bg-green-400 rounded-full font-bold text-white py-2 px-6 focus:outline-none"
+              onClick={() => setIsEditModalOpen(true)}>
+              今日のタスクを編集
             </button>
           )}
           <div
@@ -116,11 +122,13 @@ const Navbar = () => {
             backgroundColor: 'rgba(0, 0, 0, 0.7)',
           },
           content: {
+            padding: 0,
             width: '600px',
             maxWidth: '100%',
             position: 'absolute',
             top: '40%',
             left: '50%',
+            bottom: 'none',
             transform: 'translateY(-50%)translateX(-50%)',
             border: 'none',
             backgroundColor: 'white',
@@ -173,6 +181,31 @@ const Navbar = () => {
           },
         }}>
         <LoginForm closeModal={() => setIsLoginModalOpen(false)} />
+      </Modal>
+      <Modal
+        isOpen={isEditModalOpen}
+        onRequestClose={() => setIsEditModalOpen(false)}
+        ariaHideApp={false}
+        style={{
+          overlay: {
+            zIndex: 100000,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          },
+          content: {
+            width: '600px',
+            maxWidth: '100%',
+            position: 'absolute',
+            height: 'auto',
+            top: '40%',
+            left: '50%',
+            bottom: 'none',
+            transform: 'translateY(-50%)translateX(-50%)',
+            border: 'none',
+            backgroundColor: 'white',
+            padding: '0',
+          },
+        }}>
+        <EditMyTask task={myTask} />
       </Modal>
     </>
   )
