@@ -22,7 +22,12 @@ const EditMyTask: React.FC<IProps> = ({ task }) => {
     })
     setTodos(copyTodos)
   }
-  const deleteTodo = () => {}
+  const deleteTodo = (e: React.MouseEvent<HTMLButtonElement>, todoId: string) => {
+    e.preventDefault()
+    const copyTodos = [...todos]
+    const filteredTodos = copyTodos.filter(todoObj => todoObj.id !== todoId)
+    setTodos(filteredTodos)
+  }
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -47,7 +52,7 @@ const EditMyTask: React.FC<IProps> = ({ task }) => {
                   name={todo.id}
                 />
                 <button
-                  onClick={deleteTodo}
+                  onClick={e => deleteTodo(e, todo.id)}
                   className="bg-red-500 rounded-full px-3 py-1 font-bold text-white text-xs hover:underline">
                   削除
                 </button>
