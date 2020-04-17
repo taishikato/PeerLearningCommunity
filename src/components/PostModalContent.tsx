@@ -70,7 +70,7 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
       .where('createdDate', '==', today)
       .where('userId', '==', loginUser.id)
       .get()
-    addPost.id = postByUserAndDate.docs[0].data().id
+    addPost.id = postByUserAndDate.docs[0].id
     dispatch(setTask(addPost))
     closeModal()
   }
