@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import moment from 'moment-timezone'
+import AddFormButton from './AddFormButton'
 import getUnixTime from '../plugins/getUnixTime'
 import { FirestoreContext } from './FirestoreContextProvider'
 import generateUuid from '../plugins/generateUuid'
@@ -75,28 +76,31 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
     closeModal()
   }
   return (
-    <div className="modal-content py-4 text-left px-6">
-      <div className="flex justify-between items-center pb-3">
-        <p className="text-2xl font-bold">今日は何する？</p>
+    <div>
+      <div className="bg-gray-200 p-3 border-b border-gray-300">
+        <p className="text-2xl">今日は何する？</p>
       </div>
-      <form onSubmit={handleSubmit}>
-        {newTasks.map(task => (
-          <input
-            key={task.id}
-            className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500 mb-2"
-            id="inline-full-name"
-            type="text"
-            placeholder="TOEICの勉強する"
-            value={task.text}
-            onChange={e => handleFormChange(e)}
-            name={task.id}
-          />
-        ))}
-        <button onClick={e => handleAddForm(e)} className="my-2 focus:outline-none">
-          フォーム追加
-        </button>
+      <form onSubmit={handleSubmit} className="mt-6">
+        <ul className="w-10/12 m-auto">
+          {newTasks.map(task => (
+            <li key={task.id} className="mb-2 single-form">
+              <input
+                className="w-full border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
+                id="inline-full-name"
+                type="text"
+                placeholder="TOEICの勉強する"
+                value={task.text}
+                onChange={e => handleFormChange(e)}
+                name={task.id}
+              />
+            </li>
+          ))}
+          <li className="mt-3">
+            <AddFormButton addForm={handleAddForm} />
+          </li>
+        </ul>
 
-        <div className="flex justify-end pt-2">
+        <div className="bg-gray-200 mt-6 p-3 border-t border-gray-300 flex justify-end">
           {isAddButtonDisabled ? (
             <button
               disabled
