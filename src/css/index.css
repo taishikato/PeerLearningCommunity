@@ -5,3 +5,7 @@ html, body, div#app, div#root {
 .list-individual:last-child {
     border: none;
 }
+
+.single-form:last-child {
+    margin-bottom: 0;
+}

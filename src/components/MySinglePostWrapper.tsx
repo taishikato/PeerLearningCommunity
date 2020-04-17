@@ -4,10 +4,14 @@ import moment from 'moment-timezone'
 import Skeleton from 'react-loading-skeleton'
 import { FirestoreContext } from './FirestoreContextProvider'
 import IInitialState from '../interfaces/IInitialState'
+import ITaskData from '../interfaces/ITaskData'
+import Modal from 'react-modal'
+import EditMyTask from './EditMyTask'
 
 const MySinglePostWrapper = () => {
   const [isLoading, setIsLoading] = React.useState(true)
-  const [postData, setPostData] = React.useState<ITodoData>(defaultPostData)
+  const [postData, setPostData] = React.useState<ITaskData>(defaultPostData)
+  const [isModalOpen, setIsModalOpen] = React.useState(false)
   const isLogin = useSelector<IInitialState, IInitialState['isLogin']>(state => state.isLogin)
   const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
   const db = React.useContext(FirestoreContext)
@@ -47,33 +51,65 @@ const MySinglePostWrapper = () => {
     getTodo()
   }, [loginUser.id, setPostData, setIsLoading, isLogin, db])
   return (
-    <div className="list-individual border-b border-gray-200">
-      <div className="flex flex-wrap items-center">
-        <img src={loginUser.picture} className="rounded-full" alt={loginUser.displayName} width="40" />
-        <div className="ml-4 font-semibold">{loginUser.displayName}</div>
+    <>
+      <div className="list-individual border-b border-gray-200">
+        <div>
+          {isLoading ? (
+            <Skeleton count={3} />
+          ) : (
+            <>
+              <ul>
+                {postData.todos.map(todo => (
+                  <li className="mt-1" key={todo.id}>
+                    <label className="inline-flex items-center">
+                      <input
+                        type="checkbox"
+                        className="form-checkbox h-6 w-6 text-green-500"
+                        onChange={e => handleChangeTodoStatus(e, todo.id)}
+                        checked={todo.checked}
+                      />
+                      <span className="ml-3 text-lg">{todo.text}</span>
+                    </label>
+                  </li>
+                ))}
+              </ul>
+              <div className="clearfix">
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="flex rounded-full text-xs text-gray-800 float-right focus:outline-none hover:underline">
+                  タスクを編集
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
-      <div className="mt-6">
-        {isLoading ? (
-          <Skeleton count={3} />
-        ) : (
-          <ul>
-            {postData.todos.map(todo => (
-              <li className="mt-1" key={todo.id}>
-                <label className="inline-flex items-center">
-                  <input
-                    type="checkbox"
-                    className="form-checkbox h-6 w-6 text-green-500"
-                    onChange={e => handleChangeTodoStatus(e, todo.id)}
-                    checked={todo.checked}
-                  />
-                  <span className="ml-3 text-lg">{todo.text}</span>
-                </label>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-    </div>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        ariaHideApp={false}
+        style={{
+          overlay: {
+            zIndex: 100000,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          },
+          content: {
+            width: '600px',
+            maxWidth: '100%',
+            position: 'absolute',
+            height: 'auto',
+            top: '40%',
+            left: '50%',
+            bottom: 'none',
+            transform: 'translateY(-50%)translateX(-50%)',
+            border: 'none',
+            backgroundColor: 'white',
+            padding: '0',
+          },
+        }}>
+        <EditMyTask task={postData} />
+      </Modal>
+    </>
   )
 }
 
@@ -86,19 +122,4 @@ const defaultPostData = {
   createdDateObj: '',
   todos: [],
   userId: '',
-}
-
-interface ITodoData {
-  id?: string
-  created: number
-  createdDate: string
-  createdDateObj: string
-  todos: ITodo[]
-  userId: string
-}
-
-interface ITodo {
-  id: string
-  text: string
-  checked: boolean
 }

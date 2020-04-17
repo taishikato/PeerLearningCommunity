@@ -64,7 +64,6 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
       createdDateObj: moment().tz('Asia/Tokyo').format(),
       createdDate: moment().tz('Asia/Tokyo').format('YYYYMMDD'),
     }
-    console.log({ addPost })
     await db.collection('posts').add(addPost)
     closeModal()
   }
