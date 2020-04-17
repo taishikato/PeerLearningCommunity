@@ -1,12 +1,30 @@
 import { createStore, combineReducers } from 'redux'
-import { LOGIN, LOGOUT, DONE_CHECKING } from './action'
+import { LOGIN, LOGOUT, DONE_CHECKING, TASK } from './action'
 import IInitialState from '../interfaces/IInitialState'
+import { defaultTask } from '../interfaces/ITaskData'
 import { defaultUser } from '../interfaces/ILoginUser'
 
 export const initialState: IInitialState = {
   loginUser: defaultUser,
   isLogin: false,
-  isCheckingLogin: true
+  isCheckingLogin: true,
+  myTask: defaultTask
+}
+
+const myTask = (state = {}, action: any) => {
+  switch (action.type) {
+    case TASK:
+      return {
+        id: action.id,
+        created: action.created,
+        createdDate: action.createdDate,
+        createdDateObj: action.createdDateObj,
+        todos: action.todos,
+        userId: action.userId
+      }
+    default:
+      return state
+  }
 }
 
 const loginUser = (state = {}, action: any) => {
@@ -49,7 +67,8 @@ const isCheckingLogin = (state = true, action: any) => {
 const reducer = combineReducers({
   loginUser,
   isLogin,
-  isCheckingLogin
+  isCheckingLogin,
+  myTask
 })
 
 export const initializeStore = (preloadedState = initialState) => {
