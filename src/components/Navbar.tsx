@@ -46,14 +46,15 @@ const Navbar = () => {
           </button>
         </div>
         <div className="lg:flex lg:items-center">
-          {isLogin && myTask.todos.length === 0 && (
+          {console.log(myTask)}
+          {isLogin && myTask.todos[0].id === '' && (
             <button
               className="bg-green-400 rounded-full font-bold text-white py-2 px-6 focus:outline-none"
               onClick={() => setIsPostModalOpen(true)}>
               今日のタスクを追加
             </button>
           )}
-          {isLogin && myTask.todos.length > 0 && (
+          {isLogin && myTask.todos[0].id !== '' && (
             <button
               className="bg-green-400 rounded-full font-bold text-white py-2 px-6 focus:outline-none"
               onClick={() => setIsEditModalOpen(true)}>
