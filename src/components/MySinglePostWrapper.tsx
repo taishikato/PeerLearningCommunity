@@ -2,9 +2,10 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import moment from 'moment-timezone'
 import Skeleton from 'react-loading-skeleton'
+import Modal from 'react-modal'
 import { FirestoreContext } from './FirestoreContextProvider'
 import { setTask } from '../store/action'
-import Modal from 'react-modal'
+import PostModalContent from './PostModalContent'
 import EditMyTask from './EditMyTask'
 import IInitialState from '../interfaces/IInitialState'
 import ITaskData from '../interfaces/ITaskData'
@@ -13,6 +14,7 @@ const MySinglePostWrapper = () => {
   const dispatch = useDispatch()
   const [isLoading, setIsLoading] = React.useState(true)
   const [isModalOpen, setIsModalOpen] = React.useState(false)
+  const [isPostModalOpen, setIsPostModalOpen] = React.useState(false)
   const isLogin = useSelector<IInitialState, IInitialState['isLogin']>(state => state.isLogin)
   const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
   const task = useSelector<IInitialState, IInitialState['myTask']>(state => state.myTask)
@@ -60,7 +62,7 @@ const MySinglePostWrapper = () => {
             <Skeleton count={3} />
           ) : (
             <>
-              {task.todos[0].id !== '' && (
+              {task.todos[0].id !== '' ? (
                 <>
                   <ul>
                     {task.todos.map(todo => (
@@ -85,6 +87,14 @@ const MySinglePostWrapper = () => {
                     </button>
                   </div>
                 </>
+              ) : (
+                <div className="text-center">
+                  <button
+                    onClick={() => setIsPostModalOpen(true)}
+                    className="px-6 py-2 bg-green-400 rounded-full text-white font-bold focus:outline-none">
+                    今日のタスクを追加する
+                  </button>
+                </div>
               )}
             </>
           )}
@@ -114,6 +124,31 @@ const MySinglePostWrapper = () => {
           },
         }}>
         <EditMyTask task={task} />
+      </Modal>
+      <Modal
+        isOpen={isPostModalOpen}
+        onRequestClose={() => setIsPostModalOpen(false)}
+        ariaHideApp={false}
+        style={{
+          overlay: {
+            zIndex: 100000,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          },
+          content: {
+            width: '600px',
+            maxWidth: '100%',
+            position: 'absolute',
+            height: 'auto',
+            top: '40%',
+            left: '50%',
+            bottom: 'none',
+            transform: 'translateY(-50%)translateX(-50%)',
+            border: 'none',
+            backgroundColor: 'white',
+            padding: '0',
+          },
+        }}>
+        <PostModalContent closeModal={() => setIsPostModalOpen(false)} />
       </Modal>
     </>
   )
