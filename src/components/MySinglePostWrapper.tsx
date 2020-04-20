@@ -6,6 +6,8 @@ import Modal from 'react-modal'
 import { FirestoreContext } from './FirestoreContextProvider'
 import { setTask } from '../store/action'
 import PostModalContent from './PostModalContent'
+import SignupForm from './SignupForm'
+import LoginForm from './LoginForm'
 import EditMyTask from './EditMyTask'
 import IInitialState from '../interfaces/IInitialState'
 import ITaskData from '../interfaces/ITaskData'
@@ -15,6 +17,8 @@ const MySinglePostWrapper = () => {
   const [isLoading, setIsLoading] = React.useState(true)
   const [isModalOpen, setIsModalOpen] = React.useState(false)
   const [isPostModalOpen, setIsPostModalOpen] = React.useState(false)
+  const [isSignupModalOpen, setIsSignupModalOpen] = React.useState(false)
+  const [isLoginModalOpen, setIsLoginModalOpen] = React.useState(false)
   const isLogin = useSelector<IInitialState, IInitialState['isLogin']>(state => state.isLogin)
   const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
   const task = useSelector<IInitialState, IInitialState['myTask']>(state => state.myTask)
@@ -87,7 +91,7 @@ const MySinglePostWrapper = () => {
                     </button>
                   </div>
                 </>
-              ) : (
+              ) : isLogin ? (
                 <div className="text-center">
                   <button
                     onClick={() => setIsPostModalOpen(true)}
@@ -95,11 +99,72 @@ const MySinglePostWrapper = () => {
                     今日のタスクを追加する
                   </button>
                 </div>
+              ) : (
+                <div>
+                  <button
+                    onClick={() => setIsLoginModalOpen(true)}
+                    className="text-blue-500 hover:underline focus:outline-none">
+                    ログイン
+                  </button>
+                  または
+                  <button
+                    onClick={() => setIsSignupModalOpen(true)}
+                    className="text-blue-500 hover:underline focus:outline-none">
+                    サインアップ
+                  </button>
+                  してタスクを追加する
+                </div>
               )}
             </>
           )}
         </div>
       </div>
+      <Modal
+        isOpen={isLoginModalOpen}
+        onRequestClose={() => setIsLoginModalOpen(false)}
+        ariaHideApp={false}
+        style={{
+          overlay: {
+            zIndex: 100000,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          },
+          content: {
+            width: '600px',
+            maxWidth: '100%',
+            height: '400px',
+            position: 'absolute',
+            top: '40%',
+            left: '50%',
+            transform: 'translateY(-50%)translateX(-50%)',
+            border: 'none',
+            backgroundColor: 'white',
+          },
+        }}>
+        <LoginForm closeModal={() => setIsLoginModalOpen(false)} />
+      </Modal>
+      <Modal
+        isOpen={isSignupModalOpen}
+        onRequestClose={() => setIsSignupModalOpen(false)}
+        ariaHideApp={false}
+        style={{
+          overlay: {
+            zIndex: 100000,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          },
+          content: {
+            width: '600px',
+            maxWidth: '100%',
+            height: '450px',
+            position: 'absolute',
+            top: '40%',
+            left: '50%',
+            transform: 'translateY(-50%)translateX(-50%)',
+            border: 'none',
+            backgroundColor: 'white',
+          },
+        }}>
+        <SignupForm closeModal={() => setIsSignupModalOpen(false)} />
+      </Modal>
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}

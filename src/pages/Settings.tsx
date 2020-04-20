@@ -79,8 +79,9 @@ const Settings = () => {
     }
     // User Nameチェック
     const userByUserName = await db.collection('users').where('userName', '==', userData.userName).get()
-    if (!userByUserName.empty && loginUser.id !== userByUserName.docs[0].data().id) {
+    if (!userByUserName.empty && loginUser.id !== userByUserName.docs[0].id) {
       toast('このユーザーネームは既に使われています', { type: toast.TYPE.ERROR })
+      setIsSubmitting(false)
       return
     }
     const saveData: any = {}
