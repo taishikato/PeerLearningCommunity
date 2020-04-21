@@ -131,7 +131,7 @@ const Settings = () => {
       <div className="mt-10 m-auto mb-10">
         <div className="w-11/12 md:w-5/12 lg:w-5/12 m-auto">
           <h2 className="text-2xl font-medium mb-5">設定</h2>
-          <div className="border-2 border-gray-300 p-5 rounded">
+          <div className="border-2 border-gray-200 p-5 rounded">
             <form onSubmit={onSubmit} className="bg-white rounded mb-4">
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
