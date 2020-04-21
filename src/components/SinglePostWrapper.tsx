@@ -13,11 +13,11 @@ const SinglePostWrapper = () => {
   const db = useContext(FirestoreContext)
 
   React.useEffect(() => {
-    const today = moment().tz('Asia/Tokyo').format('YYYYMMDD')
+    // const today = moment().tz('Asia/Tokyo').format('YYYYMMDD')
     const getPosts = async () => {
       const postsFromDb = await db
         .collection('posts')
-        .where('createdDate', '==', today)
+        // .where('createdDate', '==', today)
         .orderBy('created', 'desc')
         .get()
       if (postsFromDb.empty) {
@@ -47,10 +47,15 @@ const SinglePostWrapper = () => {
       ) : (
         <>
           {posts.map(postObj => (
-            <div key={postObj.post.id} className="list-individual border-b border-gray-200">
+            <div key={postObj.post.id} className="list-individual border-b border-gray-200 pt-4 pb-3">
               <div className="flex flex-wrap items-center">
                 <img src={postObj.user.picture} className="rounded-full" alt={postObj.user.displayName} width="40" />
-                <div className="ml-4 font-semibold">{postObj.user.displayName}</div>
+                <div className="ml-4">
+                  <span className="font-semibold">{postObj.user.displayName}</span>
+                  <p className="text-xs text-gray-400">
+                    {moment(postObj.post.createdDateObj).tz('Asia/Tokyo').format('YYYY/MM/DD')}
+                  </p>
+                </div>
               </div>
               <div className="mt-6">
                 <ul>

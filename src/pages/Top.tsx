@@ -10,7 +10,7 @@ const Top = () => {
       <div className="pt-10 w-11/12 m-auto">
         <div className="flex flex-wrap -mx-2">
           <div className="px-2 w-full md:w-7/12 lg:w-7/12">
-            <h3 className="font-semibold text-xl mb-5">今日のみんなのタスク</h3>
+            <h3 className="font-semibold text-xl mb-5">みんなのタスク</h3>
             <div className="p-5 bg-white rounded">
               <SinglePostWrapper />
             </div>
