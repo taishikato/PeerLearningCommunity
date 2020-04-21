@@ -2,8 +2,13 @@ html, body, div#app, div#root {
     height: 100%;
 }
 
+.list-individual:first-child {
+    padding-top: 0;
+}
+
 .list-individual:last-child {
     border: none;
+    padding-bottom: 0;
 }
 
 .single-form:last-child {

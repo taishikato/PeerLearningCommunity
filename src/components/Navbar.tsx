@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import Modal from 'react-modal'
-import { Link } from 'react-router-dom'
+import { Link, RouteComponentProps } from 'react-router-dom'
 import PostModalContent from './PostModalContent'
 import EditMyTask from './EditMyTask'
 import SignupForm from './SignupForm'
@@ -9,8 +9,9 @@ import LoginForm from './LoginForm'
 import IInitialState from '../interfaces/IInitialState'
 import firebase from '../plugins/firebase'
 import 'firebase/auth'
+import { withRouter } from 'react-router'
 
-const Navbar = () => {
+const Navbar: React.FC<RouteComponentProps> = props => {
   const isLogin = useSelector<IInitialState, IInitialState['isLogin']>(state => state.isLogin)
   const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
   const myTask = useSelector<IInitialState, IInitialState['myTask']>(state => state.myTask)
@@ -25,11 +26,13 @@ const Navbar = () => {
   const logout = async () => {
     await firebase.auth().signOut()
   }
+  React.useEffect(() => {
+    handleDropDown()
+    handleHumburger()
+  }, [props.location])
   return (
     <>
-      <nav
-        // style={{ boxShadow: '0px 6px 20px rgba(0, 0, 0, 0.06)' }}
-        className="flex items-center justify-between flex-wrap px-6 py-4 text-gray-800 bg-white border-b-2 border-gray-300">
+      <nav className="flex items-center justify-between flex-wrap px-6 py-4 text-gray-800 bg-white border-b-2 border-gray-300">
         <div className="flex items-center flex-shrink-0 mr-6">
           <Link to="/" className="font-extrabold text-green-400">
             Peer Community
@@ -46,7 +49,6 @@ const Navbar = () => {
           </button>
         </div>
         <div className="lg:flex lg:items-center">
-          {console.log(myTask)}
           {isLogin && myTask.todos[0].id === '' && (
             <button
               className="bg-green-400 rounded-full font-bold text-white py-2 px-6 focus:outline-none"
@@ -212,4 +214,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default withRouter(Navbar)
