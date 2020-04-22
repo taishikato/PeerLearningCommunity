@@ -27,18 +27,18 @@ const Navbar: React.FC<RouteComponentProps> = props => {
     await firebase.auth().signOut()
   }
   React.useEffect(() => {
-    handleDropDown()
-    handleHumburger()
+    if (isOpenDropDown) handleDropDown()
+    if (isOpen) handleHumburger()
   }, [props.location])
   return (
     <>
-      <nav className="flex items-center justify-between flex-wrap px-6 py-4 text-gray-800 bg-white border-b-2 border-gray-300">
-        <div className="flex items-center flex-shrink-0 mr-6">
+      <nav className="flex flex-wrap items-center px-6 py-4 text-gray-800 bg-white border-b-2 border-gray-300">
+        <div className="mr-6">
           <Link to="/" className="font-extrabold text-green-400">
             Peer Community
           </Link>
         </div>
-        <div className="block lg:hidden">
+        <div className="ml-auto block lg:hidden">
           <button
             onClick={handleHumburger}
             className="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:border-white focus:outline-none">
@@ -48,70 +48,68 @@ const Navbar: React.FC<RouteComponentProps> = props => {
             </svg>
           </button>
         </div>
-        <div className="lg:flex lg:items-center">
+        <div
+          className={`ml-auto mt-4 md:p-0 md:mt-0 lg:mt-0 lg:p-0 lg:flex lg:items-center w-full lg:w-auto rounded z-50 ${
+            isOpen ? 'block' : 'hidden'
+          }`}>
           {isLogin && myTask.todos[0].id === '' && (
             <button
-              className="bg-green-400 rounded-full font-bold text-white py-2 px-6 focus:outline-none"
+              className="ml-auto bg-green-400 rounded-full font-bold text-white py-2 px-6 focus:outline-none"
               onClick={() => setIsPostModalOpen(true)}>
               今日のタスクを追加
             </button>
           )}
           {isLogin && myTask.todos[0].id !== '' && (
             <button
-              className="bg-green-400 rounded-full font-bold text-white py-2 px-6 focus:outline-none"
+              className="ml-auto bg-green-400 rounded-full font-bold text-white py-2 px-6 focus:outline-none"
               onClick={() => setIsEditModalOpen(true)}>
               今日のタスクを編集
             </button>
           )}
-          <div
-            className={`ml-5 mt-4 md:p-0 md:mt-0 lg:mt-0 lg:p-0 lg:flex lg:items-center w-full lg:w-auto rounded z-50 ${
-              isOpen ? 'block' : 'hidden'
-            }`}>
-            <div className="mt-4 lg:mt-0">
-              {isLogin ? (
-                <div className="relative">
-                  <button
-                    onClick={handleDropDown}
-                    className="relative z-10 block h-10 w-10 rounded-full overflow-hidden focus:outline-none">
-                    <img className="h-full w-full object-cover" src={loginUser.picture} alt={loginUser.displayName} />
-                  </button>
-                  <div
-                    className={`${
-                      isOpenDropDown ? 'show' : 'hidden'
-                    } absolute z-40 right-0 mt-2 py-2 w-full md:w-48 lg:w-48 bg-white rounded-lg shadow-xl`}>
-                    {/* <a
+          <div className="mt-4 ml-4 lg:mt-0">
+            {isLogin ? (
+              <div className="relative">
+                <button
+                  onClick={handleDropDown}
+                  className="relative z-10 block h-10 w-10 rounded-full overflow-hidden focus:outline-none">
+                  <img className="h-full w-full object-cover" src={loginUser.picture} alt={loginUser.displayName} />
+                </button>
+                <div
+                  className={`${
+                    isOpenDropDown ? 'show' : 'hidden'
+                  } absolute z-40 right-0 mt-2 py-2 w-full md:w-48 lg:w-48 bg-white rounded-lg shadow-xl`}>
+                  {/* <a
                       href="/[username]"
                       className="block px-4 py-2 text-gray-800 cursor-pointer hover:bg-indigo-500 hover:text-white">
                       Profile
                     </a> */}
-                    <Link
-                      to="/settings"
-                      className="block px-4 py-2 text-gray-800 cursor-pointer hover:bg-indigo-500 hover:text-white">
-                      設定
-                    </Link>
-                    <a
-                      onClick={logout}
-                      href="/"
-                      className="cursor-pointer block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white">
-                      ログアウト
-                    </a>
-                  </div>
+                  <Link
+                    to="/settings"
+                    className="block px-4 py-2 text-gray-800 cursor-pointer hover:bg-indigo-500 hover:text-white">
+                    設定
+                  </Link>
+                  <a
+                    onClick={logout}
+                    href="/"
+                    className="cursor-pointer block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white">
+                    ログアウト
+                  </a>
                 </div>
-              ) : (
-                <>
-                  <button
-                    onClick={() => setIsSignupModalOpen(true)}
-                    className="ml-3 bg-green-400 text-white py-2 px-6 font-semibold rounded-full focus:outline-none">
-                    サインアップ
-                  </button>
-                  <button
-                    onClick={() => setIsLoginModalOpen(true)}
-                    className="ml-3 py-2 px-6 font-semibold rounded-full text-gray-600 hover:text-gray-900 focus:outline-none">
-                    ログイン
-                  </button>
-                </>
-              )}
-            </div>
+              </div>
+            ) : (
+              <>
+                <button
+                  onClick={() => setIsSignupModalOpen(true)}
+                  className="bg-green-400 text-white py-2 px-6 font-semibold rounded-full focus:outline-none">
+                  サインアップ
+                </button>
+                <button
+                  onClick={() => setIsLoginModalOpen(true)}
+                  className="ml-3 py-2 px-6 font-semibold rounded-full text-gray-600 hover:text-gray-900 focus:outline-none">
+                  ログイン
+                </button>
+              </>
+            )}
           </div>
         </div>
       </nav>
