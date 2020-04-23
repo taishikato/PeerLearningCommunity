@@ -20,7 +20,9 @@ const Top = () => {
             <div className="p-5 bg-white rounded mb-4 border-2 border-gray-200">
               <MySinglePostWrapper />
             </div>
-            <h3 className="font-semibold text-xl mb-5">連続更新記録</h3>
+            <h3 className="font-semibold text-xl mb-5">
+              連続更新記録 <span className="text-xs text-gray-600 font-medium">*毎晩深夜0時頃に更新されます</span>
+            </h3>
             <div className="p-5 bg-white rounded mb-4 border-2 border-gray-200">
               <Streak />
             </div>
