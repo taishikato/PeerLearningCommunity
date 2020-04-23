@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import Skeleton from 'react-loading-skeleton'
 import { FirestoreContext } from './FirestoreContextProvider'
 
 const Streak = () => {
@@ -13,7 +14,7 @@ const Streak = () => {
   }, [db, setRank])
   return (
     <div>
-      {rank.streakRank !== undefined &&
+      {rank.streakRank !== undefined ? (
         rank.streakRank.map((rankItem: IRankItem) => (
           <div key={rankItem.user.picture} className="single-streak flex items-center mb-3">
             <img src={rankItem.user.picture} alt="プロフィール写真" className="w-10 rounded-full" />
@@ -31,7 +32,10 @@ const Streak = () => {
               {rankItem.streak}
             </span>
           </div>
-        ))}
+        ))
+      ) : (
+        <Skeleton count={3} />
+      )}
     </div>
   )
 }
