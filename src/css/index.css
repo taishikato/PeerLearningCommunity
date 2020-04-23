@@ -11,6 +11,6 @@ html, body, div#app, div#root {
     padding-bottom: 0;
 }
 
-.single-form:last-child {
+.single-form:last-child,.single-streak:last-child {
     margin-bottom: 0;
 }
