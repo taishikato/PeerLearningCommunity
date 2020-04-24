@@ -14,6 +14,7 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
   const dispatch = useDispatch()
   const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
   const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [newTasks, setNewTasks] = useState<{ id: string; text: string; checked: boolean }[]>([
     { id: generateUuid(), text: '', checked: false },
   ])
@@ -57,6 +58,7 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
   }
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setIsSubmitting(true)
     const addPost: ITaskData = {
       userId: loginUser.id,
       todos: newTasks,
@@ -73,6 +75,7 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
       .get()
     addPost.id = postByUserAndDate.docs[0].id
     dispatch(setTask(addPost))
+    setIsSubmitting(false)
     closeModal()
   }
   return (
@@ -101,17 +104,25 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
         </ul>
 
         <div className="bg-gray-200 mt-6 p-3 border-t border-gray-300 flex justify-end">
-          {isAddButtonDisabled ? (
+          {isSubmitting && (
+            <button
+              disabled
+              className="px-6 p-2 rounded-lg text-white bg-green-200 mr-2 rounded-full font-bold cursor-not-allowed">
+              送信中…
+            </button>
+          )}
+          {isAddButtonDisabled && !isSubmitting && (
             <button
               disabled
               className="px-6 p-2 rounded-lg text-white bg-green-200 mr-2 rounded-full font-bold cursor-not-allowed">
               追加
             </button>
-          ) : (
+          )}
+          {!isAddButtonDisabled && !isSubmitting && (
             <input
               value="追加"
               type="submit"
-              className="px-6 p-2 rounded-lg text-white bg-green-400 hover:bg-green-500 mr-2 rounded-full font-bold"
+              className="px-6 p-2 rounded-lg text-white bg-green-400 hover:bg-green-500 mr-2 rounded-full font-bold focus:outline-none"
             />
           )}
         </div>
