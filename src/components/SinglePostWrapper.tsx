@@ -4,7 +4,7 @@ import moment from 'moment-timezone'
 import axios from 'axios'
 import Skeleton from 'react-loading-skeleton'
 import { FirestoreContext } from './FirestoreContextProvider'
-import Todo from './Todo'
+import TodoForShow from './TodoForShow'
 import asyncForEach from '../plugins/asyncForEach'
 import IInitialState from '../interfaces/IInitialState'
 import { ITodoData as ITodoData2 } from '../interfaces/ITodoData'
@@ -87,7 +87,7 @@ const SinglePostWrapper = () => {
                   </div>
                   {todoData.todos.map((todo: ITodoNew) => (
                     <div className="todo-component-wrapper p-3 border-b border-gray-300">
-                      <Todo todo={todo} />
+                      <TodoForShow todo={todo} />
                     </div>
                   ))}
                 </div>
@@ -132,22 +132,22 @@ const SinglePostWrapper = () => {
 
 export default SinglePostWrapper
 
-const defaultMyPostData = {
-  id: '',
-  created: 0,
-  createdDate: '',
-  createdDateObj: '',
-  todos: [],
-  userId: '',
-}
+// const defaultMyPostData = {
+//   id: '',
+//   created: 0,
+//   createdDate: '',
+//   createdDateObj: '',
+//   todos: [],
+//   userId: '',
+// }
 
-const defaultPostData = [
-  {
-    id: '',
-    post: defaultMyPostData,
-    user: {},
-  },
-]
+// const defaultPostData = [
+//   {
+//     id: '',
+//     post: defaultMyPostData,
+//     user: {},
+//   },
+// ]
 
 // interface IPostNew {
 //   date: string

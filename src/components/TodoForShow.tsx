@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { ITodoNew } from '../interfaces/ITodo'
+import { FirestoreContext } from './FirestoreContextProvider'
 
 const Todo: React.FC<IProps> = ({ todo }) => {
+  const db = useContext(FirestoreContext)
   const handleChangeTodoStatus = (e: React.ChangeEvent<HTMLInputElement>) => {}
   return (
     <div>
