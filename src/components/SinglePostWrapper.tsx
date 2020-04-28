@@ -37,8 +37,6 @@ const SinglePostWrapper = () => {
       postData.push(yesterdayPosts.data)
       postData.push(twoaysAgo.data)
 
-      console.log(postData)
-
       setPostsNew(postData)
     }
 
@@ -77,16 +75,16 @@ const SinglePostWrapper = () => {
       ) : (
         <>
           {postsNew.map((postObj: any) => (
-            <div className="mb-5">
+            <div key={postObj.date} className="mb-5">
               <h3 className="text-xl mb-5">{moment(postObj.date).tz('Asia/Tokyo').format('MM月DD日(ddd)')}</h3>
               {postObj.todoByUser.map((todoData: any) => (
-                <div className="bg-white rounded mb-4 border-2 border-gray-300">
+                <div key={todoData.user.userName} className="bg-white rounded mb-4 border-2 border-gray-300">
                   <div className="flex items-center p-3 border-b border-gray-300">
                     <img src={todoData.user.picture} alt="プロフィール写真" className="rounded-full w-10 h-10" />
                     <span className="ml-3 font-medium">{todoData.user.displayName}</span>
                   </div>
                   {todoData.todos.map((todo: ITodoNew) => (
-                    <div className="todo-component-wrapper p-3 border-b border-gray-300">
+                    <div key={todo.id} className="todo-component-wrapper p-3 border-b border-gray-300">
                       <TodoForShow todo={todo} />
                     </div>
                   ))}
