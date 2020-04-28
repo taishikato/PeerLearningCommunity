@@ -1,19 +1,49 @@
 import React, { useState, useContext } from 'react'
 import { useSelector } from 'react-redux'
 import moment from 'moment-timezone'
+import axios from 'axios'
 import Skeleton from 'react-loading-skeleton'
 import { FirestoreContext } from './FirestoreContextProvider'
+import Todo from './Todo'
 import asyncForEach from '../plugins/asyncForEach'
 import IInitialState from '../interfaces/IInitialState'
+import { ITodoData as ITodoData2 } from '../interfaces/ITodoData'
+import { ITodoNew } from '../interfaces/ITodo'
+
+moment.locale('ja')
 
 const SinglePostWrapper = () => {
   const [isLoading, setIsLoading] = useState(true)
   const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
-  const [posts, setPosts] = useState<IPost[]>(defaultPostData)
+  const [posts, setPosts] = useState<IPost[]>([])
+  const [postsNew, setPostsNew] = useState<ITodoData2[]>([])
   const db = useContext(FirestoreContext)
 
   React.useEffect(() => {
-    // const today = moment().tz('Asia/Tokyo').format('YYYYMMDD')
+    const getPosts2 = async () => {
+      const [todayPosts, yesterdayPosts, twoaysAgo] = await Promise.all([
+        axios.post('https://asia-northeast1-peer-learning-app.cloudfunctions.net/getTodosApiFunc/getTodos', {
+          dayBefore: 0,
+        }),
+        axios.post('https://asia-northeast1-peer-learning-app.cloudfunctions.net/getTodosApiFunc/getTodos', {
+          dayBefore: 1,
+        }),
+        axios.post('https://asia-northeast1-peer-learning-app.cloudfunctions.net/getTodosApiFunc/getTodos', {
+          dayBefore: 2,
+        }),
+      ])
+
+      const postData = [todayPosts.data]
+      postData.push(yesterdayPosts.data)
+      postData.push(twoaysAgo.data)
+
+      console.log(postData)
+
+      setPostsNew(postData)
+    }
+
+    getPosts2()
+
     const getPosts = async () => {
       const postsFromDb = await db
         .collection('posts')
@@ -46,7 +76,25 @@ const SinglePostWrapper = () => {
         <Skeleton count={3} />
       ) : (
         <>
-          {posts.map(postObj => (
+          {postsNew.map((postObj: any) => (
+            <div className="mb-5">
+              <h3 className="text-xl mb-5">{moment(postObj.date).tz('Asia/Tokyo').format('MM月DD日(ddd)')}</h3>
+              {postObj.todoByUser.map((todoData: any) => (
+                <div className="bg-white rounded mb-4 border-2 border-gray-300">
+                  <div className="flex items-center p-3 border-b border-gray-300">
+                    <img src={todoData.user.picture} alt="プロフィール写真" className="rounded-full w-10 h-10" />
+                    <span className="ml-3 font-medium">{todoData.user.displayName}</span>
+                  </div>
+                  {todoData.todos.map((todo: ITodoNew) => (
+                    <div className="todo-component-wrapper p-3 border-b border-gray-300">
+                      <Todo todo={todo} />
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          ))}
+          {/* {posts.map(postObj => (
             <div key={postObj.post.id} className="list-individual border-b border-gray-200 pt-4 pb-3">
               <div className="flex flex-wrap items-center">
                 <img src={postObj.user.picture} className="rounded-full" alt={postObj.user.displayName} width="40" />
@@ -75,7 +123,7 @@ const SinglePostWrapper = () => {
                 </ul>
               </div>
             </div>
-          ))}
+          ))} */}
         </>
       )}
     </>
@@ -100,6 +148,20 @@ const defaultPostData = [
     user: {},
   },
 ]
+
+// interface IPostNew {
+//   date: string
+//   [key: string]: ITodoDataNew[]
+// }
+
+// interface ITodoDataNew {
+//   id?: string
+//   created: number
+//   createdDate: string
+//   createdDateObj: string
+//   todos: ITodo[]
+//   userId: string
+// }
 
 interface IPost {
   id: string
