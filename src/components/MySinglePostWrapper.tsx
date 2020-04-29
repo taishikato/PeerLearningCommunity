@@ -61,7 +61,7 @@ const MySinglePostWrapper = () => {
   }, [loginUser.id, setIsLoading, isLogin, db])
   return (
     <>
-      <div className="list-individual border-b border-gray-200">
+      <div className="list-individual">
         <div>
           {isLoading ? (
             <Skeleton count={3} />
@@ -104,7 +104,7 @@ const MySinglePostWrapper = () => {
                   </button>
                 </div>
               ) : (
-                <div>
+                <div className="bg-white rounded p-3 mb-4 border-2 border-gray-300">
                   <button
                     onClick={() => setIsLoginModalOpen(true)}
                     className="text-blue-500 hover:underline focus:outline-none">

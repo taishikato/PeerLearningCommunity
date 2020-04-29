@@ -56,7 +56,7 @@ const Navbar: React.FC<RouteComponentProps> = props => {
             <button
               className="ml-auto bg-green-400 rounded-full font-bold text-white py-2 px-6 focus:outline-none"
               onClick={() => setIsPostModalOpen(true)}>
-              今日のタスクを追加
+              タスクを追加
             </button>
           )}
           {isLogin && myTask.todos[0].id !== '' && (

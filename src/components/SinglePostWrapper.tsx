@@ -37,7 +37,10 @@ const SinglePostWrapper = () => {
       postData.push(yesterdayPosts.data)
       postData.push(twoaysAgo.data)
 
+      console.log()
+
       setPostsNew(postData)
+      setIsLoading(false)
     }
 
     getPosts2()
@@ -66,7 +69,7 @@ const SinglePostWrapper = () => {
       setPosts(postsData)
       setIsLoading(false)
     }
-    getPosts()
+    // getPosts()
   }, [loginUser.id, db, setPosts, setIsLoading])
   return (
     <>
