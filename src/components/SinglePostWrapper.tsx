@@ -19,6 +19,7 @@ const SinglePostWrapper = () => {
 
   React.useEffect(() => {
     const getPosts2 = async () => {
+      setIsLoading(true)
       const [todayPosts, yesterdayPosts, twoaysAgo] = await Promise.all([
         axios.post('https://asia-northeast1-peer-learning-app.cloudfunctions.net/getTodosApiFunc/getTodos', {
           dayBefore: 0,

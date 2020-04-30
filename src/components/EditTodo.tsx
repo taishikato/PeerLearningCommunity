@@ -32,7 +32,7 @@ const EditTodo: React.FC<IProps> = ({ closeModal, todo }) => {
   return (
     <div>
       <div className="bg-gray-200 py-3 border-b border-gray-300">
-        <p className="text-2xl w-10/12 m-auto">新規タスク</p>
+        <p className="text-2xl w-10/12 m-auto">編集</p>
       </div>
       <form onSubmit={handleSubmit} className="mt-6">
         <ul className="w-10/12 m-auto">

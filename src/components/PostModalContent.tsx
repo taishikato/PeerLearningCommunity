@@ -106,7 +106,7 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
             className="w-full border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
             id="inline-full-name"
             type="text"
-            placeholder="TOEICの勉強する"
+            placeholder="Reduxを組み込む"
             value={text}
             onChange={e => handleFormChange(e)}
           />
@@ -117,14 +117,12 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
             {isSubmitting && (
               <button
                 disabled
-                className="px-6 p-2 rounded-lg text-white bg-green-200 rounded-full font-bold cursor-not-allowed">
+                className="px-5 p-2 rounded text-white bg-green-200 rounded font-semibold cursor-not-allowed">
                 送信中…
               </button>
             )}
             {isAddButtonDisabled && !isSubmitting && (
-              <button
-                disabled
-                className="px-6 p-2 rounded-lg text-white bg-green-200 rounded-full font-bold cursor-not-allowed">
+              <button disabled className="px-5 p-2 rounded text-white bg-green-200 font-semibold cursor-not-allowed">
                 追加
               </button>
             )}
@@ -132,7 +130,7 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
               <input
                 value="追加"
                 type="submit"
-                className="px-6 p-2 rounded-lg text-white bg-green-400 hover:bg-green-500 rounded-full font-bold focus:outline-none"
+                className="px-5 p-2 rounded text-white bg-green-400 hover:bg-green-500 font-semibold focus:outline-none"
               />
             )}
           </div>

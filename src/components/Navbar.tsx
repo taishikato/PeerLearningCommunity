@@ -52,20 +52,20 @@ const Navbar: React.FC<RouteComponentProps> = props => {
           className={`ml-auto mt-4 md:p-0 md:mt-0 lg:mt-0 lg:p-0 lg:flex lg:items-center w-full lg:w-auto rounded z-50 ${
             isOpen ? 'block' : 'hidden'
           }`}>
-          {isLogin && myTask.todos[0].id === '' && (
+          {isLogin && (
             <button
-              className="ml-auto bg-green-400 rounded-full font-bold text-white py-2 px-5 focus:outline-none"
+              className="ml-auto bg-green-400 rounded font-bold text-white py-2 px-5 focus:outline-none"
               onClick={() => setIsPostModalOpen(true)}>
               タスクを追加
             </button>
           )}
-          {isLogin && myTask.todos[0].id !== '' && (
+          {/* {isLogin && myTask.todos[0].id !== '' && (
             <button
               className="ml-auto bg-green-400 rounded-full font-bold text-white py-2 px-5 focus:outline-none"
               onClick={() => setIsEditModalOpen(true)}>
               今日のタスクを編集
             </button>
-          )}
+          )} */}
           <div className="mt-4 ml-4 lg:mt-0">
             {isLogin ? (
               <div className="relative">
@@ -100,12 +100,12 @@ const Navbar: React.FC<RouteComponentProps> = props => {
               <>
                 <button
                   onClick={() => setIsSignupModalOpen(true)}
-                  className="bg-green-400 text-white py-2 px-5 font-semibold rounded-full focus:outline-none">
+                  className="bg-green-400 text-white py-2 px-5 font-semibold rounded focus:outline-none">
                   サインアップ
                 </button>
                 <button
                   onClick={() => setIsLoginModalOpen(true)}
-                  className="ml-3 py-2 px-5 font-semibold rounded-full text-gray-600 hover:text-gray-900 focus:outline-none">
+                  className="ml-3 py-2 px-5 font-semibold rounded text-gray-600 hover:text-gray-900 focus:outline-none">
                   ログイン
                 </button>
               </>
