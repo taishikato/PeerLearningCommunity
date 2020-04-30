@@ -102,22 +102,6 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
       </div>
       <form onSubmit={handleSubmit} className="mt-6">
         <ul className="w-10/12 m-auto">
-          {/* {newTasks.map(task => (
-            <li key={task.id} className="mb-2 single-form">
-              <input
-                className="w-full border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
-                id="inline-full-name"
-                type="text"
-                placeholder="TOEICの勉強する"
-                value={task.text}
-                onChange={e => handleFormChange(e)}
-                name={task.id}
-              />
-            </li>
-          ))} */}
-          {/* <li className="mt-3">
-            <AddFormButton addForm={handleAddForm} />
-          </li> */}
           <input
             className="w-full border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
             id="inline-full-name"
