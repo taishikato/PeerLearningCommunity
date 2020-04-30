@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react'
 import moment from 'moment-timezone'
 import { ITodoNew } from '../interfaces/ITodo'
 import { FirestoreContext } from './FirestoreContextProvider'
+import EditButton from './EditButton'
 
 const Todo: React.FC<IProps> = ({ todo }) => {
   const [todoState, setTodoState] = useState(todo)
@@ -15,7 +16,7 @@ const Todo: React.FC<IProps> = ({ todo }) => {
     setTodoState(copiedTodo)
   }
   return (
-    <div>
+    <div className="flex items-center justify-between">
       <label className="inline-flex items-center">
         <input
           type="checkbox"
@@ -25,6 +26,7 @@ const Todo: React.FC<IProps> = ({ todo }) => {
         />
         <span className="ml-3 text-lg">{todoState.text}</span>
       </label>
+      <EditButton todo={todoState} />
     </div>
   )
 }
