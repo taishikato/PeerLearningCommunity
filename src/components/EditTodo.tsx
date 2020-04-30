@@ -80,7 +80,7 @@ const EditTodo: React.FC<IProps> = ({ closeModal, todo }) => {
               )}
               {!isAddButtonDisabled && !isSubmitting && (
                 <input
-                  value="追加"
+                  value="更新"
                   type="submit"
                   className="px-5 p-2 rounded text-white bg-green-400 hover:bg-green-500 rounded font-semibold cursor-pointer focus:outline-none"
                 />
