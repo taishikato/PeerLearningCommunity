@@ -1,35 +1,18 @@
 import React, { useState, useContext } from 'react'
 import { useSelector } from 'react-redux'
 import moment from 'moment-timezone'
-// import AddFormButton from './AddFormButton'
 import getUnixTime from '../plugins/getUnixTime'
+import extractTag from '../plugins/extractTag'
 import { FirestoreContext } from './FirestoreContextProvider'
 import generateUuid from '../plugins/generateUuid'
-// import { setTask } from '../store/action'
 import IInitialState from '../interfaces/IInitialState'
-// import ITaskData from '../interfaces/ITaskData'
 
 const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
   const db = useContext(FirestoreContext)
-  // const dispatch = useDispatch()
   const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
   const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  // const [newTasks, setNewTasks] = useState<{ id: string; text: string; checked: boolean }[]>([
-  //   { id: generateUuid(), text: '', checked: false },
-  // ])
   const [text, setText] = useState('')
-  // const handleAddForm = (e: React.MouseEvent<HTMLButtonElement>) => {
-  //   e.preventDefault()
-  //   const copyTasks = [...newTasks]
-  //   const newObj = {
-  //     id: generateUuid(),
-  //     text: '',
-  //     checked: false,
-  //   }
-  //   copyTasks.push(newObj)
-  //   setNewTasks(copyTasks)
-  // }
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setText(value)
@@ -38,60 +21,26 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
     } else {
       setIsAddButtonDisabled(true)
     }
-    // const target = e.target
-    // const value = target.value
-    // const todoId: string = target.name
-    // const copyTasks = [...newTasks]
-    // copyTasks.some(task => {
-    //   if (task.id === todoId) {
-    //     task.text = target.value
-    //     return true
-    //   }
-    //   return false
-    // })
-    // let disableFlg = true
-    // if (value !== '') {
-    //   disableFlg = false
-    // } else {
-    //   copyTasks.forEach(task => {
-    //     if (task.text !== '') {
-    //       disableFlg = false
-    //       return true
-    //     }
-    //     return false
-    //   })
-    // }
-    // setIsAddButtonDisabled(disableFlg)
-    // setNewTasks(copyTasks)
   }
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
-    // const addPost: ITaskData = {
-    //   userId: loginUser.id,
-    //   todos: newTasks,
-    //   created: getUnixTime(),
-    //   createdDateObj: moment().tz('Asia/Tokyo').format(),
-    //   createdDate: moment().tz('Asia/Tokyo').format('YYYYMMDD'),
-    // }
-    // await db.collection('posts').add(addPost)
+    // Set tag
     const today = moment().tz('Asia/Tokyo').format('YYYYMMDD')
     const id = generateUuid()
-    await db.collection('todos').doc(id).set({
+    const todoObj: any = {
       checked: false,
       created: getUnixTime(),
       createdDate: today,
       id,
       text,
       userId: loginUser.id,
-    })
-    // const postByUserAndDate = await db
-    //   .collection('posts')
-    //   .where('createdDate', '==', today)
-    //   .where('userId', '==', loginUser.id)
-    //   .get()
-    // addPost.id = postByUserAndDate.docs[0].id
-    // dispatch(setTask(addPost))
+    }
+    const tag = extractTag(text)
+    if (tag !== null) {
+      todoObj.tag = tag.slice(1)
+    }
+    await db.collection('todos').doc(id).set(todoObj)
     setIsSubmitting(false)
     closeModal()
   }
