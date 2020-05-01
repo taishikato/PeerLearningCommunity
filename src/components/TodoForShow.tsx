@@ -1,7 +1,13 @@
 import React from 'react'
 import { ITodoNew } from '../interfaces/ITodo'
+import extractTag from '../plugins/extractTag'
+import { Link } from 'react-router-dom'
+import ReactHashtag from 'react-hashtag'
 
 const TodoForShow: React.FC<IProps> = ({ todo }) => {
+  let text = todo.text
+  const tag = extractTag(text)
+
   return (
     <div>
       <label className="inline-flex items-center">
@@ -11,7 +17,22 @@ const TodoForShow: React.FC<IProps> = ({ todo }) => {
           checked={todo.checked}
           disabled
         />
-        <span className="ml-3 text-lg">{todo.text}</span>
+        {tag !== null ? (
+          <span className="ml-3 text-lg">
+            <ReactHashtag
+              renderHashtag={(hashtagValue: string) => (
+                <Link
+                  to={`/project/${hashtagValue.slice(1)}`}
+                  className="bg-blue-200 p-1 ml-3 rounded text-blue-700 text-lg">
+                  {hashtagValue}
+                </Link>
+              )}>
+              {text}
+            </ReactHashtag>
+          </span>
+        ) : (
+          <span className="ml-3 text-lg">{text}</span>
+        )}
       </label>
     </div>
   )
