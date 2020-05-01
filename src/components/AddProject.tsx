@@ -1,14 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+import { FirestoreContext } from './FirestoreContextProvider'
 
 const AddProject: React.FC<IProps> = ({ closeModal }) => {
+  const db = useContext(FirestoreContext)
+  const projectRef = db.collection('projetcs')
   const [project, setProject] = useState<{ [key: string]: string }>({
     name: '',
     description: '',
     tag: '',
-    id: '',
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(true)
+  const [duplicateTag, setDuplicateTag] = useState(false)
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
     setIsAddButtonDisabled(true)
@@ -21,12 +24,19 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
       setIsAddButtonDisabled(false)
     }
   }
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
-    console.log(project)
+    setDuplicateTag(false)
+    const projectData = await projectRef.where('tag', '==', project.tag).get()
+    if (!projectData.empty) {
+      setDuplicateTag(true)
+      setIsSubmitting(false)
+      return
+    }
+    await projectRef.add(project)
     setIsSubmitting(false)
-    // closeModal()
+    closeModal()
   }
   return (
     <div>
@@ -73,6 +83,7 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
               onChange={e => handleFormChange(e)}
               placeholder="vrgram"
             />
+            {duplicateTag && <p className="text-sm text-red-500">このタグは既に使用されています</p>}
           </div>
         </div>
 
