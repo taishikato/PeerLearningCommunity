@@ -9,7 +9,6 @@ import PostModalContent from './PostModalContent'
 import Todo from './Todo'
 import SignupForm from './SignupForm'
 import LoginForm from './LoginForm'
-import EditMyTask from './EditMyTask'
 import IInitialState from '../interfaces/IInitialState'
 import ITaskData from '../interfaces/ITaskData'
 import { ITodoNew } from '../interfaces/ITodo'
@@ -169,7 +168,7 @@ const MySinglePostWrapper = () => {
         }}>
         <SignupForm closeModal={() => setIsSignupModalOpen(false)} />
       </Modal>
-      <Modal
+      {/* <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
         ariaHideApp={false}
@@ -193,7 +192,7 @@ const MySinglePostWrapper = () => {
           },
         }}>
         <EditMyTask task={task} />
-      </Modal>
+      </Modal> */}
       <Modal
         isOpen={isPostModalOpen}
         onRequestClose={() => setIsPostModalOpen(false)}
