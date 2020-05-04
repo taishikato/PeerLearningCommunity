@@ -9,7 +9,7 @@ import IInitialState from '../interfaces/IInitialState'
 import firebase from '../plugins/firebase'
 import 'firebase/auth'
 import { withRouter } from 'react-router'
-import AddProject from './AddProject'
+import ProjectAdd from './ProjectAdd'
 
 const Navbar: React.FC<RouteComponentProps> = props => {
   const isLogin = useSelector<IInitialState, IInitialState['isLogin']>(state => state.isLogin)
@@ -211,7 +211,7 @@ const Navbar: React.FC<RouteComponentProps> = props => {
             backgroundColor: 'white',
           },
         }}>
-        <AddProject closeModal={() => setIsAddProjectModalOpen(false)} />
+        <ProjectAdd closeModal={() => setIsAddProjectModalOpen(false)} />
       </Modal>
     </>
   )

@@ -1,49 +1,53 @@
 import React, { useState, useContext } from 'react'
+import { useSelector } from 'react-redux'
+import IInitialState from '../interfaces/IInitialState'
+import getUnixTime from '../plugins/getUnixTime'
 import { FirestoreContext } from './FirestoreContextProvider'
 
-const AddProject: React.FC<IProps> = ({ closeModal }) => {
-  const db = useContext(FirestoreContext)
-  const projectRef = db.collection('projetcs')
-  const [project, setProject] = useState<{ [key: string]: string }>({
-    name: '',
-    description: '',
-    tag: '',
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(true)
+const ProjectEdit: React.FC<IProps> = ({ project, closeModal }) => {
+  const [projectState, setProjectState] = useState(project)
   const [duplicateTag, setDuplicateTag] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(false)
+  const db = useContext(FirestoreContext)
+  const projectRef = db.collection('projects')
+  const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
+
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
-    setIsAddButtonDisabled(true)
+    setIsAddButtonDisabled(false)
     const name = e.target.name
     const value = e.target.value
-    const copiePproject = { ...project }
+    const copiePproject = { ...projectState }
     copiePproject[name] = value
-    setProject(copiePproject)
-    if (copiePproject.name !== '' && copiePproject.description !== '' && copiePproject.tag !== '') {
-      setIsAddButtonDisabled(false)
+    setProjectState(copiePproject)
+    if (copiePproject.name === '' || copiePproject.description === '' || copiePproject.tag === '') {
+      setIsAddButtonDisabled(true)
     }
   }
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
     setDuplicateTag(false)
     const projectData = await projectRef.where('tag', '==', project.tag).get()
-    if (!projectData.empty) {
+    if (!projectData.empty && projectData.docs[0].id !== projectState.id) {
       setDuplicateTag(true)
       setIsSubmitting(false)
       return
     }
-    await projectRef.add(project)
+    project.created = getUnixTime()
+    project.userId = loginUser.id
+    await projectRef.doc(project.id).update(project)
     setIsSubmitting(false)
     closeModal()
   }
   return (
     <div>
       <div className="bg-gray-200 py-3 border-b border-gray-300">
-        <p className="text-2xl w-10/12 m-auto">新規プロジェクト</p>
+        <p className="text-2xl w-10/12 m-auto">プロジェクト編集</p>
       </div>
-      <form onSubmit={handleSubmit} className="mt-6">
+      <form onSubmit={submit} className="mt-6">
         <div className="w-10/12 m-auto">
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
@@ -53,7 +57,7 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
               className="w-full border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
               type="text"
               placeholder="次世代Instagram"
-              value={project.name}
+              value={projectState.name}
               name="name"
               onChange={e => handleFormChange(e)}
             />
@@ -66,7 +70,7 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
               className="w-full border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
               type="text"
               name="description"
-              value={project.description}
+              value={projectState.description}
               onChange={e => handleFormChange(e)}
               placeholder="VRgram"
             />
@@ -79,7 +83,7 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
               className="w-full border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
               type="text"
               name="tag"
-              value={project.tag}
+              value={projectState.tag}
               onChange={e => handleFormChange(e)}
               placeholder="vrgram"
             />
@@ -119,8 +123,9 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
   )
 }
 
-export default AddProject
+export default ProjectEdit
 
 interface IProps {
+  project: any
   closeModal: () => void
 }
