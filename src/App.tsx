@@ -7,6 +7,7 @@ import Auth from './components/Auth'
 import Navbar from './components/Navbar'
 import Top from './pages/Top'
 import Settings from './pages/Settings'
+import Project from './pages/Project'
 
 const store = initializeStore()
 
@@ -21,6 +22,7 @@ const App = () => {
               <Switch>
                 <Route component={Top} exact path="/" />
                 <Route component={Settings} exact path="/settings" />
+                <Route component={Project} exact path="/project/:tag" />
               </Switch>
             </FirestoreContextProvider>
           </BrowserRouter>

@@ -3,24 +3,23 @@ import { useSelector } from 'react-redux'
 import Modal from 'react-modal'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import PostModalContent from './PostModalContent'
-import EditMyTask from './EditMyTask'
 import SignupForm from './SignupForm'
 import LoginForm from './LoginForm'
 import IInitialState from '../interfaces/IInitialState'
 import firebase from '../plugins/firebase'
 import 'firebase/auth'
 import { withRouter } from 'react-router'
+import ProjectAdd from './ProjectAdd'
 
 const Navbar: React.FC<RouteComponentProps> = props => {
   const isLogin = useSelector<IInitialState, IInitialState['isLogin']>(state => state.isLogin)
   const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
-  const myTask = useSelector<IInitialState, IInitialState['myTask']>(state => state.myTask)
   const [isOpen, setIsOpen] = useState(false)
   const [isOpenDropDown, setIsOpenDropDown] = React.useState(false)
   const [isPostModalOpen, setIsPostModalOpen] = useState(false)
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false)
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false)
   const handleDropDown = () => setIsOpenDropDown(!isOpenDropDown)
   const handleHumburger = () => setIsOpen(!isOpen)
   const logout = async () => {
@@ -54,7 +53,14 @@ const Navbar: React.FC<RouteComponentProps> = props => {
           }`}>
           {isLogin && (
             <button
-              className="ml-auto bg-green-400 rounded font-bold text-white py-2 px-5 focus:outline-none"
+              className="ml-auto rounded font-semibold py-2 px-5 focus:outline-none bg-gray-200"
+              onClick={() => setIsAddProjectModalOpen(true)}>
+              プロジェクトを追加
+            </button>
+          )}
+          {isLogin && (
+            <button
+              className="ml-2 bg-green-400 rounded font-semibold text-white py-2 px-5 focus:outline-none"
               onClick={() => setIsPostModalOpen(true)}>
               タスクを追加
             </button>
@@ -184,8 +190,8 @@ const Navbar: React.FC<RouteComponentProps> = props => {
         <LoginForm closeModal={() => setIsLoginModalOpen(false)} />
       </Modal>
       <Modal
-        isOpen={isEditModalOpen}
-        onRequestClose={() => setIsEditModalOpen(false)}
+        isOpen={isAddProjectModalOpen}
+        onRequestClose={() => setIsAddProjectModalOpen(false)}
         ariaHideApp={false}
         style={{
           overlay: {
@@ -193,20 +199,19 @@ const Navbar: React.FC<RouteComponentProps> = props => {
             backgroundColor: 'rgba(0, 0, 0, 0.7)',
           },
           content: {
+            padding: 0,
             width: '600px',
             maxWidth: '100%',
             position: 'absolute',
-            height: 'auto',
             top: '40%',
             left: '50%',
             bottom: 'none',
             transform: 'translateY(-50%)translateX(-50%)',
             border: 'none',
             backgroundColor: 'white',
-            padding: '0',
           },
         }}>
-        <EditMyTask task={myTask} />
+        <ProjectAdd closeModal={() => setIsAddProjectModalOpen(false)} />
       </Modal>
     </>
   )

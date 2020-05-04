@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { ITodoNew } from '../interfaces/ITodo'
 import { FirestoreContext } from './FirestoreContextProvider'
+import extractTag from '../plugins/extractTag'
 
 const EditTodo: React.FC<IProps> = ({ closeModal, todo }) => {
   const db = useContext(FirestoreContext)
@@ -18,7 +19,12 @@ const EditTodo: React.FC<IProps> = ({ closeModal, todo }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
-    await todoRef.update({ text })
+    const todoObj: { [key: string]: string } = { text, tag: '' }
+    // Set tag
+    const tag = extractTag(text)
+    if (tag !== null) todoObj.tag = tag.slice(1)
+    // Save
+    await todoRef.update(todoObj)
     setIsSubmitting(false)
     closeModal()
   }
@@ -49,21 +55,6 @@ const EditTodo: React.FC<IProps> = ({ closeModal, todo }) => {
         <div className="bg-gray-200 mt-6 py-3 border-t border-gray-300">
           <div className="w-10/12 m-auto flex items-center justify-end">
             <div>
-              {isDeleting ? (
-                <button
-                  disabled
-                  className="px-5 p-2 rounded rounded font-semibold bg-red-200 text-white cursor-not-allowed">
-                  削除中…
-                </button>
-              ) : (
-                <button
-                  onClick={deleteTodo}
-                  className="px-5 p-2 rounded rounded font-semibold bg-red-500 text-white hover:bg-red-600 focus:outline-none">
-                  削除
-                </button>
-              )}
-            </div>
-            <div className="ml-2">
               {isSubmitting && (
                 <button
                   disabled
@@ -84,6 +75,21 @@ const EditTodo: React.FC<IProps> = ({ closeModal, todo }) => {
                   type="submit"
                   className="px-5 p-2 rounded text-white bg-green-400 hover:bg-green-500 rounded font-semibold cursor-pointer focus:outline-none"
                 />
+              )}
+            </div>
+            <div className="ml-2">
+              {isDeleting ? (
+                <button
+                  disabled
+                  className="px-5 p-2 rounded rounded font-semibold bg-red-200 text-white cursor-not-allowed">
+                  削除中…
+                </button>
+              ) : (
+                <button
+                  onClick={deleteTodo}
+                  className="px-5 p-2 rounded rounded font-semibold bg-red-500 text-white hover:bg-red-600 focus:outline-none">
+                  削除
+                </button>
               )}
             </div>
           </div>

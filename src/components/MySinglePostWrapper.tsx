@@ -9,7 +9,6 @@ import PostModalContent from './PostModalContent'
 import Todo from './Todo'
 import SignupForm from './SignupForm'
 import LoginForm from './LoginForm'
-import EditMyTask from './EditMyTask'
 import IInitialState from '../interfaces/IInitialState'
 import ITaskData from '../interfaces/ITaskData'
 import { ITodoNew } from '../interfaces/ITodo'
@@ -54,6 +53,8 @@ const MySinglePostWrapper = () => {
       // postDataForState.id = todo.docs[0].id
       // dispatch(setTask(postDataForState as ITaskData))
       const todoData = todos.docs.map(doc => doc.data())
+
+      console.log(todoData)
       setTodosState(todoData as ITodoNew[])
       setIsLoading(false)
     }
@@ -168,31 +169,6 @@ const MySinglePostWrapper = () => {
           },
         }}>
         <SignupForm closeModal={() => setIsSignupModalOpen(false)} />
-      </Modal>
-      <Modal
-        isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
-        ariaHideApp={false}
-        style={{
-          overlay: {
-            zIndex: 100000,
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-          },
-          content: {
-            width: '600px',
-            maxWidth: '100%',
-            position: 'absolute',
-            height: 'auto',
-            top: '40%',
-            left: '50%',
-            bottom: 'none',
-            transform: 'translateY(-50%)translateX(-50%)',
-            border: 'none',
-            backgroundColor: 'white',
-            padding: '0',
-          },
-        }}>
-        <EditMyTask task={task} />
       </Modal>
       <Modal
         isOpen={isPostModalOpen}
