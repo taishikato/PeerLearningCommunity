@@ -25,7 +25,6 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
-    // Set tag
     const today = moment().tz('Asia/Tokyo').format('YYYYMMDD')
     const id = generateUuid()
     const todoObj: any = {
@@ -36,6 +35,7 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
       text,
       userId: loginUser.id,
     }
+    // Set tag
     const tag = extractTag(text)
     if (tag !== null) {
       todoObj.tag = tag.slice(1)
