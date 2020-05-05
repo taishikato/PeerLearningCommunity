@@ -10,6 +10,7 @@ import IInitialState from '../interfaces/IInitialState'
 const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
   const db = useContext(FirestoreContext)
   const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
+  const todos = useSelector<IInitialState, IInitialState['myTodos']>(state => state.myTodos)
   const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [text, setText] = useState('')

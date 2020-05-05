@@ -8,6 +8,9 @@ export const defaultTodo = {
   id: '',
   text: '',
   checked: false,
+  userId: '',
+  createdDate: '',
+  created: 0,
 }
 
 export interface ITodoNew {

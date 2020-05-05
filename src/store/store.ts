@@ -1,27 +1,34 @@
 import { createStore, combineReducers } from 'redux'
-import { LOGIN, LOGOUT, DONE_CHECKING, TASK } from './action'
+import { LOGIN, LOGOUT, DONE_CHECKING, ADD_TODOS, SET_TODOS } from './action'
 import IInitialState from '../interfaces/IInitialState'
-import { defaultTask } from '../interfaces/ITaskData'
+// import { defaultTask } from '../interfaces/ITaskData'
+import { defaultTodo } from '../interfaces/ITodo'
 import { defaultUser } from '../interfaces/ILoginUser'
 
 export const initialState: IInitialState = {
   loginUser: defaultUser,
   isLogin: false,
   isCheckingLogin: true,
-  myTask: defaultTask
+  myTodos: [defaultTodo],
 }
 
-const myTask = (state = {}, action: any) => {
+const myTodos = (state = [{}], action: any) => {
   switch (action.type) {
-    case TASK:
-      return {
-        id: action.id,
-        created: action.created,
-        createdDate: action.createdDate,
-        createdDateObj: action.createdDateObj,
-        todos: action.todos,
-        userId: action.userId
-      }
+    case SET_TODOS:
+      console.log('SET_TODOS')
+      return [...action.todos]
+    case ADD_TODOS:
+      return [
+        ...state,
+        {
+          id: action.id,
+          created: action.created,
+          createdDate: action.createdDate,
+          createdDateObj: action.createdDateObj,
+          todos: action.todos,
+          userId: action.userId,
+        },
+      ]
     default:
       return state
   }
@@ -35,10 +42,10 @@ const loginUser = (state = {}, action: any) => {
         picture: action.picture,
         userName: action.userName,
         displayName: action.displayName,
-        email: action.email
+        email: action.email,
       }
-      case LOGOUT:
-        return {}
+    case LOGOUT:
+      return {}
     default:
       return state
   }
@@ -68,12 +75,9 @@ const reducer = combineReducers({
   loginUser,
   isLogin,
   isCheckingLogin,
-  myTask
+  myTodos,
 })
 
 export const initializeStore = (preloadedState = initialState) => {
-  return createStore(
-    reducer,
-    preloadedState
-  )
+  return createStore(reducer, preloadedState)
 }
