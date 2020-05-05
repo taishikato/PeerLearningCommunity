@@ -1,19 +1,36 @@
 import ILoginUser from '../interfaces/ILoginUser'
-import ITaskData from '../interfaces/ITaskData'
+import { ITodoNew } from '../interfaces/ITodo'
 
 export const LOGIN = 'login'
 export const LOGOUT = 'logout'
 export const DONE_CHECKING = 'doneChecking'
-export const TASK = 'task'
+export const ADD_TODOS = 'add_todos'
+export const SET_TODOS = 'set_todos'
+export const REMOVE_TODOS = 'remove_todos'
+export const EDIT_TODOS = 'edit_todos'
 
-export const setTask = (task: ITaskData) => ({
-  type: TASK,
-  id: task.id,
-  created: task.created,
-  createdDate: task.createdDate,
-  createdDateObj: task.createdDateObj,
-  todos: task.todos,
-  userId: task.userId
+export const setMyTodos = (todos: ITodoNew[]) => ({
+  type: SET_TODOS,
+  todos,
+})
+
+export const addMyTodos = (todo: ITodoNew) => ({
+  type: ADD_TODOS,
+  id: todo.id,
+  created: todo.created,
+  createdDate: todo.createdDate,
+  userId: todo.userId,
+  text: todo.text,
+})
+
+export const removeMyTodos = (todoId: string) => ({
+  type: REMOVE_TODOS,
+  id: todoId,
+})
+
+export const editMyTodo = (todo: { [key: string]: string }) => ({
+  type: EDIT_TODOS,
+  todo,
 })
 
 export const loginUser = (user: ILoginUser) => ({
@@ -22,13 +39,13 @@ export const loginUser = (user: ILoginUser) => ({
   picture: user.picture,
   userName: user.userName,
   displayName: user.displayName,
-  email: user.email
+  email: user.email,
 })
 
 export const logoutUser = () => ({
-  type: LOGOUT
+  type: LOGOUT,
 })
 
 export const checkingLoginDone = () => ({
-  type: DONE_CHECKING
+  type: DONE_CHECKING,
 })

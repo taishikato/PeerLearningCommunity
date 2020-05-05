@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import Modal from 'react-modal'
 import { Link, RouteComponentProps } from 'react-router-dom'
-import PostModalContent from './PostModalContent'
+import TodoAdd from './TodoAdd'
 import SignupForm from './SignupForm'
 import LoginForm from './LoginForm'
 import IInitialState from '../interfaces/IInitialState'
@@ -142,7 +142,7 @@ const Navbar: React.FC<RouteComponentProps> = props => {
             backgroundColor: 'white',
           },
         }}>
-        <PostModalContent closeModal={() => setIsPostModalOpen(false)} />
+        <TodoAdd closeModal={() => setIsPostModalOpen(false)} />
       </Modal>
       <Modal
         isOpen={isSignupModalOpen}

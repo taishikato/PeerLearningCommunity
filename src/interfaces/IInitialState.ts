@@ -1,9 +1,9 @@
 import ILoginUser from './ILoginUser'
-import ITaskData from './ITaskData'
+import { ITodoNew } from './ITodo'
 
 export default interface IInitialState {
   loginUser: ILoginUser
   isLogin: boolean
-  isCheckingLogin: boolean,
-  myTask: ITaskData
+  isCheckingLogin: boolean
+  myTodos: ITodoNew[]
 }
