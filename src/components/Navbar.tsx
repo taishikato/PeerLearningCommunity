@@ -10,6 +10,7 @@ import firebase from '../plugins/firebase'
 import 'firebase/auth'
 import { withRouter } from 'react-router'
 import ProjectAdd from './ProjectAdd'
+import logo from '../assets/images/logo.png'
 
 const Navbar: React.FC<RouteComponentProps> = props => {
   const isLogin = useSelector<IInitialState, IInitialState['isLogin']>(state => state.isLogin)
@@ -34,7 +35,7 @@ const Navbar: React.FC<RouteComponentProps> = props => {
       <nav className="flex flex-wrap items-center px-6 py-4 text-gray-800 bg-white border-b-2 border-gray-300">
         <div className="mr-6">
           <Link to="/" className="font-extrabold text-green-400">
-            Peer Community
+            <img src={logo} alt="ロゴ" width="100px" />
           </Link>
         </div>
         <div className="ml-auto block lg:hidden">
