@@ -1,10 +1,13 @@
 import React, { useState, useContext } from 'react'
 import { ITodoNew } from '../interfaces/ITodo'
+import { useDispatch } from 'react-redux'
 import { FirestoreContext } from './FirestoreContextProvider'
 import extractTag from '../plugins/extractTag'
+import { editMyTodo, removeMyTodos } from '../store/action'
 
 const EditTodo: React.FC<IProps> = ({ closeModal, todo }) => {
   const db = useContext(FirestoreContext)
+  const dispatch = useDispatch()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(false)
@@ -25,6 +28,8 @@ const EditTodo: React.FC<IProps> = ({ closeModal, todo }) => {
     if (tag !== null) todoObj.tag = tag.slice(1)
     // Save
     await todoRef.update(todoObj)
+    todoObj.id = todo.id
+    dispatch(editMyTodo(todoObj))
     setIsSubmitting(false)
     closeModal()
   }
@@ -32,6 +37,7 @@ const EditTodo: React.FC<IProps> = ({ closeModal, todo }) => {
     e.preventDefault()
     setIsDeleting(true)
     await todoRef.delete()
+    dispatch(removeMyTodos(todo.id))
     setIsDeleting(false)
     closeModal()
   }

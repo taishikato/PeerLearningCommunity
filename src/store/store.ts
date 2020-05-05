@@ -1,5 +1,5 @@
 import { createStore, combineReducers } from 'redux'
-import { LOGIN, LOGOUT, DONE_CHECKING, ADD_TODOS, SET_TODOS } from './action'
+import { LOGIN, LOGOUT, DONE_CHECKING, ADD_TODOS, SET_TODOS, REMOVE_TODOS, EDIT_TODOS } from './action'
 import IInitialState from '../interfaces/IInitialState'
 // import { defaultTask } from '../interfaces/ITaskData'
 import { defaultTodo } from '../interfaces/ITodo'
@@ -12,16 +12,16 @@ export const initialState: IInitialState = {
   myTodos: [defaultTodo],
 }
 
-const myTodos = (state = [{}], action: any) => {
+const myTodos = (state = [defaultTodo], action: any) => {
   switch (action.type) {
     case SET_TODOS:
-      console.log('SET_TODOS')
       return [...action.todos]
     case ADD_TODOS:
       return [
         ...state,
         {
           id: action.id,
+          text: action.text,
           created: action.created,
           createdDate: action.createdDate,
           createdDateObj: action.createdDateObj,
@@ -29,6 +29,19 @@ const myTodos = (state = [{}], action: any) => {
           userId: action.userId,
         },
       ]
+    case REMOVE_TODOS:
+      return state.filter(todo => {
+        return todo.id !== action.id
+      })
+    case EDIT_TODOS:
+      const newState = [...state]
+      return newState.map(todo => {
+        if (todo.id !== action.todo.id) return todo
+        return {
+          ...todo,
+          ...action.todo,
+        }
+      })
     default:
       return state
   }

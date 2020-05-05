@@ -30,6 +30,7 @@ const MySinglePostWrapper = () => {
     const getTodo = async () => {
       setIsLoading(true)
       if (todosStore[0] !== undefined && todosStore[0].id !== '') {
+        setTodosState(todosStore as ITodoNew[])
         setIsLoading(false)
         return
       }
@@ -56,21 +57,10 @@ const MySinglePostWrapper = () => {
               {todosState[0] !== undefined ? (
                 <>
                   <ul className="bg-white rounded mb-4 border-2 border-gray-300">
-                    {todosStore.map(todo => (
+                    {todosState.map(todo => (
                       <div key={todo.id} className="todo-component-wrapper p-3 border-b border-gray-300">
                         <Todo todo={todo} />
                       </div>
-                      // <li className="mt-1" key={todo.id}>
-                      //   <label className="inline-flex items-center">
-                      //     <input
-                      //       type="checkbox"
-                      //       className="form-checkbox h-6 w-6 text-green-500"
-                      //       onChange={e => handleChangeTodoStatus(e, todo.id)}
-                      //       checked={todo.checked}
-                      //     />
-                      //     <span className="ml-3 text-lg">{todo.text}</span>
-                      //   </label>
-                      // </li>
                     ))}
                   </ul>
                 </>

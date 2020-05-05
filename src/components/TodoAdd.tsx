@@ -1,16 +1,17 @@
 import React, { useState, useContext } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import moment from 'moment-timezone'
 import getUnixTime from '../plugins/getUnixTime'
 import extractTag from '../plugins/extractTag'
 import { FirestoreContext } from './FirestoreContextProvider'
+import { addMyTodos } from '../store/action'
 import generateUuid from '../plugins/generateUuid'
 import IInitialState from '../interfaces/IInitialState'
 
 const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
   const db = useContext(FirestoreContext)
+  const dispatch = useDispatch()
   const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
-  const todos = useSelector<IInitialState, IInitialState['myTodos']>(state => state.myTodos)
   const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [text, setText] = useState('')
@@ -42,6 +43,7 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
       todoObj.tag = tag.slice(1)
     }
     await db.collection('todos').doc(id).set(todoObj)
+    dispatch(addMyTodos(todoObj))
     setIsSubmitting(false)
     closeModal()
   }

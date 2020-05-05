@@ -6,6 +6,8 @@ export const LOGOUT = 'logout'
 export const DONE_CHECKING = 'doneChecking'
 export const ADD_TODOS = 'add_todos'
 export const SET_TODOS = 'set_todos'
+export const REMOVE_TODOS = 'remove_todos'
+export const EDIT_TODOS = 'edit_todos'
 
 export const setMyTodos = (todos: ITodoNew[]) => ({
   type: SET_TODOS,
@@ -19,6 +21,16 @@ export const addMyTodos = (todo: ITodoNew) => ({
   createdDate: todo.createdDate,
   userId: todo.userId,
   text: todo.text,
+})
+
+export const removeMyTodos = (todoId: string) => ({
+  type: REMOVE_TODOS,
+  id: todoId,
+})
+
+export const editMyTodo = (todo: { [key: string]: string }) => ({
+  type: EDIT_TODOS,
+  todo,
 })
 
 export const loginUser = (user: ILoginUser) => ({
