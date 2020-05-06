@@ -59,64 +59,68 @@ const LoginForm: React.FC<IProps> = ({ closeModal }) => {
   return (
     <>
       <ToastContainer autoClose={4000} />
-      <div className="modal-content py-4 text-left px-6">
-        <div className="flex justify-between items-center pb-3">
-          <p className="text-2xl font-bold">サインアップ</p>
+      <div>
+        <div className="bg-gray-200 py-3 border-b border-gray-300">
+          <p className="text-2xl w-10/12 m-auto">新規登録</p>
         </div>
-        <form onSubmit={onSubmit} className="bg-white rounded mb-4">
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-              ユーザーネーム
-            </label>
-            <input
-              className="appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-0"
-              id="username"
-              type="text"
-              placeholder=""
-              onChange={e => handleChange(e, 'username')}
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-              メールアドレス
-            </label>
-            <input
-              className="appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-0"
-              id="email"
-              type="email"
-              placeholder=""
-              onChange={e => handleChange(e, 'email')}
-            />
-            {errCode === DUPLICATED_EMAIL && (
-              <p className="text-red-500 text-xs italic">このメールアドレスは既に使用されています</p>
-            )}
-          </div>
-          <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-              パスワード
-            </label>
-            <input
-              className="appearance-none border-2 border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-              id="password"
-              type="password"
-              onChange={e => handleChange(e, 'password')}
-            />
-            {errCode === WEAK_PW && (
-              <p className="text-red-500 text-xs italic">6文字以上のパスワードを入力してください</p>
-            )}
-          </div>
-          <div className="flex items-end justify-between">
-            {isSubmitting ? (
-              <button className="bg-blue-200 text-white font-bold py-2 px-4 rounded-full cursor-not-allowed focus:outline-none">
-                送信中…
-              </button>
-            ) : (
+        <form onSubmit={onSubmit} className="mt-6">
+          <div className="w-10/12 m-auto">
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+                ユーザーネーム
+              </label>
               <input
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline"
-                type="submit"
-                value="サインアップ"
+                className="appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-0"
+                id="username"
+                type="text"
+                placeholder=""
+                onChange={e => handleChange(e, 'username')}
               />
-            )}
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+                メールアドレス
+              </label>
+              <input
+                className="appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-0"
+                id="email"
+                type="email"
+                placeholder=""
+                onChange={e => handleChange(e, 'email')}
+              />
+              {errCode === DUPLICATED_EMAIL && (
+                <p className="text-red-500 text-xs italic">このメールアドレスは既に使用されています</p>
+              )}
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                パスワード
+              </label>
+              <input
+                className="appearance-none border-2 border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                id="password"
+                type="password"
+                onChange={e => handleChange(e, 'password')}
+              />
+              {errCode === WEAK_PW && (
+                <p className="text-red-500 text-xs italic">6文字以上のパスワードを入力してください</p>
+              )}
+            </div>
+          </div>
+          <div className="bg-gray-200 mt-6 py-3 border-t border-gray-300">
+            <div className="w-10/12 m-auto flex items-center justify-end">
+              {isSubmitting ? (
+                <button className="bg-green-200 text-white font-bold py-2 px-4 rounded cursor-not-allowed focus:outline-none">
+                  送信中…
+                </button>
+              ) : (
+                <input
+                  className="text-white font-bold py-2 px-4 rounded bg-green-400 hover:bg-green-500 focus:outline-none focus:shadow-outline"
+                  type="submit"
+                  value="サインアップ"
+                />
+              )}
+            </div>
           </div>
         </form>
       </div>

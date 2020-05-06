@@ -35,7 +35,7 @@ const Navbar: React.FC<RouteComponentProps> = props => {
       <nav className="flex flex-wrap items-center px-6 py-4 text-gray-800 bg-white border-b-2 border-gray-300">
         <div className="mr-6">
           <Link to="/" className="font-extrabold text-green-400">
-            <img src={logo} alt="ロゴ" width="100px" />
+            <img src={logo} alt="ロゴ" width="130px" />
           </Link>
         </div>
         <div className="ml-auto block lg:hidden">
@@ -154,12 +154,13 @@ const Navbar: React.FC<RouteComponentProps> = props => {
             backgroundColor: 'rgba(0, 0, 0, 0.7)',
           },
           content: {
+            padding: 0,
             width: '600px',
             maxWidth: '100%',
-            height: '450px',
             position: 'absolute',
             top: '40%',
             left: '50%',
+            bottom: 'none',
             transform: 'translateY(-50%)translateX(-50%)',
             border: 'none',
             backgroundColor: 'white',
