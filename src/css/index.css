@@ -19,3 +19,7 @@ html, body, div#app, div#root {
 .todo-component-wrapper:last-child {
     border-bottom: 0;
 }
+
+.twitter-bg {
+    background-color: #1da1f2;
+}
