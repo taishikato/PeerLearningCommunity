@@ -11,6 +11,8 @@ import { ITodoNew } from '../interfaces/ITodo'
 
 moment.locale('ja')
 
+const url = 'https://peer-learning-community.netlify.app/'
+
 const SinglePostWrapper = () => {
   const [isLoading, setIsLoading] = useState(true)
   const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
@@ -19,12 +21,9 @@ const SinglePostWrapper = () => {
 
   const tweet = (e: MouseEvent, todos: ITodoNew[]) => {
     e.preventDefault()
-    const tweetText = todos.map(todo => todo.text).join('')
-    window.open(
-      `https://twitter.com/intent/tweet?url=https://peer-learning-community.netlify.app/&text=${encodeURIComponent(
-        tweetText,
-      )}`,
-    )
+    let tweetText = todos.map(todo => `✅${todo.text}`).join('\n')
+    tweetText += `\n${url}`
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`)
   }
 
   React.useEffect(() => {
@@ -74,7 +73,7 @@ const SinglePostWrapper = () => {
                       {todoData.user.userName === loginUser.userName && (
                         <button
                           onClick={e => tweet(e, todoData.todos)}
-                          className="text-white text-sm twitter-bg p-1 rounded focus:outline-none">
+                          className="text-white text-xs font-medium twitter-bg p-1 rounded focus:outline-none">
                           Tweet
                         </button>
                       )}
