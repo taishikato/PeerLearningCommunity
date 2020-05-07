@@ -11,6 +11,7 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
   const [project, setProject] = useState<{ [key: string]: string | number }>({
     name: '',
     description: '',
+    url: '',
     tag: '',
     created: 0,
     userId: '',
@@ -77,6 +78,19 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
               value={project.description}
               onChange={e => handleFormChange(e)}
               placeholder="VRgram"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+              URL
+            </label>
+            <input
+              className="w-full border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
+              type="url"
+              name="url"
+              value={project.url}
+              onChange={e => handleFormChange(e)}
+              placeholder="https://vrgram.com/"
             />
           </div>
           <div className="mb-4">
