@@ -6,6 +6,7 @@ import { FirestoreContext } from './FirestoreContextProvider'
 
 const ProjectEdit: React.FC<IProps> = ({ project, closeModal }) => {
   const [projectState, setProjectState] = useState(project)
+  if(projectState.url === undefined) projectState.url = ''
   const [duplicateTag, setDuplicateTag] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(false)
@@ -36,9 +37,8 @@ const ProjectEdit: React.FC<IProps> = ({ project, closeModal }) => {
       setIsSubmitting(false)
       return
     }
-    project.created = getUnixTime()
-    project.userId = loginUser.id
-    await projectRef.doc(project.id).update(project)
+    project.updated = getUnixTime()
+    await projectRef.doc(project.id).update(projectState)
     setIsSubmitting(false)
     closeModal()
   }
@@ -73,6 +73,19 @@ const ProjectEdit: React.FC<IProps> = ({ project, closeModal }) => {
               value={projectState.description}
               onChange={e => handleFormChange(e)}
               placeholder="VRgram"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+              URL
+            </label>
+            <input
+              className="w-full border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
+              type="url"
+              name="url"
+              value={projectState.url}
+              onChange={e => handleFormChange(e)}
+              placeholder="https://vrgram.com/"
             />
           </div>
           <div className="mb-4">

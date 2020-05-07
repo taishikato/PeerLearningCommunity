@@ -15,6 +15,7 @@ const Project = () => {
   const [projectState, setProjectState] = useState<IProject>({
     name: '',
     description: '',
+    url: '',
     tag: '',
     created: 0,
     userId: '',
@@ -35,11 +36,11 @@ const Project = () => {
       setMaker(user)
     }
     getProject()
-  }, [projectState, db, tag])
+  }, [setProjectState, db, tag, setMaker])
   return (
     <>
-      <div className="flex flex-wrap w-9/12 mt-5 m-auto">
-        <div className="w-8/12">
+      <div className="flex flex-wrap w-11/12 md:w-9/12 lg:w-9/12 mt-5 m-auto">
+        <div className="mb-3 w-full md:w-8/12 lg:w-8/12">
           <div>
             <span className="text-xl font-semibold">{projectState.name}</span>
             {projectState.userId === loginUser.id && (
@@ -50,9 +51,14 @@ const Project = () => {
               </button>
             )}
           </div>
+          {projectState.url !== '' && projectState.url !== undefined &&
+            <div>
+              <a href={projectState.url} target="_blank" className="text-blue-500" rel="noopener noreferrer">{projectState.url}</a>
+            </div>
+          }
           <div>{projectState.description}</div>
         </div>
-        <div className="w-4/12">
+        <div className="w-full md:w-4/12 lg:w-4/12">
           <div className="p-4 border-2 border-gray-300 rounded">
             <div className="text-sm font-semibold mb-3">作成者</div>
             <div className="flex items-center">
