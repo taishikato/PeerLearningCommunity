@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react'
 import { useSelector } from 'react-redux'
 import IInitialState from '../interfaces/IInitialState'
 import getUnixTime from '../plugins/getUnixTime'
+import generateUuid from '../plugins/generateUuid'
 import { FirestoreContext } from './FirestoreContextProvider'
 import uploadImage from '@taishikato/firebase-storage-uploader'
 import beforeUpload from '../plugins/beforeUpload'
@@ -54,13 +55,15 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
       setIsSubmitting(false)
       return
     }
+    const id = generateUuid()
+    project.id = id
     if (imageUrl !== '') {
       await uploadImage(`/projects/${project.id}.png`, imageUrl, firebase)
       project.hasImage = true
     }
     project.created = getUnixTime()
     project.userId = loginUser.id
-    await projectRef.add(project)
+    await projectRef.doc(id).set(project)
     setIsSubmitting(false)
     closeModal()
   }
