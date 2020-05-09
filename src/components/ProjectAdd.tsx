@@ -4,31 +4,15 @@ import IInitialState from '../interfaces/IInitialState'
 import getUnixTime from '../plugins/getUnixTime'
 import { FirestoreContext } from './FirestoreContextProvider'
 import uploadImage from '@taishikato/firebase-storage-uploader'
+import beforeUpload from '../plugins/beforeUpload'
+import getBase64 from '../plugins/getBase64'
+import UploadButton from './UploadButton'
 import firebase from '../plugins/firebase'
 import 'firebase/storage'
 import { Upload } from 'antd'
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import 'antd/lib/upload/style/index.css'
 
 type TImageUrl = string | null
-
-const getBase64 = (img: File, callback: (imageUrl: TImageUrl) => void) => {
-  const reader = new FileReader()
-  reader.addEventListener('load', () => callback(reader.result as TImageUrl))
-  reader.readAsDataURL(img)
-}
-
-const beforeUpload = (file: File) => {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-  if (!isJpgOrPng) {
-    console.error('You can only upload JPG/PNG file!')
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2
-  if (!isLt2M) {
-    console.error('Image must smaller than 2MB!')
-  }
-  return isJpgOrPng && isLt2M
-}
 
 const AddProject: React.FC<IProps> = ({ closeModal }) => {
   const [imageUrl, setImageUrl] = useState('')
@@ -71,7 +55,7 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
       return
     }
     if (imageUrl !== '') {
-      await uploadImage(`/projects/${project.tag}.png`, imageUrl, firebase)
+      await uploadImage(`/projects/${project.id}.png`, imageUrl, firebase)
       project.hasImage = true
     }
     project.created = getUnixTime()
@@ -92,12 +76,6 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
       })
     }
   }
-  const uploadButton = (
-    <div>
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div className="ant-upload-text">Upload</div>
-    </div>
-  )
   return (
     <div>
       <div className="bg-gray-200 py-3 border-b border-gray-300">
@@ -156,7 +134,11 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
               action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
               beforeUpload={beforeUpload}
               onChange={handleImageChange}>
-              {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+              {imageUrl ? (
+                <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
+              ) : (
+                <UploadButton loading={loading} />
+              )}
             </Upload>
           </div>
           <div className="mb-4">

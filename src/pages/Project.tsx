@@ -35,7 +35,7 @@ const Project = () => {
         const imageUrl = await firebase
           .storage()
           .ref()
-          .child(`/projects/thumbs/${project.tag}_200x200.png`)
+          .child(`/projects/thumbs/${project.id}_200x200.png`)
           .getDownloadURL()
         project.image = imageUrl
       }
@@ -95,7 +95,7 @@ const Project = () => {
             width: '600px',
             maxWidth: '100%',
             position: 'absolute',
-            top: '40%',
+            top: '50%',
             left: '50%',
             bottom: 'none',
             transform: 'translateY(-50%)translateX(-50%)',
