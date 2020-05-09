@@ -15,12 +15,16 @@ const RecentProjects = () => {
         projects.docs.map(async doc => {
           const project = doc.data()
           if (project.hasImage) {
-            const imageUrl = await firebase
-              .storage()
-              .ref()
-              .child(`/projects/thumbs/${project.id}_100x100.png`)
-              .getDownloadURL()
-            project.image = imageUrl
+            try {
+              const imageUrl = await firebase
+                .storage()
+                .ref()
+                .child(`/projects/thumbs/${project.id}_100x100.png`)
+                .getDownloadURL()
+              project.image = imageUrl
+            } catch (err) {
+              console.error(err.message)
+            }
           }
           return project
         }),
