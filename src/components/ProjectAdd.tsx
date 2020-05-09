@@ -3,16 +3,29 @@ import { useSelector } from 'react-redux'
 import IInitialState from '../interfaces/IInitialState'
 import getUnixTime from '../plugins/getUnixTime'
 import { FirestoreContext } from './FirestoreContextProvider'
+import uploadImage from '@taishikato/firebase-storage-uploader'
+import beforeUpload from '../plugins/beforeUpload'
+import getBase64 from '../plugins/getBase64'
+import UploadButton from './UploadButton'
+import firebase from '../plugins/firebase'
+import 'firebase/storage'
+import { Upload } from 'antd'
+import 'antd/lib/upload/style/index.css'
+
+type TImageUrl = string | null
 
 const AddProject: React.FC<IProps> = ({ closeModal }) => {
+  const [imageUrl, setImageUrl] = useState('')
+  const [loading, setLoading] = useState(false)
   const db = useContext(FirestoreContext)
   const projectRef = db.collection('projects')
   const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
-  const [project, setProject] = useState<{ [key: string]: string | number }>({
+  const [project, setProject] = useState<{ [key: string]: string | number | boolean }>({
     name: '',
     description: '',
     url: '',
     tag: '',
+    hasImage: false,
     created: 0,
     userId: '',
   })
@@ -41,11 +54,27 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
       setIsSubmitting(false)
       return
     }
+    if (imageUrl !== '') {
+      await uploadImage(`/projects/${project.id}.png`, imageUrl, firebase)
+      project.hasImage = true
+    }
     project.created = getUnixTime()
     project.userId = loginUser.id
     await projectRef.add(project)
     setIsSubmitting(false)
     closeModal()
+  }
+  const handleImageChange = (info: any) => {
+    if (info.file.status === 'uploading') {
+      setLoading(true)
+      return
+    }
+    if (info.file.status === 'done') {
+      getBase64(info.file.originFileObj, async (imageUrlVal: TImageUrl) => {
+        setImageUrl(imageUrlVal as string)
+        setLoading(false)
+      })
+    }
   }
   return (
     <div>
@@ -62,7 +91,7 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
               className="w-full border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
               type="text"
               placeholder="次世代Instagram"
-              value={project.name}
+              value={project.name as string}
               name="name"
               onChange={e => handleFormChange(e)}
             />
@@ -75,7 +104,7 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
               className="w-full border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
               type="text"
               name="description"
-              value={project.description}
+              value={project.description as string}
               onChange={e => handleFormChange(e)}
               placeholder="VRgram"
             />
@@ -88,10 +117,29 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
               className="w-full border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
               type="url"
               name="url"
-              value={project.url}
+              value={project.url as string}
               onChange={e => handleFormChange(e)}
               placeholder="https://vrgram.com/"
             />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+              画像
+            </label>
+            <Upload
+              name="avatar"
+              listType="picture-card"
+              className="avatar-uploader"
+              showUploadList={false}
+              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              beforeUpload={beforeUpload}
+              onChange={handleImageChange}>
+              {imageUrl ? (
+                <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
+              ) : (
+                <UploadButton loading={loading} />
+              )}
+            </Upload>
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
@@ -101,7 +149,7 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
               className="w-full border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
               type="text"
               name="tag"
-              value={project.tag}
+              value={project.tag as string}
               onChange={e => handleFormChange(e)}
               placeholder="vrgram"
             />

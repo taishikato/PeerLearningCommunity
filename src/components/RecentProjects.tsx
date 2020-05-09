@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { FirestoreContext } from './FirestoreContextProvider'
 import IProject from '../interfaces/IProject'
+import firebase from '../plugins/firebase'
+import 'firebase/storage'
 
 const RecentProjects = () => {
   const db = useContext(FirestoreContext)
@@ -9,7 +11,21 @@ const RecentProjects = () => {
   useEffect(() => {
     const getProjects = async () => {
       const projects = await db.collection('projects').orderBy('created', 'desc').get()
-      setProjects(projects.docs.map(doc => doc.data()) as IProject[])
+      const projectsData = await Promise.all(
+        projects.docs.map(async doc => {
+          const project = doc.data()
+          if (project.hasImage) {
+            const imageUrl = await firebase
+              .storage()
+              .ref()
+              .child(`/projects/thumbs/${project.id}_100x100.png`)
+              .getDownloadURL()
+            project.image = imageUrl
+          }
+          return project
+        }),
+      )
+      setProjects(projectsData as IProject[])
     }
     getProjects()
   }, [db])
@@ -18,7 +34,8 @@ const RecentProjects = () => {
       <ul>
         {projects.map(project => (
           <li className="p-3 mb-2 rounded bg-green-200">
-            <Link to={`/project/${project.tag}`} className="block font-semibold">
+            <Link to={`/project/${project.tag}`} className="flex items-center font-semibold">
+              {project.hasImage && <img src={project.image} className="mr-3 w-8 h-8 rounded-full" alt="" />}
               {project.name}
             </Link>
           </li>

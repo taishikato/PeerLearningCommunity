@@ -1,18 +1,27 @@
 import React, { useState, useContext } from 'react'
-import { useSelector } from 'react-redux'
-import IInitialState from '../interfaces/IInitialState'
 import getUnixTime from '../plugins/getUnixTime'
 import { FirestoreContext } from './FirestoreContextProvider'
+import uploadImage from '@taishikato/firebase-storage-uploader'
+import beforeUpload from '../plugins/beforeUpload'
+import getBase64 from '../plugins/getBase64'
+import UploadButton from './UploadButton'
+import firebase from '../plugins/firebase'
+import 'firebase/storage'
+import { Upload } from 'antd'
+import 'antd/lib/upload/style/index.css'
+
+type TImageUrl = string | null
 
 const ProjectEdit: React.FC<IProps> = ({ project, closeModal }) => {
+  const [loading, setLoading] = useState(false)
+  const [imageUrl, setImageUrl] = useState('')
   const [projectState, setProjectState] = useState(project)
-  if(projectState.url === undefined) projectState.url = ''
+  if (projectState.url === undefined) projectState.url = ''
   const [duplicateTag, setDuplicateTag] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(false)
   const db = useContext(FirestoreContext)
   const projectRef = db.collection('projects')
-  const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
@@ -38,9 +47,25 @@ const ProjectEdit: React.FC<IProps> = ({ project, closeModal }) => {
       return
     }
     project.updated = getUnixTime()
+    if (imageUrl !== '') {
+      await uploadImage(`/projects/${project.id}.png`, imageUrl, firebase)
+      projectState.hasImage = true
+    }
     await projectRef.doc(project.id).update(projectState)
     setIsSubmitting(false)
     closeModal()
+  }
+  const handleImageChange = (info: any) => {
+    if (info.file.status === 'uploading') {
+      setLoading(true)
+      return
+    }
+    if (info.file.status === 'done') {
+      getBase64(info.file.originFileObj, async (imageUrlVal: TImageUrl) => {
+        setImageUrl(imageUrlVal as string)
+        setLoading(false)
+      })
+    }
   }
   return (
     <div>
@@ -87,6 +112,25 @@ const ProjectEdit: React.FC<IProps> = ({ project, closeModal }) => {
               onChange={e => handleFormChange(e)}
               placeholder="https://vrgram.com/"
             />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+              画像
+            </label>
+            <Upload
+              name="avatar"
+              listType="picture-card"
+              className="avatar-uploader"
+              showUploadList={false}
+              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              beforeUpload={beforeUpload}
+              onChange={handleImageChange}>
+              {imageUrl ? (
+                <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
+              ) : (
+                <UploadButton loading={loading} />
+              )}
+            </Upload>
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">

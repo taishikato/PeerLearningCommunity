@@ -6,4 +6,6 @@ export default interface IProject {
   created: number
   userId: string
   id?: string
+  hasImage?: boolean
+  image?: string
 }

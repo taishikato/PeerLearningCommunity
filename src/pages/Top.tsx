@@ -16,7 +16,7 @@ const Top = () => {
           <div className="px-2 w-full mt-6 md:w-5/12 lg:w-5/12 md:mt-0 lg:mt-0">
             <h3 className="font-medium text-lg mb-4">自分のタスク</h3>
             <MySinglePostWrapper />
-            <h3 className="font-medium text-xl mb-4">最近追加されたプロジェクト</h3>
+            <h3 className="font-medium text-lg mb-4">最近追加されたプロジェクト</h3>
             <RecentProjects />
             <h3 className="font-medium text-lg mb-5">
               連続更新記録（修理中）{' '}

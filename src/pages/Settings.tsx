@@ -49,7 +49,6 @@ const Settings = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, name: string) => {
     const copyUserData = { ...userData, [name]: e.target.value }
     setUserData(copyUserData)
-    console.log({ copyUserData })
     if (copyUserData.password !== '' && copyUserData.password === copyUserData.passwordConfirm) {
       setUpdatePassword('ok')
     } else if (copyUserData.password === '' && copyUserData.passwordConfirm === '') {
