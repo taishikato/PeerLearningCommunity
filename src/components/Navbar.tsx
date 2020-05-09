@@ -205,7 +205,7 @@ const Navbar: React.FC<RouteComponentProps> = props => {
             width: '600px',
             maxWidth: '100%',
             position: 'absolute',
-            top: '40%',
+            top: '50%',
             left: '50%',
             bottom: 'none',
             transform: 'translateY(-50%)translateX(-50%)',
