@@ -1,28 +1,28 @@
-import React, { useState, useEffect, useContext } from 'react'
-import moment from 'moment-timezone'
-import { useDispatch } from 'react-redux'
-import { ITodoNew } from '../interfaces/ITodo'
-import { FirestoreContext } from './FirestoreContextProvider'
-import EditButton from './EditButton'
-import { editMyTodo } from '../store/action'
+import React, { useState, useEffect, useContext } from 'react';
+import moment from 'moment-timezone';
+import { useDispatch } from 'react-redux';
+import { ITodoNew } from '../interfaces/ITodo';
+import { FirestoreContext } from './FirestoreContextProvider';
+import EditButton from './EditButton';
+import { editMyTodo } from '../store/action';
 
 const Todo: React.FC<IProps> = ({ todo }) => {
-  const db = useContext(FirestoreContext)
-  const dispatch = useDispatch()
-  const [todoState, setTodoState] = useState(todo)
+  const db = useContext(FirestoreContext);
+  const dispatch = useDispatch();
+  const [todoState, setTodoState] = useState(todo);
   const handleChangeTodoStatus = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const checked = e.target.checked
-    const today = moment().tz('Asia/Tokyo').format('YYYYMMDD')
-    await db.collection('todos').doc(todo.id).update({ checked, doneDate: today })
-    todo.checked = checked
-    dispatch(editMyTodo(todo as any))
-    setTodoState(todo)
-    const copiedTodo = { ...todo }
-    copiedTodo.checked = checked
-  }
+    const checked = e.target.checked;
+    const today = moment().tz('Asia/Tokyo').format('YYYYMMDD');
+    await db.collection('todos').doc(todo.id).update({ checked, doneDate: today });
+    const copiedTodo = { ...todo };
+    copiedTodo.checked = checked;
+    setTodoState(copiedTodo);
+    dispatch(editMyTodo(copiedTodo as any));
+    return;
+  };
   useEffect(() => {
-    setTodoState(todo)
-  }, [todo])
+    setTodoState(todo);
+  }, [todo]);
   return (
     <div className="flex items-center justify-between">
       <label className="inline-flex items-center">
@@ -36,11 +36,11 @@ const Todo: React.FC<IProps> = ({ todo }) => {
       </label>
       <EditButton todo={todoState} />
     </div>
-  )
-}
+  );
+};
 
-export default Todo
+export default Todo;
 
 interface IProps {
-  todo: ITodoNew
+  todo: ITodoNew;
 }
