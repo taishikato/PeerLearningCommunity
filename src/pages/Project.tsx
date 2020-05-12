@@ -12,6 +12,7 @@ import ILoginUser from '../interfaces/ILoginUser';
 import { ITodoNew } from '../interfaces/ITodo';
 import firebase from '../plugins/firebase';
 import 'firebase/storage';
+import thinkingImage from '../assets/images/thinking.svg';
 
 const Project = () => {
   const { tag } = useParams();
@@ -25,12 +26,14 @@ const Project = () => {
     created: 0,
     userId: '',
   });
+  const [loading, setLoading] = useState(true);
   const [doneTodos, setDoneTodos] = useState<ITodoNew[]>([]);
   const [todos, setTodos] = useState<ITodoNew[]>([]);
   const [maker, setMaker] = useState<ILoginUser>({} as ILoginUser);
   const [isModalOpen, setIsModalOpen] = useState(false);
   useEffect(() => {
     const getProject = async () => {
+      setLoading(true);
       // プロジェクト取得
       const projectSnap = await db.collection('projects').where('tag', '==', tag).get();
       if (projectSnap.empty) return;
@@ -72,6 +75,7 @@ const Project = () => {
         .orderBy('doneDate', 'desc')
         .get();
       setDoneTodos(doneTodosSnap.docs.map(doc => doc.data()) as ITodoNew[]);
+      setLoading(false);
     };
     getProject();
   }, [setProjectState, db, tag, setMaker, setDoneTodos, loginUser]);
@@ -110,7 +114,7 @@ const Project = () => {
               ))}
             </div>
           )}
-          {doneTodos.length > 0 && (
+          {doneTodos.length > 0 && !loading && (
             <div className="mt-10">
               <div className="font-medium text-lg mb-3">完了TODO</div>
               {doneTodos.map(todo => (
@@ -118,6 +122,12 @@ const Project = () => {
                   <TodoForShow todo={todo} />
                 </div>
               ))}
+            </div>
+          )}
+          {doneTodos.length === 0 && !loading && (
+            <div className="text-center mb-5">
+              <img src={thinkingImage} className="w-20 h-20 m-auto" alt="" />
+              <p className="text-gray-500 font-semibold text-sm mt-1">まだTODOはありません</p>
             </div>
           )}
         </div>
