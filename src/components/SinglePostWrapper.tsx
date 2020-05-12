@@ -1,5 +1,5 @@
 import React, { useState, useContext, MouseEvent } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment-timezone';
 import Skeleton from 'react-loading-skeleton';
 import { FirestoreContext } from './FirestoreContextProvider';
@@ -8,14 +8,17 @@ import IInitialState from '../interfaces/IInitialState';
 import { ITodoData as ITodoData2 } from '../interfaces/ITodoData';
 import { ITodoNew } from '../interfaces/ITodo';
 import getTodos from '../plugins/getTodos';
+import { setTimeLine } from '../store/action';
 
 moment.locale('ja');
 
 const url = 'https://makerslog.co/';
 
 const SinglePostWrapper = () => {
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser);
+  const timeline = useSelector<IInitialState, IInitialState['timeline']>(state => state.timeline);
   const [postsNew, setPostsNew] = useState<ITodoData2[]>([]);
   const db = useContext(FirestoreContext);
 
@@ -27,7 +30,7 @@ const SinglePostWrapper = () => {
   };
 
   React.useEffect(() => {
-    const getPosts2 = async () => {
+    const getPosts = async () => {
       setIsLoading(true);
       const [todayPosts, yesterdayPosts, twoaysAgo] = await Promise.all([
         getTodos(db),
@@ -40,11 +43,17 @@ const SinglePostWrapper = () => {
       postData.push(twoaysAgo);
 
       setPostsNew(postData as ITodoData2[] | []);
+      dispatch(setTimeLine(postData as ITodoData2[] | []));
       setIsLoading(false);
     };
 
-    getPosts2();
-  }, [db, setIsLoading, setPostsNew]);
+    if (timeline.length === 0) {
+      getPosts();
+    } else {
+      setPostsNew(timeline);
+      setIsLoading(false);
+    }
+  }, [db, setIsLoading, setPostsNew, timeline, dispatch]);
   return (
     <>
       {isLoading ? (

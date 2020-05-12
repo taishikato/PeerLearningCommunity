@@ -1,9 +1,11 @@
-import ILoginUser from './ILoginUser'
-import { ITodoNew } from './ITodo'
+import ILoginUser from './ILoginUser';
+import { ITodoNew } from './ITodo';
+import { ITodoData } from '../interfaces/ITodoData';
 
 export default interface IInitialState {
-  loginUser: ILoginUser
-  isLogin: boolean
-  isCheckingLogin: boolean
-  myTodos: ITodoNew[]
+  timeline: ITodoData[];
+  loginUser: ILoginUser;
+  isLogin: boolean;
+  isCheckingLogin: boolean;
+  myTodos: ITodoNew[];
 }
