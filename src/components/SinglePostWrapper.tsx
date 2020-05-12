@@ -1,34 +1,34 @@
-import React, { useState, useContext, MouseEvent } from 'react'
-import { useSelector } from 'react-redux'
-import moment from 'moment-timezone'
-import axios from 'axios'
-import Skeleton from 'react-loading-skeleton'
-import { FirestoreContext } from './FirestoreContextProvider'
-import TodoForShow from './TodoForShow'
-import IInitialState from '../interfaces/IInitialState'
-import { ITodoData as ITodoData2 } from '../interfaces/ITodoData'
-import { ITodoNew } from '../interfaces/ITodo'
+import React, { useState, useContext, MouseEvent } from 'react';
+import { useSelector } from 'react-redux';
+import moment from 'moment-timezone';
+import axios from 'axios';
+import Skeleton from 'react-loading-skeleton';
+import { FirestoreContext } from './FirestoreContextProvider';
+import TodoForShow from './TodoForShow';
+import IInitialState from '../interfaces/IInitialState';
+import { ITodoData as ITodoData2 } from '../interfaces/ITodoData';
+import { ITodoNew } from '../interfaces/ITodo';
 
-moment.locale('ja')
+moment.locale('ja');
 
-const url = 'https://peer-learning-community.netlify.app/'
+const url = 'https://peer-learning-community.netlify.app/';
 
 const SinglePostWrapper = () => {
-  const [isLoading, setIsLoading] = useState(true)
-  const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
-  const [postsNew, setPostsNew] = useState<ITodoData2[]>([])
-  const db = useContext(FirestoreContext)
+  const [isLoading, setIsLoading] = useState(true);
+  const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser);
+  const [postsNew, setPostsNew] = useState<ITodoData2[]>([]);
+  const db = useContext(FirestoreContext);
 
   const tweet = (e: MouseEvent, todos: ITodoNew[]) => {
-    e.preventDefault()
-    let tweetText = todos.map(todo => `✅${todo.text}`).join('\n')
-    tweetText += `\n${url}`
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`)
-  }
+    e.preventDefault();
+    let tweetText = todos.map(todo => `✅${todo.text}`).join('\n');
+    tweetText += `\n${url}`;
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`);
+  };
 
   React.useEffect(() => {
     const getPosts2 = async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       const [todayPosts, yesterdayPosts, twoaysAgo] = await Promise.all([
         axios.post('https://asia-northeast1-peer-learning-app.cloudfunctions.net/getTodosApiFunc/getTodos', {
           dayBefore: 0,
@@ -39,18 +39,18 @@ const SinglePostWrapper = () => {
         axios.post('https://asia-northeast1-peer-learning-app.cloudfunctions.net/getTodosApiFunc/getTodos', {
           dayBefore: 2,
         }),
-      ])
+      ]);
 
-      const postData = [todayPosts.data]
-      postData.push(yesterdayPosts.data)
-      postData.push(twoaysAgo.data)
+      const postData = [todayPosts.data];
+      postData.push(yesterdayPosts.data);
+      postData.push(twoaysAgo.data);
 
-      setPostsNew(postData)
-      setIsLoading(false)
-    }
+      setPostsNew(postData);
+      setIsLoading(false);
+    };
 
-    getPosts2()
-  }, [loginUser.id, db, setIsLoading, setPostsNew])
+    getPosts2();
+  }, [loginUser.id, db, setIsLoading, setPostsNew]);
   return (
     <>
       {isLoading ? (
@@ -67,7 +67,7 @@ const SinglePostWrapper = () => {
                   <div key={todoData.user.userName} className="bg-white rounded mb-4 border-2 border-gray-300">
                     <div className="flex items-center justify-between p-3 border-b border-gray-300">
                       <div className="flex items-center">
-                        <img src={todoData.user.picture} alt="プロフィール写真" className="rounded-full w-10 h-10" />
+                        <img src={todoData.user.picture} alt="プロフィール写真" className="rounded-full w-8 h-8" />
                         <span className="ml-3 font-medium">{todoData.user.displayName}</span>
                       </div>
                       {todoData.user.userName === loginUser.userName && (
@@ -91,7 +91,7 @@ const SinglePostWrapper = () => {
         </>
       )}
     </>
-  )
-}
+  );
+};
 
-export default SinglePostWrapper
+export default SinglePostWrapper;
