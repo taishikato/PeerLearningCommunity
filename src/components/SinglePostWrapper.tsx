@@ -1,17 +1,17 @@
 import React, { useState, useContext, MouseEvent } from 'react';
 import { useSelector } from 'react-redux';
 import moment from 'moment-timezone';
-import axios from 'axios';
 import Skeleton from 'react-loading-skeleton';
 import { FirestoreContext } from './FirestoreContextProvider';
 import TodoForShow from './TodoForShow';
 import IInitialState from '../interfaces/IInitialState';
 import { ITodoData as ITodoData2 } from '../interfaces/ITodoData';
 import { ITodoNew } from '../interfaces/ITodo';
+import getTodos from '../plugins/getTodos';
 
 moment.locale('ja');
 
-const url = 'https://peer-learning-community.netlify.app/';
+const url = 'https://makerslog.co/';
 
 const SinglePostWrapper = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -30,27 +30,21 @@ const SinglePostWrapper = () => {
     const getPosts2 = async () => {
       setIsLoading(true);
       const [todayPosts, yesterdayPosts, twoaysAgo] = await Promise.all([
-        axios.post('https://asia-northeast1-peer-learning-app.cloudfunctions.net/getTodosApiFunc/getTodos', {
-          dayBefore: 0,
-        }),
-        axios.post('https://asia-northeast1-peer-learning-app.cloudfunctions.net/getTodosApiFunc/getTodos', {
-          dayBefore: 1,
-        }),
-        axios.post('https://asia-northeast1-peer-learning-app.cloudfunctions.net/getTodosApiFunc/getTodos', {
-          dayBefore: 2,
-        }),
+        getTodos(db),
+        getTodos(db, 1),
+        getTodos(db, 2),
       ]);
 
-      const postData = [todayPosts.data];
-      postData.push(yesterdayPosts.data);
-      postData.push(twoaysAgo.data);
+      const postData = [todayPosts];
+      postData.push(yesterdayPosts);
+      postData.push(twoaysAgo);
 
-      setPostsNew(postData);
+      setPostsNew(postData as ITodoData2[] | []);
       setIsLoading(false);
     };
 
     getPosts2();
-  }, [loginUser.id, db, setIsLoading, setPostsNew]);
+  }, [db, setIsLoading, setPostsNew]);
   return (
     <>
       {isLoading ? (
@@ -59,7 +53,7 @@ const SinglePostWrapper = () => {
         <>
           {postsNew.map((postObj: any) => (
             <div key={postObj.date} className="mb-5">
-              <h3 className="text-xl mb-5">{moment(postObj.date).tz('Asia/Tokyo').format('MM月DD日(ddd)')}</h3>
+              <h3 className="text-lg mb-5">{moment(postObj.date).tz('Asia/Tokyo').format('MM月DD日(ddd)')}</h3>
               {postObj.todoByUser.length === 0 ? (
                 <>まだToDoはありません</>
               ) : (
