@@ -1,65 +1,74 @@
-import React, { useState, useContext, MouseEvent } from 'react'
-import { useSelector } from 'react-redux'
-import moment from 'moment-timezone'
-import axios from 'axios'
-import Skeleton from 'react-loading-skeleton'
-import { FirestoreContext } from './FirestoreContextProvider'
-import TodoForShow from './TodoForShow'
-import IInitialState from '../interfaces/IInitialState'
-import { ITodoData as ITodoData2 } from '../interfaces/ITodoData'
-import { ITodoNew } from '../interfaces/ITodo'
+import React, { useState, useContext, MouseEvent } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import moment from 'moment-timezone';
+import Skeleton from 'react-loading-skeleton';
+import { FirestoreContext } from './FirestoreContextProvider';
+import TodoForShow from './TodoForShow';
+import IInitialState from '../interfaces/IInitialState';
+import { ITodoData as ITodoData2 } from '../interfaces/ITodoData';
+import { ITodoNew } from '../interfaces/ITodo';
+import getTodos from '../plugins/getTodos';
+import { setTimeLine, addTimeLine } from '../store/action';
 
-moment.locale('ja')
+moment.locale('ja');
 
-const url = 'https://peer-learning-community.netlify.app/'
+const url = 'https://makerslog.co/';
 
 const SinglePostWrapper = () => {
-  const [isLoading, setIsLoading] = useState(true)
-  const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
-  const [postsNew, setPostsNew] = useState<ITodoData2[]>([])
-  const db = useContext(FirestoreContext)
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadingMoreTimeline, setLoadingMoreTimeline] = useState(false);
+  const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser);
+  const timeline = useSelector<IInitialState, IInitialState['timeline']>(state => state.timeline);
+  const loadMoreCount = useSelector<IInitialState, IInitialState['loadMoreCount']>(state => state.loadMoreCount);
+  const db = useContext(FirestoreContext);
 
   const tweet = (e: MouseEvent, todos: ITodoNew[]) => {
-    e.preventDefault()
-    let tweetText = todos.map(todo => `✅${todo.text}`).join('\n')
-    tweetText += `\n${url}`
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`)
-  }
+    e.preventDefault();
+    let tweetText = todos.map(todo => `✅${todo.text}`).join('\n');
+    tweetText += `\n${url}`;
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`);
+  };
+
+  const getMoreTodos = async () => {
+    setLoadingMoreTimeline(true);
+    const todoData = await getTodos(db, loadMoreCount);
+    dispatch(addTimeLine(todoData as ITodoData2 | []));
+    setLoadingMoreTimeline(false);
+  };
 
   React.useEffect(() => {
-    const getPosts2 = async () => {
-      setIsLoading(true)
+    const getPosts = async () => {
+      setIsLoading(true);
       const [todayPosts, yesterdayPosts, twoaysAgo] = await Promise.all([
-        axios.post('https://asia-northeast1-peer-learning-app.cloudfunctions.net/getTodosApiFunc/getTodos', {
-          dayBefore: 0,
-        }),
-        axios.post('https://asia-northeast1-peer-learning-app.cloudfunctions.net/getTodosApiFunc/getTodos', {
-          dayBefore: 1,
-        }),
-        axios.post('https://asia-northeast1-peer-learning-app.cloudfunctions.net/getTodosApiFunc/getTodos', {
-          dayBefore: 2,
-        }),
-      ])
+        getTodos(db),
+        getTodos(db, 1),
+        getTodos(db, 2),
+      ]);
 
-      const postData = [todayPosts.data]
-      postData.push(yesterdayPosts.data)
-      postData.push(twoaysAgo.data)
+      const postData = [todayPosts];
+      postData.push(yesterdayPosts);
+      postData.push(twoaysAgo);
 
-      setPostsNew(postData)
-      setIsLoading(false)
+      dispatch(setTimeLine(postData as ITodoData2[] | []));
+      setIsLoading(false);
+    };
+
+    if (timeline.length === 0) {
+      getPosts();
+    } else {
+      setIsLoading(false);
     }
-
-    getPosts2()
-  }, [loginUser.id, db, setIsLoading, setPostsNew])
+  }, [db, setIsLoading, timeline, dispatch]);
   return (
     <>
       {isLoading ? (
         <Skeleton count={3} />
       ) : (
         <>
-          {postsNew.map((postObj: any) => (
+          {timeline.map((postObj: any) => (
             <div key={postObj.date} className="mb-5">
-              <h3 className="text-xl mb-5">{moment(postObj.date).tz('Asia/Tokyo').format('MM月DD日(ddd)')}</h3>
+              <h3 className="text-lg mb-5">{moment(postObj.date).tz('Asia/Tokyo').format('MM月DD日(ddd)')}</h3>
               {postObj.todoByUser.length === 0 ? (
                 <>まだToDoはありません</>
               ) : (
@@ -67,7 +76,7 @@ const SinglePostWrapper = () => {
                   <div key={todoData.user.userName} className="bg-white rounded mb-4 border-2 border-gray-300">
                     <div className="flex items-center justify-between p-3 border-b border-gray-300">
                       <div className="flex items-center">
-                        <img src={todoData.user.picture} alt="プロフィール写真" className="rounded-full w-10 h-10" />
+                        <img src={todoData.user.picture} alt="プロフィール写真" className="rounded-full w-8 h-8" />
                         <span className="ml-3 font-medium">{todoData.user.displayName}</span>
                       </div>
                       {todoData.user.userName === loginUser.userName && (
@@ -88,10 +97,21 @@ const SinglePostWrapper = () => {
               )}
             </div>
           ))}
+          {loadingMoreTimeline ? (
+            <button className="border px-6 py-2 rounded-full block m-auto bg-green-200 text-white focus:outline-none cursor-not-allowed	">
+              取得中…
+            </button>
+          ) : (
+            <button
+              onClick={getMoreTodos}
+              className="border border-green-400 px-6 py-2 rounded-full block m-auto hover:bg-green-400 hover:text-white focus:outline-none">
+              もっと見る
+            </button>
+          )}
         </>
       )}
     </>
-  )
-}
+  );
+};
 
-export default SinglePostWrapper
+export default SinglePostWrapper;
