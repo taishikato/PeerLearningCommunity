@@ -11,7 +11,7 @@ export default async (db: firebase.firestore.Firestore, dayBefore: number = 0) =
 
   if (doneTodosData.empty && undoneTodosData.empty) {
     console.log('INFO: No todo yet');
-    return [];
+    return { date: targetDay, todoByUser: [] };
   }
 
   const addingTodos: { [key: string]: ITodoNew[] } = {};

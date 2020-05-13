@@ -50,6 +50,8 @@ const SinglePostWrapper = () => {
       postData.push(yesterdayPosts);
       postData.push(twoaysAgo);
 
+      console.log(postData);
+
       dispatch(setTimeLine(postData as ITodoData2[] | []));
       setIsLoading(false);
     };

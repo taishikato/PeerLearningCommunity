@@ -1,15 +1,17 @@
-import { ITodoNew } from './ITodo'
+import { ITodoNew } from './ITodo';
 
 export interface ITodoData {
-  date: string
-  todoByUser: {
-    user: IUser
-    todos: ITodoNew[]
-  }
+  date: string;
+  todoByUser:
+    | {
+        user: IUser;
+        todos: ITodoNew[];
+      }
+    | [];
 }
 
 interface IUser {
-  displayName: string
-  picture: string
-  userName: string
+  displayName: string;
+  picture: string;
+  userName: string;
 }
