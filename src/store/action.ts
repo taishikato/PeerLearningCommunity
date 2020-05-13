@@ -10,6 +10,7 @@ export const SET_TODOS = 'set_todos';
 export const REMOVE_TODOS = 'remove_todos';
 export const EDIT_TODOS = 'edit_todos';
 export const SET_TIMELINE = 'set_timeline';
+export const ADD_TIMELINE = 'add_timeline';
 
 /**
  * Timeline
@@ -17,6 +18,11 @@ export const SET_TIMELINE = 'set_timeline';
 export const setTimeLine = (timeline: ITodoData[]) => ({
   type: SET_TIMELINE,
   timeline,
+});
+
+export const addTimeLine = (todoData: ITodoData | []) => ({
+  type: ADD_TIMELINE,
+  todoData,
 });
 
 /**

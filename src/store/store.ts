@@ -1,5 +1,15 @@
 import { createStore, combineReducers } from 'redux';
-import { LOGIN, LOGOUT, DONE_CHECKING, ADD_TODOS, SET_TODOS, REMOVE_TODOS, EDIT_TODOS, SET_TIMELINE } from './action';
+import {
+  LOGIN,
+  LOGOUT,
+  DONE_CHECKING,
+  ADD_TODOS,
+  SET_TODOS,
+  REMOVE_TODOS,
+  EDIT_TODOS,
+  SET_TIMELINE,
+  ADD_TIMELINE,
+} from './action';
 import IInitialState from '../interfaces/IInitialState';
 import { defaultTodo } from '../interfaces/ITodo';
 import { defaultUser } from '../interfaces/ILoginUser';
@@ -7,16 +17,29 @@ import { ITodoData } from '../interfaces/ITodoData';
 
 export const initialState: IInitialState = {
   timeline: [] as any,
+  loadMoreCount: 3,
   loginUser: defaultUser,
   isLogin: false,
   isCheckingLogin: true,
   myTodos: [defaultTodo],
 };
 
-const timeline = (state = [], action: { type: string; timeline: [] | ITodoData[] }) => {
+const timeline = (state = [], action: any) => {
   switch (action.type) {
     case SET_TIMELINE:
       return [...action.timeline];
+    case ADD_TIMELINE:
+      return [...state, action.todoData];
+    default:
+      return state;
+  }
+};
+
+const loadMoreCount = (state = 3, action: any) => {
+  switch (action.type) {
+    case ADD_TIMELINE:
+      let CopiedState = state;
+      return (CopiedState += 1);
     default:
       return state;
   }
@@ -96,6 +119,7 @@ const isCheckingLogin = (state = true, action: any) => {
 
 const reducer = combineReducers({
   timeline,
+  loadMoreCount,
   loginUser,
   isLogin,
   isCheckingLogin,

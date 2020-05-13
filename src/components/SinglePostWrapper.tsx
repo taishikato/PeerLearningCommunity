@@ -8,7 +8,7 @@ import IInitialState from '../interfaces/IInitialState';
 import { ITodoData as ITodoData2 } from '../interfaces/ITodoData';
 import { ITodoNew } from '../interfaces/ITodo';
 import getTodos from '../plugins/getTodos';
-import { setTimeLine } from '../store/action';
+import { setTimeLine, addTimeLine } from '../store/action';
 
 moment.locale('ja');
 
@@ -17,9 +17,10 @@ const url = 'https://makerslog.co/';
 const SinglePostWrapper = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingMoreTimeline, setLoadingMoreTimeline] = useState(false);
   const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser);
   const timeline = useSelector<IInitialState, IInitialState['timeline']>(state => state.timeline);
-  const [postsNew, setPostsNew] = useState<ITodoData2[]>([]);
+  const loadMoreCount = useSelector<IInitialState, IInitialState['loadMoreCount']>(state => state.loadMoreCount);
   const db = useContext(FirestoreContext);
 
   const tweet = (e: MouseEvent, todos: ITodoNew[]) => {
@@ -27,6 +28,13 @@ const SinglePostWrapper = () => {
     let tweetText = todos.map(todo => `✅${todo.text}`).join('\n');
     tweetText += `\n${url}`;
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`);
+  };
+
+  const getMoreTodos = async () => {
+    setLoadingMoreTimeline(true);
+    const todoData = await getTodos(db, loadMoreCount);
+    dispatch(addTimeLine(todoData as ITodoData2 | []));
+    setLoadingMoreTimeline(false);
   };
 
   React.useEffect(() => {
@@ -42,7 +50,6 @@ const SinglePostWrapper = () => {
       postData.push(yesterdayPosts);
       postData.push(twoaysAgo);
 
-      setPostsNew(postData as ITodoData2[] | []);
       dispatch(setTimeLine(postData as ITodoData2[] | []));
       setIsLoading(false);
     };
@@ -50,17 +57,16 @@ const SinglePostWrapper = () => {
     if (timeline.length === 0) {
       getPosts();
     } else {
-      setPostsNew(timeline);
       setIsLoading(false);
     }
-  }, [db, setIsLoading, setPostsNew, timeline, dispatch]);
+  }, [db, setIsLoading, timeline, dispatch]);
   return (
     <>
       {isLoading ? (
         <Skeleton count={3} />
       ) : (
         <>
-          {postsNew.map((postObj: any) => (
+          {timeline.map((postObj: any) => (
             <div key={postObj.date} className="mb-5">
               <h3 className="text-lg mb-5">{moment(postObj.date).tz('Asia/Tokyo').format('MM月DD日(ddd)')}</h3>
               {postObj.todoByUser.length === 0 ? (
@@ -91,6 +97,17 @@ const SinglePostWrapper = () => {
               )}
             </div>
           ))}
+          {loadingMoreTimeline ? (
+            <button className="border px-6 py-2 rounded-full block m-auto bg-green-200 text-white focus:outline-none cursor-not-allowed	">
+              取得中…
+            </button>
+          ) : (
+            <button
+              onClick={getMoreTodos}
+              className="border border-green-400 px-6 py-2 rounded-full block m-auto hover:bg-green-400 hover:text-white focus:outline-none">
+              もっと見る
+            </button>
+          )}
         </>
       )}
     </>

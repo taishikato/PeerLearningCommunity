@@ -4,6 +4,7 @@ import { ITodoData } from '../interfaces/ITodoData';
 
 export default interface IInitialState {
   timeline: ITodoData[];
+  loadMoreCount: number;
   loginUser: ILoginUser;
   isLogin: boolean;
   isCheckingLogin: boolean;
