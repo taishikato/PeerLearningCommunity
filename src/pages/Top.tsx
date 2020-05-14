@@ -8,7 +8,7 @@ import dog from '../assets/images/dog.gif'
 const Top = () => {
   return (
     <div className="h-auto pb-10">
-      <div className="pt-10 w-11/12 m-auto">
+      <div className="pt-10 w-full px-3 md:px-6 lg:px-6">
         <div className="flex flex-wrap -mx-2">
           <div className="px-2 w-full md:w-7/12 lg:w-7/12">
             <SinglePostWrapper />
