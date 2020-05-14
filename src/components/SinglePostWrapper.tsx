@@ -25,7 +25,13 @@ const SinglePostWrapper = () => {
 
   const tweet = (e: MouseEvent, todos: ITodoNew[]) => {
     e.preventDefault();
-    let tweetText = todos.map(todo => `✅${todo.text}`).join('\n');
+    let tweetText = todos
+      .map(todo => {
+        let emoji = '✅';
+        if (!todo.checked) emoji = '🚧';
+        return `${emoji}${todo.text}`;
+      })
+      .join('\n');
     tweetText += `\n${url}`;
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`);
   };
