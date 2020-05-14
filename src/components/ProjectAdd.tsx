@@ -1,26 +1,26 @@
-import React, { useState, useContext } from 'react'
-import { useSelector } from 'react-redux'
-import IInitialState from '../interfaces/IInitialState'
-import getUnixTime from '../plugins/getUnixTime'
-import generateUuid from '../plugins/generateUuid'
-import { FirestoreContext } from './FirestoreContextProvider'
-import uploadImage from '@taishikato/firebase-storage-uploader'
-import beforeUpload from '../plugins/beforeUpload'
-import getBase64 from '../plugins/getBase64'
-import UploadButton from './UploadButton'
-import firebase from '../plugins/firebase'
-import 'firebase/storage'
-import { Upload } from 'antd'
-import 'antd/lib/upload/style/index.css'
+import React, { useState, useContext } from 'react';
+import { useSelector } from 'react-redux';
+import IInitialState from '../interfaces/IInitialState';
+import getUnixTime from '../plugins/getUnixTime';
+import generateUuid from '../plugins/generateUuid';
+import { FirestoreContext } from './FirestoreContextProvider';
+import uploadImage from '@taishikato/firebase-storage-uploader';
+import beforeUpload from '../plugins/beforeUpload';
+import getBase64 from '../plugins/getBase64';
+import UploadButton from './UploadButton';
+import firebase from '../plugins/firebase';
+import 'firebase/storage';
+import { Upload } from 'antd';
+import 'antd/lib/upload/style/index.css';
 
-type TImageUrl = string | null
+type TImageUrl = string | null;
 
 const AddProject: React.FC<IProps> = ({ closeModal }) => {
-  const [imageUrl, setImageUrl] = useState('')
-  const [loading, setLoading] = useState(false)
-  const db = useContext(FirestoreContext)
-  const projectRef = db.collection('projects')
-  const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
+  const [imageUrl, setImageUrl] = useState('');
+  const [loading, setLoading] = useState(false);
+  const db = useContext(FirestoreContext);
+  const projectRef = db.collection('projects');
+  const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser);
   const [project, setProject] = useState<{ [key: string]: string | number | boolean }>({
     name: '',
     description: '',
@@ -29,56 +29,61 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
     hasImage: false,
     created: 0,
     userId: '',
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(true)
-  const [duplicateTag, setDuplicateTag] = useState(false)
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(true);
+  const [duplicateTag, setDuplicateTag] = useState(false);
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    setIsAddButtonDisabled(true)
-    const name = e.target.name
-    const value = e.target.value
-    const copiePproject = { ...project }
-    copiePproject[name] = value
-    setProject(copiePproject)
+    e.preventDefault();
+    setIsAddButtonDisabled(true);
+    const name = e.target.name;
+    const value = e.target.value;
+    const copiePproject = { ...project };
+    copiePproject[name] = value;
+    setProject(copiePproject);
     if (copiePproject.name !== '' && copiePproject.description !== '' && copiePproject.tag !== '') {
-      setIsAddButtonDisabled(false)
+      setIsAddButtonDisabled(false);
     }
-  }
+  };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setDuplicateTag(false)
-    const projectData = await projectRef.where('tag', '==', project.tag).get()
+    e.preventDefault();
+    setIsSubmitting(true);
+    setDuplicateTag(false);
+    let tag = project.tag;
+    if ((tag as string).charAt(0) === '#') {
+      tag = (tag as string).slice(1);
+    }
+    project.tag = tag;
+    const projectData = await projectRef.where('tag', '==', tag).get();
     if (!projectData.empty) {
-      setDuplicateTag(true)
-      setIsSubmitting(false)
-      return
+      setDuplicateTag(true);
+      setIsSubmitting(false);
+      return;
     }
-    const id = generateUuid()
-    project.id = id
+    const id = generateUuid();
+    project.id = id;
     if (imageUrl !== '') {
-      await uploadImage(`/projects/${project.id}.png`, imageUrl, firebase)
-      project.hasImage = true
+      await uploadImage(`/projects/${project.id}.png`, imageUrl, firebase);
+      project.hasImage = true;
     }
-    project.created = getUnixTime()
-    project.userId = loginUser.id
-    await projectRef.doc(id).set(project)
-    setIsSubmitting(false)
-    closeModal()
-  }
+    project.created = getUnixTime();
+    project.userId = loginUser.id;
+    await projectRef.doc(id).set(project);
+    setIsSubmitting(false);
+    closeModal();
+  };
   const handleImageChange = (info: any) => {
     if (info.file.status === 'uploading') {
-      setLoading(true)
-      return
+      setLoading(true);
+      return;
     }
     if (info.file.status === 'done') {
       getBase64(info.file.originFileObj, async (imageUrlVal: TImageUrl) => {
-        setImageUrl(imageUrlVal as string)
-        setLoading(false)
-      })
+        setImageUrl(imageUrlVal as string);
+        setLoading(false);
+      });
     }
-  }
+  };
   return (
     <div>
       <div className="bg-gray-200 py-3 border-b border-gray-300">
@@ -189,11 +194,11 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
         </div>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default AddProject
+export default AddProject;
 
 interface IProps {
-  closeModal: () => void
+  closeModal: () => void;
 }
