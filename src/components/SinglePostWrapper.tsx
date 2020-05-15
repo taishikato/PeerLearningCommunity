@@ -32,7 +32,7 @@ const SinglePostWrapper = () => {
         return `${emoji}${todo.text}`;
       })
       .join('\n');
-    tweetText += `\n${url}`;
+    tweetText += `\n${url}\n#メイカーズログ`;
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`);
   };
 
