@@ -49,7 +49,7 @@ const Todo: React.FC<IProps> = ({ todo }) => {
             onChange={e => handleChangeTodoStatus(e)}
             checked={todoState.checked}
           />
-          <span className="ml-3 text-lg">{todoState.text}</span>
+          <span className="ml-3">{todoState.text}</span>
         </label>
         <EditButton todo={todoState} />
       </div>
