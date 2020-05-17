@@ -70,7 +70,7 @@ const CommentAddForm: React.FC<IProps> = ({ show, todo }) => {
   return (
     <div>
       {commentList.map((commentData: ICommentList) => (
-        <div key={commentData.comment.id} className="flex mt-2 mb-2">
+        <div key={commentData.comment.id} className={show ? 'flex mt-2 mb-2' : 'hidden'}>
           <img src={commentData.user.picture} className="w-6 h-6 rounded-full" alt="" />
           <div key={commentData.comment.id} className="bg-gray-100 rounded ml-2 p-2">
             <div className="font-bold text-sm">{commentData.user.displayName}</div>
