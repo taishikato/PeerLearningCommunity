@@ -14,6 +14,7 @@ const CommentAddForm: React.FC<IProps> = ({ show, todo }) => {
   const [hasError, setHasError] = useState(false);
   const [commentList, setCommentList] = useState<ICommentList[]>([]);
   const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser);
+  const isLogin = useSelector<IInitialState, IInitialState['isLogin']>(state => state.isLogin);
   React.useEffect(() => {
     const getComments = async () => {
       const commentsSnapShot = await db
@@ -81,31 +82,33 @@ const CommentAddForm: React.FC<IProps> = ({ show, todo }) => {
           </div>
         </div>
       ))}
-      <form onSubmit={submit} className={show ? 'w-full flex flex-wrap items-center -mx-2 mt-2' : 'hidden'}>
-        <div className="px-2 w-10/12">
-          <input
-            onChange={handleOnChange}
-            type="text"
-            placeholder="コメントを書く"
-            className="w-full rounded border-2 border-gray-200 bg-gray-100 p-1 text-sm focus:outline-none"
-            value={comment}
-          />
-        </div>
-        <div className="px-2 w-2/12">
-          {isPosting ? (
-            <button className="rounded bg-gray-100 px-2 py-1 text-sm border-2 border-gray-100 cursor-not-allowed focus:outline-none">
-              投稿中
-            </button>
-          ) : (
+      {isLogin && (
+        <form onSubmit={submit} className={show ? 'w-full flex flex-wrap items-center -mx-2 mt-2' : 'hidden'}>
+          <div className="px-2 w-10/12">
             <input
-              type="submit"
-              value="投稿"
-              className="rounded bg-gray-200 px-2 py-1 text-sm border-2 border-gray-200 cursor-pointer hover:bg-gray-300 hover:border-gray-300 focus:outline-none"
+              onChange={handleOnChange}
+              type="text"
+              placeholder="コメントを書く"
+              className="w-full rounded border-2 border-gray-200 bg-gray-100 p-1 text-sm focus:outline-none"
+              value={comment}
             />
-          )}
-        </div>
-        {hasError && <p className="text-red-500 text-xs px-2">コメントを入力してください</p>}
-      </form>
+          </div>
+          <div className="px-2 w-2/12">
+            {isPosting ? (
+              <button className="rounded bg-gray-100 px-2 py-1 text-sm border-2 border-gray-100 cursor-not-allowed focus:outline-none">
+                投稿中
+              </button>
+            ) : (
+              <input
+                type="submit"
+                value="投稿"
+                className="rounded bg-gray-200 px-2 py-1 text-sm border-2 border-gray-200 cursor-pointer hover:bg-gray-300 hover:border-gray-300 focus:outline-none"
+              />
+            )}
+          </div>
+          {hasError && <p className="text-red-500 text-xs px-2">コメントを入力してください</p>}
+        </form>
+      )}
     </div>
   );
 };
