@@ -11,7 +11,7 @@ import service from '../assets/images/service.svg';
 const Profile = () => {
   const [user, setUser] = useState<ILoginUser>(defaultUser);
   const [projects, setProjects] = useState<IProject[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingPage, setLoadingPage] = useState(true);
   const { username } = useParams();
   const db = useContext(FirestoreContext);
 
@@ -19,7 +19,7 @@ const Profile = () => {
     const getUser = async () => {
       const user = await db.collection('users').where('userName', '==', username).get();
       if (user.empty) {
-        setLoading(false);
+        setLoadingPage(false);
         return;
       }
       const userData = user.docs[0].data();
@@ -45,13 +45,13 @@ const Profile = () => {
         }),
       );
       setProjects(projects as IProject[]);
-      setLoading(false);
+      setLoadingPage(false);
     };
     getUser();
   }, [username, db]);
   return (
     <>
-      {loading ? (
+      {loadingPage ? (
         <div className="bg-gray-100 h-full w-full flex items-center justify-center flex-col">
           <img src={dog} alt="" className="rounded-lg w-64" />
           <p>Loading…</p>
@@ -70,7 +70,7 @@ const Profile = () => {
               {projects.map(project => (
                 <li className="px-2">
                   <Link to={`/project/${project.tag}`} className="bg-white rounded-lg p-2 block">
-                    <img src={project.image} className="w-20 h-20 rounded-lg" alt="" />
+                    <img src={project.image} className="w-20 h-20 rounded-lg" alt="" title={project.name} />
                   </Link>
                 </li>
               ))}
