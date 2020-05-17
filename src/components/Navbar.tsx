@@ -85,11 +85,11 @@ const Navbar: React.FC<RouteComponentProps> = props => {
                   className={`${
                     isOpenDropDown ? 'show' : 'hidden'
                   } absolute z-40 right-0 mt-2 py-2 w-full md:w-48 lg:w-48 bg-white rounded-lg shadow-xl`}>
-                  {/* <a
-                      href="/[username]"
-                      className="block px-4 py-2 text-gray-800 cursor-pointer hover:bg-indigo-500 hover:text-white">
-                      Profile
-                    </a> */}
+                  <Link
+                    to={`/@${loginUser.userName}`}
+                    className="block px-4 py-2 text-gray-800 cursor-pointer hover:bg-indigo-500 hover:text-white">
+                    プロフィール
+                  </Link>
                   <Link
                     to="/settings"
                     className="block px-4 py-2 text-gray-800 cursor-pointer hover:bg-indigo-500 hover:text-white">

@@ -13,6 +13,7 @@ import { ITodoNew } from '../interfaces/ITodo';
 import firebase from '../plugins/firebase';
 import 'firebase/storage';
 import thinkingImage from '../assets/images/thinking.svg';
+import dog from '../assets/images/dog.gif';
 
 const Project = () => {
   const { tag } = useParams();
@@ -31,12 +32,17 @@ const Project = () => {
   const [todos, setTodos] = useState<ITodoNew[]>([]);
   const [maker, setMaker] = useState<ILoginUser>({} as ILoginUser);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(true);
   useEffect(() => {
     const getProject = async () => {
       setLoading(true);
+      setLoadingPage(true);
       // プロジェクト取得
       const projectSnap = await db.collection('projects').where('tag', '==', tag).get();
-      if (projectSnap.empty) return;
+      if (projectSnap.empty) {
+        setLoadingPage(false);
+        return;
+      }
       const project: IProject = projectSnap.docs[0].data() as IProject;
       project.id = projectSnap.docs[0].id;
       if (project.hasImage) {
@@ -76,71 +82,79 @@ const Project = () => {
         .get();
       setDoneTodos(doneTodosSnap.docs.map(doc => doc.data()) as ITodoNew[]);
       setLoading(false);
+      setLoadingPage(false);
     };
     getProject();
   }, [setProjectState, db, tag, setMaker, setDoneTodos, loginUser]);
   return (
     <>
-      <div className="flex flex-wrap w-11/12 md:w-9/12 lg:w-9/12 mt-5 m-auto">
-        <div className="w-full md:w-8/12 lg:w-8/12">
-          <div className="flex mb-3">
-            {projectState.hasImage && <img src={projectState.image} alt="" className="w-20 h-20 rounded-full mr-3" />}
-            <div>
-              <span className="text-xl font-semibold">{projectState.name}</span>
-              {projectState.userId === loginUser.id && (
-                <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="text-xs px-2 py-1 ml-3 bg-gray-200 rounded-full focus:outline-none">
-                  編集
-                </button>
-              )}
-              {projectState.url !== '' && projectState.url !== undefined && (
-                <div>
-                  <a href={projectState.url} target="_blank" className="text-blue-500" rel="noopener noreferrer">
-                    {projectState.url}
-                  </a>
-                </div>
-              )}
-              <div>{projectState.description}</div>
+      {loadingPage ? (
+        <div className="bg-gray-100 h-full w-full flex items-center justify-center flex-col">
+          <img src={dog} alt="" className="rounded-lg w-64" />
+          <p>Loading…</p>
+        </div>
+      ) : (
+        <div className="flex flex-wrap w-11/12 md:w-9/12 lg:w-9/12 mt-5 m-auto">
+          <div className="w-full md:w-8/12 lg:w-8/12">
+            <div className="flex mb-3">
+              {projectState.hasImage && <img src={projectState.image} alt="" className="w-20 h-20 rounded-full mr-3" />}
+              <div>
+                <span className="text-xl font-semibold">{projectState.name}</span>
+                {projectState.userId === loginUser.id && (
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="text-xs px-2 py-1 ml-3 bg-gray-200 rounded-full focus:outline-none">
+                    編集
+                  </button>
+                )}
+                {projectState.url !== '' && projectState.url !== undefined && (
+                  <div>
+                    <a href={projectState.url} target="_blank" className="text-blue-500" rel="noopener noreferrer">
+                      {projectState.url}
+                    </a>
+                  </div>
+                )}
+                <div>{projectState.description}</div>
+              </div>
+            </div>
+            {todos.length > 0 && (
+              <div className="mt-10">
+                <div className="font-medium text-lg mb-3">未完TODO</div>
+                {todos.map(todo => (
+                  <div key={todo.id} className="border-2 rounded border-gray-300 p-3 mb-3">
+                    <Todo todo={todo} />
+                  </div>
+                ))}
+              </div>
+            )}
+            {doneTodos.length > 0 && !loading && (
+              <div className="mt-10">
+                <div className="font-medium text-lg mb-3">完了TODO</div>
+                {doneTodos.map(todo => (
+                  <div key={todo.id} className="border-2 rounded border-gray-300 p-3 mb-3">
+                    <TodoForShow todo={todo} />
+                  </div>
+                ))}
+              </div>
+            )}
+            {doneTodos.length === 0 && !loading && (
+              <div className="text-center mb-5">
+                <img src={thinkingImage} className="w-20 h-20 m-auto" alt="" />
+                <p className="text-gray-500 font-semibold text-sm mt-1">まだTODOはありません</p>
+              </div>
+            )}
+          </div>
+          <div className="w-full md:w-4/12 lg:w-4/12">
+            <div className="p-4 border-2 border-gray-300 rounded">
+              <div className="text-sm font-semibold mb-3">作成者</div>
+              <div className="flex items-center">
+                <img src={maker.picture} alt="プロフィール写真" className="rounded-full w-10 h-10" />
+                <div className="ml-2">{maker.displayName}</div>
+              </div>
             </div>
           </div>
-          {todos.length > 0 && (
-            <div className="mt-10">
-              <div className="font-medium text-lg mb-3">未完TODO</div>
-              {todos.map(todo => (
-                <div key={todo.id} className="border-2 rounded border-gray-300 p-3 mb-3">
-                  <Todo todo={todo} />
-                </div>
-              ))}
-            </div>
-          )}
-          {doneTodos.length > 0 && !loading && (
-            <div className="mt-10">
-              <div className="font-medium text-lg mb-3">完了TODO</div>
-              {doneTodos.map(todo => (
-                <div key={todo.id} className="border-2 rounded border-gray-300 p-3 mb-3">
-                  <TodoForShow todo={todo} />
-                </div>
-              ))}
-            </div>
-          )}
-          {doneTodos.length === 0 && !loading && (
-            <div className="text-center mb-5">
-              <img src={thinkingImage} className="w-20 h-20 m-auto" alt="" />
-              <p className="text-gray-500 font-semibold text-sm mt-1">まだTODOはありません</p>
-            </div>
-          )}
         </div>
-        <div className="w-full md:w-4/12 lg:w-4/12">
-          <div className="p-4 border-2 border-gray-300 rounded">
-            <div className="text-sm font-semibold mb-3">作成者</div>
-            <div className="flex items-center">
-              <img src={maker.picture} alt="プロフィール写真" className="rounded-full w-10 h-10" />
-              <div className="ml-2">{maker.displayName}</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      )}
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}

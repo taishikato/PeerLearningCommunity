@@ -35,12 +35,12 @@ const TodoForShow: React.FC<IProps> = ({ todo }) => {
             disabled
           />
           {tag !== null ? (
-            <span className="ml-3 text-lg">
+            <span className="ml-3">
               <ReactHashtag
                 renderHashtag={(hashtagValue: string) => (
                   <Link
                     to={`/project/${hashtagValue.slice(1)}`}
-                    className="bg-blue-200 p-1 ml-3 rounded text-blue-700 text-lg">
+                    className="bg-blue-200 p-1 ml-3 rounded text-blue-700">
                     {hashtagValue}
                   </Link>
                 )}>
@@ -48,7 +48,7 @@ const TodoForShow: React.FC<IProps> = ({ todo }) => {
               </ReactHashtag>
             </span>
           ) : (
-            <span className="ml-3 text-lg">{text}</span>
+            <span className="ml-3">{text}</span>
           )}
         </label>
       </div>
