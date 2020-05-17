@@ -1,5 +1,6 @@
 import React, { useState, useContext, MouseEvent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import moment from 'moment-timezone';
 import Skeleton from 'react-loading-skeleton';
 import { FirestoreContext } from './FirestoreContextProvider';
@@ -82,8 +83,12 @@ const SinglePostWrapper = () => {
                   <div key={todoData.user.userName} className="bg-white rounded mb-4 border-2 border-gray-300">
                     <div className="flex items-center justify-between p-3 border-b border-gray-300">
                       <div className="flex items-center">
-                        <img src={todoData.user.picture} alt="プロフィール写真" className="rounded-full w-8 h-8" />
-                        <span className="ml-3 font-medium">{todoData.user.displayName}</span>
+                        <Link to={`/@${todoData.user.userName}`}>
+                          <img src={todoData.user.picture} alt="プロフィール写真" className="rounded-full w-8 h-8" />
+                        </Link>
+                        <span className="ml-3 font-medium">
+                          <Link to={`/@${todoData.user.userName}`}>{todoData.user.displayName}</Link>
+                        </span>
                       </div>
                       {todoData.user.userName === loginUser.userName && (
                         <button
