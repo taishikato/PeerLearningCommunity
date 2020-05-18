@@ -1,48 +1,49 @@
-import React, { useState } from 'react'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import firebase from '../plugins/firebase'
-import 'firebase/auth'
+import React, { useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
+import firebase from '../plugins/firebase';
+import 'firebase/auth';
 
-const WRONG_PW = 'wrongPw'
-const USER_NOT_FOUND = 'userNotFound'
+const WRONG_PW = 'wrongPw';
+const USER_NOT_FOUND = 'userNotFound';
 const LoginForm: React.FC<IProps> = ({ closeModal }) => {
   const [userData, setUserData] = useState<{ [key: string]: string }>({
     username: '',
     email: '',
     password: '',
-  })
-  const [errCode, setErrCode] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  });
+  const [errCode, setErrCode] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, itemName: string) => {
-    e.preventDefault()
-    const copyUserData = { ...userData }
-    copyUserData[itemName] = e.target.value
-    setUserData(copyUserData)
-  }
+    e.preventDefault();
+    const copyUserData = { ...userData };
+    copyUserData[itemName] = e.target.value;
+    setUserData(copyUserData);
+  };
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setErrCode('')
+    e.preventDefault();
+    setIsSubmitting(true);
+    setErrCode('');
     try {
       // Firebase Auth
-      await firebase.auth().signInWithEmailAndPassword(userData.email, userData.password)
-      closeModal()
+      await firebase.auth().signInWithEmailAndPassword(userData.email, userData.password);
+      closeModal();
     } catch (err) {
       if (err) {
-        const code = err.code
+        const code = err.code;
         if (code === 'auth/wrong-password') {
-          setErrCode(WRONG_PW)
+          setErrCode(WRONG_PW);
         } else if (code === 'auth/user-not-found') {
-          setErrCode(USER_NOT_FOUND)
+          setErrCode(USER_NOT_FOUND);
         } else {
-          toast('エラーが発生しました。時間をおいて再度お試しください', { type: toast.TYPE.ERROR })
+          toast('エラーが発生しました。時間をおいて再度お試しください', { type: toast.TYPE.ERROR });
         }
       }
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
   return (
     <>
       <ToastContainer autoClose={4000} />
@@ -78,27 +79,33 @@ const LoginForm: React.FC<IProps> = ({ closeModal }) => {
             />
             {errCode === WRONG_PW && <p className="text-red-500 text-xs italic">有効ではないパスワードです</p>}
           </div>
-          <div className="flex items-end justify-between">
+          <div className="flex items-end items-center">
             {isSubmitting ? (
-              <button className="bg-blue-200 text-white font-bold py-2 px-4 rounded-full cursor-not-allowed focus:outline-none">
+              <button className="bg-green-200 text-white font-bold py-2 px-5 rounded cursor-not-allowed focus:outline-none">
                 送信中…
               </button>
             ) : (
               <input
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline"
+                className="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-5 rounded cursor-pointer focus:outline-none focus:shadow-outline"
                 type="submit"
                 value="ログイン"
               />
             )}
+            <Link
+              to="/reset-password"
+              onClick={() => closeModal()}
+              className="ml-3 text-blue-500 font-semibold text-sm hover:underline">
+              パスワードを忘れた方はこちら
+            </Link>
           </div>
         </form>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default LoginForm
+export default LoginForm;
 
 interface IProps {
-  closeModal: () => void
+  closeModal: () => void;
 }

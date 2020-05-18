@@ -10,6 +10,7 @@ import Top from './pages/Top';
 import Settings from './pages/Settings';
 import Project from './pages/Project';
 import Profile from './pages/Profile';
+import ResetPassword from './pages/ResetPassword';
 
 const store = initializeStore();
 
@@ -27,6 +28,7 @@ const App = () => {
                   <Route component={Settings} exact path="/settings" />
                   <Route component={Project} exact path="/project/:tag" />
                   <Route component={Profile} exact path="/@:username" />
+                  <Route component={ResetPassword} exact path="/reset-password" />
                 </Switch>
               </ScrollToTop>
             </FirestoreContextProvider>
