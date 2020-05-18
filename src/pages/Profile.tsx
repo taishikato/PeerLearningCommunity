@@ -23,6 +23,7 @@ const Profile = () => {
         return;
       }
       const userData = user.docs[0].data();
+      userData.id = user.docs[0].id;
       setUser(userData as ILoginUser);
       const projectsSnapShot = await db.collection('projects').where('userId', '==', userData.id).get();
       const projects = await Promise.all(

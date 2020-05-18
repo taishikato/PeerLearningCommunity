@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import Modal from 'react-modal';
 import { useSelector } from 'react-redux';
 import ProjectEdit from '../components/ProjectEdit';
@@ -148,8 +148,12 @@ const Project = () => {
             <div className="p-4 border-2 border-gray-300 rounded">
               <div className="text-sm font-semibold mb-3">作成者</div>
               <div className="flex items-center">
-                <img src={maker.picture} alt="プロフィール写真" className="rounded-full w-10 h-10" />
-                <div className="ml-2">{maker.displayName}</div>
+                <Link to={`/@${maker.userName}`}>
+                  <img src={maker.picture} alt="プロフィール写真" className="rounded-full w-10 h-10" />
+                </Link>
+                <Link to={`/@${maker.userName}`}>
+                  <div className="ml-2">{maker.displayName}</div>
+                </Link>
               </div>
             </div>
           </div>

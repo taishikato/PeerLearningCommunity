@@ -11,7 +11,6 @@ const ResetPassword = () => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
   const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(email);
     try {
       await auth.sendPasswordResetEmail(email);
       toast('メール送信が正常に完了しました。', { type: toast.TYPE.DEFAULT });
