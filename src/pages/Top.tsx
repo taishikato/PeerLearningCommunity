@@ -14,7 +14,7 @@ const Top = () => {
           <MySinglePostWrapper />
         </div>
       </div>
-      <div className="pt-10 w-full md:w-9/12 lg:w-9/12 pl-2 pr-6">
+      <div className="pt-10 w-full md:w-9/12 lg:w-9/12 px-3 md:pl-2 md:pr-6 lg:pl-2 lg:pr-6">
         <div className="flex flex-wrap -mx-2">
           <div className="px-2 w-full md:w-8/12 lg:w-8/12">
             <SinglePostWrapper />
@@ -22,13 +22,13 @@ const Top = () => {
           <div className="px-2 w-full mt-6 md:w-4/12 lg:w-4/12 md:mt-0 lg:mt-0">
             <h3 className="font-medium text-lg mb-4">最近追加されたプロジェクト</h3>
             <RecentProjects />
-            <h3 className="font-medium text-lg mb-5">
+            {/* <h3 className="font-medium text-lg mb-5">
               連続更新記録（修理中）{' '}
               <span className="text-xs text-gray-600 font-medium">*毎晩深夜0時頃に更新されます</span>
             </h3>
             <div className="p-5 bg-white rounded mb-4 border-2 border-gray-300">
               <Streak />
-            </div>
+            </div> */}
             <div className="mb-10">
               <Footer />
             </div>
