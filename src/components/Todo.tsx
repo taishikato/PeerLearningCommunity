@@ -45,11 +45,11 @@ const Todo: React.FC<IProps> = ({ todo }) => {
         <label className="inline-flex items-center">
           <input
             type="checkbox"
-            className="form-checkbox h-6 w-6 text-green-500"
+            className="form-checkbox h-5 w-5 text-green-500"
             onChange={e => handleChangeTodoStatus(e)}
             checked={todoState.checked}
           />
-          <span className="ml-3">{todoState.text}</span>
+          <span className="ml-3 text-sm">{todoState.text}</span>
         </label>
         <EditButton todo={todoState} />
       </div>
