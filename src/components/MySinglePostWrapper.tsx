@@ -1,54 +1,62 @@
-import React, { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import Skeleton from 'react-loading-skeleton'
-import Modal from 'react-modal'
-import { FirestoreContext } from './FirestoreContextProvider'
-import TodoAdd from './TodoAdd'
-import Todo from './Todo'
-import SignupForm from './SignupForm'
-import LoginForm from './LoginForm'
-import IInitialState from '../interfaces/IInitialState'
-import { ITodoNew } from '../interfaces/ITodo'
-import { setMyTodos } from '../store/action'
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import Skeleton from 'react-loading-skeleton';
+import Modal from 'react-modal';
+import { FirestoreContext } from './FirestoreContextProvider';
+import TodoAdd from './TodoAdd';
+import Todo from './Todo';
+import SignupForm from './SignupForm';
+import LoginForm from './LoginForm';
+import IInitialState from '../interfaces/IInitialState';
+import { ITodoNew } from '../interfaces/ITodo';
+import { setMyTodos } from '../store/action';
 
-const MySinglePostWrapper = () => {
-  const dispatch = useDispatch()
-  const [isLoading, setIsLoading] = React.useState(true)
-  const [isPostModalOpen, setIsPostModalOpen] = React.useState(false)
-  const [isSignupModalOpen, setIsSignupModalOpen] = React.useState(false)
-  const [isLoginModalOpen, setIsLoginModalOpen] = React.useState(false)
-  const isLogin = useSelector<IInitialState, IInitialState['isLogin']>(state => state.isLogin)
-  const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
-  const todosStore = useSelector<IInitialState, IInitialState['myTodos']>(state => state.myTodos)
-  const [todosState, setTodosState] = useState<ITodoNew[]>([])
-  const db = React.useContext(FirestoreContext)
+const MySinglePostWrapper: React.FC<IProps> = ({ setLoading }) => {
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [isPostModalOpen, setIsPostModalOpen] = React.useState(false);
+  const [isSignupModalOpen, setIsSignupModalOpen] = React.useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = React.useState(false);
+  let isLogin = useSelector<IInitialState, IInitialState['isLogin']>(state => state.isLogin);
+  const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser);
+  const todosStore = useSelector<IInitialState, IInitialState['myTodos']>(state => state.myTodos);
+  const [todosState, setTodosState] = useState<ITodoNew[]>([]);
+  const db = React.useContext(FirestoreContext);
   React.useEffect(() => {
     if (!isLogin) {
-      setIsLoading(false)
-      return
+      setIsLoading(false);
+      setLoading(false);
+      return;
     }
     const getTodo = async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       if (todosStore[0] !== undefined && todosStore[0].id !== '') {
-        setTodosState(todosStore as ITodoNew[])
-        setIsLoading(false)
-        return
+        setTodosState(todosStore as ITodoNew[]);
+        setIsLoading(false);
+        setLoading(false);
+        return;
       }
-      const todos = await db.collection('todos').where('userId', '==', loginUser.id).where('checked', '==', false).get()
+      const todos = await db
+        .collection('todos')
+        .where('userId', '==', loginUser.id)
+        .where('checked', '==', false)
+        .get();
       if (todos.empty) {
-        setIsLoading(false)
-        return
+        setIsLoading(false);
+        setLoading(false);
+        return;
       }
-      const todoData = todos.docs.map(doc => doc.data())
-      dispatch(setMyTodos(todoData as ITodoNew[]))
-      setTodosState(todosStore as ITodoNew[])
-      setIsLoading(false)
-    }
-    getTodo()
-  }, [loginUser.id, setIsLoading, isLogin, db, dispatch, setTodosState, todosStore])
+      const todoData = todos.docs.map(doc => doc.data());
+      dispatch(setMyTodos(todoData as ITodoNew[]));
+      setTodosState(todosStore as ITodoNew[]);
+      setIsLoading(false);
+      setLoading(false);
+    };
+    getTodo();
+  }, [loginUser.id, setIsLoading, isLogin, db, dispatch, setTodosState, todosStore, setLoading]);
   return (
     <>
-      <div className="list-individual">
+      <div className="list-individual mx-3">
         <div>
           {isLoading ? (
             <Skeleton count={3} />
@@ -56,11 +64,11 @@ const MySinglePostWrapper = () => {
             <>
               {todosState[0] !== undefined ? (
                 <>
-                  <ul className="bg-white rounded mb-5 border-2 border-gray-300">
+                  <ul className="bg-white mb-5">
                     {todosState.map(todo => (
-                      <div key={todo.id} className="todo-component-wrapper p-3 border-b border-gray-300">
+                      <li key={todo.id} className="todo-component-wrapper border-b border-gray-300 mb-3 pb-3">
                         <Todo todo={todo} />
-                      </div>
+                      </li>
                     ))}
                   </ul>
                 </>
@@ -164,7 +172,11 @@ const MySinglePostWrapper = () => {
         <TodoAdd closeModal={() => setIsPostModalOpen(false)} />
       </Modal>
     </>
-  )
-}
+  );
+};
 
-export default MySinglePostWrapper
+export default MySinglePostWrapper;
+
+interface IProps {
+  setLoading: (val: boolean) => void;
+}

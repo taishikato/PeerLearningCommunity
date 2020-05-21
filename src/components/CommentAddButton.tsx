@@ -4,7 +4,7 @@ const CommentAddButton: React.FC<IProps> = ({ handleAddCommentButtonClick, comme
   return (
     <button
       onClick={handleAddCommentButtonClick}
-      className="rounded-full text-sm ml-8 py-1 px-2 focus:outline-none hover:bg-gray-200">
+      className="rounded-full text-xs ml-8 py-1 px-2 focus:outline-none hover:bg-gray-200">
       <span role="img" aria-label="絵文字">
         💬
       </span>

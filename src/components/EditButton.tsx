@@ -1,15 +1,13 @@
-import React, { useState } from 'react'
-import { ITodoNew } from '../interfaces/ITodo'
-import Modal from 'react-modal'
-import EditTodo from './EditTodo'
+import React, { useState } from 'react';
+import { ITodoNew } from '../interfaces/ITodo';
+import Modal from 'react-modal';
+import EditTodo from './EditTodo';
 
 const EditButton: React.FC<IProps> = ({ todo }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <>
-      <button
-        onClick={() => setIsModalOpen(true)}
-        className="px-2 py-1 bg-gray-200 rounded-full text-xs focus:outline-none">
+      <button onClick={() => setIsModalOpen(true)} className="px-2 py-1 text-xs focus:outline-none hover:underline">
         編集
       </button>
       <Modal
@@ -38,11 +36,11 @@ const EditButton: React.FC<IProps> = ({ todo }) => {
         <EditTodo closeModal={() => setIsModalOpen(false)} todo={todo} />
       </Modal>
     </>
-  )
-}
+  );
+};
 
-export default EditButton
+export default EditButton;
 
 interface IProps {
-  todo: ITodoNew
+  todo: ITodoNew;
 }
