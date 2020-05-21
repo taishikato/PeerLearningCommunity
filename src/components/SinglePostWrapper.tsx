@@ -15,7 +15,7 @@ moment.locale('ja');
 
 const url = 'https://makerslog.co/';
 
-const SinglePostWrapper = () => {
+const SinglePostWrapper: React.FC<IProps> = ({ setLoading }) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [loadingMoreTimeline, setLoadingMoreTimeline] = useState(false);
@@ -59,14 +59,16 @@ const SinglePostWrapper = () => {
 
       dispatch(setTimeLine(postData as ITodoData2[] | []));
       setIsLoading(false);
+      setLoading(false);
     };
 
     if (timeline.length === 0) {
       getPosts();
     } else {
       setIsLoading(false);
+      setLoading(false);
     }
-  }, [db, setIsLoading, timeline, dispatch]);
+  }, [db, setIsLoading, timeline, dispatch, setLoading]);
   return (
     <>
       {isLoading ? (
@@ -126,3 +128,7 @@ const SinglePostWrapper = () => {
 };
 
 export default SinglePostWrapper;
+
+interface IProps {
+  setLoading: (val: boolean) => void;
+}

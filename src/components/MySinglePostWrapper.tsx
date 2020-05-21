@@ -11,13 +11,13 @@ import IInitialState from '../interfaces/IInitialState';
 import { ITodoNew } from '../interfaces/ITodo';
 import { setMyTodos } from '../store/action';
 
-const MySinglePostWrapper = () => {
+const MySinglePostWrapper: React.FC<IProps> = ({ setLoading }) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = React.useState(true);
   const [isPostModalOpen, setIsPostModalOpen] = React.useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = React.useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = React.useState(false);
-  const isLogin = useSelector<IInitialState, IInitialState['isLogin']>(state => state.isLogin);
+  let isLogin = useSelector<IInitialState, IInitialState['isLogin']>(state => state.isLogin);
   const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser);
   const todosStore = useSelector<IInitialState, IInitialState['myTodos']>(state => state.myTodos);
   const [todosState, setTodosState] = useState<ITodoNew[]>([]);
@@ -25,6 +25,7 @@ const MySinglePostWrapper = () => {
   React.useEffect(() => {
     if (!isLogin) {
       setIsLoading(false);
+      setLoading(false);
       return;
     }
     const getTodo = async () => {
@@ -32,6 +33,7 @@ const MySinglePostWrapper = () => {
       if (todosStore[0] !== undefined && todosStore[0].id !== '') {
         setTodosState(todosStore as ITodoNew[]);
         setIsLoading(false);
+        setLoading(false);
         return;
       }
       const todos = await db
@@ -41,15 +43,17 @@ const MySinglePostWrapper = () => {
         .get();
       if (todos.empty) {
         setIsLoading(false);
+        setLoading(false);
         return;
       }
       const todoData = todos.docs.map(doc => doc.data());
       dispatch(setMyTodos(todoData as ITodoNew[]));
       setTodosState(todosStore as ITodoNew[]);
       setIsLoading(false);
+      setLoading(false);
     };
     getTodo();
-  }, [loginUser.id, setIsLoading, isLogin, db, dispatch, setTodosState, todosStore]);
+  }, [loginUser.id, setIsLoading, isLogin, db, dispatch, setTodosState, todosStore, setLoading]);
   return (
     <>
       <div className="list-individual mx-3">
@@ -172,3 +176,7 @@ const MySinglePostWrapper = () => {
 };
 
 export default MySinglePostWrapper;
+
+interface IProps {
+  setLoading: (val: boolean) => void;
+}
