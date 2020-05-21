@@ -51,10 +51,10 @@ const Todo: React.FC<IProps> = ({ todo }) => {
           />
           <span className="ml-3 text-sm">{todoState.text}</span>
         </label>
-        <EditButton todo={todoState} />
       </div>
       <div className="mt-1">
         <CommentAddButton commentCount={commentCount} handleAddCommentButtonClick={handleAddCommentButtonClick} />
+        <EditButton todo={todoState} />
       </div>
       <div className="ml-8">
         <CommentAddForm show={showCommentForm} todo={todo} />

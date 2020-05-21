@@ -2,25 +2,29 @@ import React from 'react';
 import SinglePostWrapper from '../components/SinglePostWrapper';
 import MySinglePostWrapper from '../components/MySinglePostWrapper';
 import RecentProjects from '../components/RecentProjects';
-import Streak from '../components/Streak';
+// import Streak from '../components/Streak';
 import Footer from '../components/Footer';
+import ProfilBar from '../components/ProfilBar';
 
 const Top = () => {
   return (
-    <div className="h-auto bg-gray-100 flex flex-wrap -mx-2">
-      <div className="px-2 w-full h-auto md:w-3/12 lg:w-3/12">
-        <div className="pt-10 h-full bg-white border-r border-gray-300">
+    <div className="h-auto bg-gray-100 flex flex-wrap md:-mx-2 ld:-mx-2">
+      <div className="md:px-2 lg:px-2 w-full h-auto md:w-3/12 lg:w-3/12">
+        <div className="pt-10 h-full bg-white border-r border-gray-400">
+          <div className="mx-3 mb-5 pb-3 border-b border-gray-400">
+            <ProfilBar />
+          </div>
           <h3 className="font-semibold text-base mb-4 px-3">自分のタスク</h3>
           <MySinglePostWrapper />
         </div>
       </div>
       <div className="pt-10 w-full md:w-9/12 lg:w-9/12 px-3 md:pl-2 md:pr-6 lg:pl-2 lg:pr-6">
         <div className="flex flex-wrap -mx-2">
-          <div className="px-2 w-full md:w-8/12 lg:w-8/12">
+          <div className="mb-10 px-2 w-full md:w-8/12 lg:w-8/12">
             <SinglePostWrapper />
           </div>
           <div className="px-2 w-full mt-6 md:w-4/12 lg:w-4/12 md:mt-0 lg:mt-0">
-            <h3 className="font-medium text-lg mb-4">最近追加されたプロジェクト</h3>
+            <h3 className="font-semibold text-base mb-4">最近追加されたプロジェクト</h3>
             <RecentProjects />
             {/* <h3 className="font-medium text-lg mb-5">
               連続更新記録（修理中）{' '}
