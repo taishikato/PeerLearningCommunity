@@ -89,6 +89,7 @@ const loginUser = (state = {}, action: any) => {
         userName: action.userName,
         displayName: action.displayName,
         email: action.email,
+        hasImage: action.hasImage || false,
       };
     case LOGOUT:
       return {};

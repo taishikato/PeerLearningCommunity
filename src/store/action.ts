@@ -62,6 +62,7 @@ export const loginUser = (user: ILoginUser) => ({
   userName: user.userName,
   displayName: user.displayName,
   email: user.email,
+  hasImage: user.hasImage,
 });
 
 export const logoutUser = () => ({

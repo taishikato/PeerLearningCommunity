@@ -57,6 +57,9 @@ const Project = () => {
       // 作成者取得
       const snapshot = await db.collection('users').doc(project.userId).get();
       const user = snapshot.data() as ILoginUser;
+      if (user.hasImage) {
+        user.picture = await firebase.storage().ref().child(`/users/thumbs/${user.id}_100x100.png`).getDownloadURL();
+      }
       setMaker(user);
 
       // 作者なら未完TODOも表示
