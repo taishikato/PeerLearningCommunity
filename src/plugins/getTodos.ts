@@ -1,5 +1,7 @@
 import moment from 'moment-timezone';
 import { ITodoNew } from '../interfaces/ITodo';
+import firebase from './firebase';
+import 'firebase/storage';
 
 export default async (db: firebase.firestore.Firestore, dayBefore: number = 0) => {
   const targetDay = moment().subtract(dayBefore, 'days').tz('Asia/Tokyo').format('YYYYMMDD');
@@ -41,6 +43,13 @@ export default async (db: firebase.firestore.Firestore, dayBefore: number = 0) =
     Object.keys(addingTodos).map(async userId => {
       const user = await db.collection('users').doc(userId).get();
       const userData = user.data() as IUser;
+      if (userData.hasImage) {
+        userData.picture = await firebase
+          .storage()
+          .ref()
+          .child(`/users/thumbs/${userData.id}_100x100.png`)
+          .getDownloadURL();
+      }
       todoByUserArray.push({
         user: {
           userName: userData.userName,
@@ -61,7 +70,9 @@ interface ITodoByUser {
 }
 
 interface IUser {
+  id?: string;
   picture: string;
   userName: string;
   displayName: string;
+  hasImage?: boolean;
 }

@@ -3,10 +3,11 @@ import { useParams, Link } from 'react-router-dom';
 import { FirestoreContext } from '../components/FirestoreContextProvider';
 import ILoginUser, { defaultUser } from '../interfaces/ILoginUser';
 import IProject from '../interfaces/IProject';
-import firebase from '../plugins/firebase';
 import 'firebase/storage';
 import dog from '../assets/images/dog.gif';
 import service from '../assets/images/service.svg';
+import firebase from '../plugins/firebase';
+import 'firebase/storage';
 
 const Profile = () => {
   const [user, setUser] = useState<ILoginUser>(defaultUser);
@@ -24,6 +25,13 @@ const Profile = () => {
       }
       const userData = user.docs[0].data();
       userData.id = user.docs[0].id;
+      if (userData.hasImage) {
+        userData.picture = await firebase
+          .storage()
+          .ref()
+          .child(`/users/thumbs/${userData.id}_200x200.png`)
+          .getDownloadURL();
+      }
       setUser(userData as ILoginUser);
       const projectsSnapShot = await db.collection('projects').where('userId', '==', userData.id).get();
       const projects = await Promise.all(

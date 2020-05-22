@@ -1,120 +1,120 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import uploadImage from '@taishikato/firebase-storage-uploader'
-import { Upload } from 'antd'
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
-import 'antd/lib/upload/style/index.css'
-import IInitialState from '../interfaces/IInitialState'
-import { loginUser as loginUserAction } from '../store/action'
-import { FirestoreContext } from '../components/FirestoreContextProvider'
-import firebase from '../plugins/firebase'
-import 'firebase/auth'
-import 'firebase/storage'
+import React, { useState, useContext, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import uploadImage from '@taishikato/firebase-storage-uploader';
+import { Upload } from 'antd';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import 'antd/lib/upload/style/index.css';
+import IInitialState from '../interfaces/IInitialState';
+import { loginUser as loginUserAction } from '../store/action';
+import { FirestoreContext } from '../components/FirestoreContextProvider';
+import firebase from '../plugins/firebase';
+import 'firebase/auth';
+import 'firebase/storage';
 
 const getBase64 = (img: File, callback: (imageUrl: TImageUrl) => void) => {
-  const reader = new FileReader()
-  reader.addEventListener('load', () => callback(reader.result as TImageUrl))
-  reader.readAsDataURL(img)
-}
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result as TImageUrl));
+  reader.readAsDataURL(img);
+};
 
 const beforeUpload = (file: File) => {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
   if (!isJpgOrPng) {
-    console.error('You can only upload JPG/PNG file!')
+    console.error('You can only upload JPG/PNG file!');
   }
-  const isLt2M = file.size / 1024 / 1024 < 2
+  const isLt2M = file.size / 1024 / 1024 < 2;
   if (!isLt2M) {
-    console.error('Image must smaller than 2MB!')
+    console.error('Image must smaller than 2MB!');
   }
-  return isJpgOrPng && isLt2M
-}
+  return isJpgOrPng && isLt2M;
+};
 
 const Settings = () => {
-  const dispatch = useDispatch()
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [updatePassword, setUpdatePassword] = useState('noNeed')
-  const [loading, setLoading] = useState(false)
-  const [imageUrl, setImageUrl] = useState('')
-  const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
-  const db = useContext(FirestoreContext)
+  const dispatch = useDispatch();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [updatePassword, setUpdatePassword] = useState('noNeed');
+  const [loading, setLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
+  const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser);
+  const db = useContext(FirestoreContext);
   const [userData, setUserData] = useState({
     userName: loginUser.userName,
     displayName: loginUser.displayName,
     email: loginUser.email,
     password: '',
     passwordConfirm: '',
-  })
+  });
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, name: string) => {
-    const copyUserData = { ...userData, [name]: e.target.value }
-    setUserData(copyUserData)
+    const copyUserData = { ...userData, [name]: e.target.value };
+    setUserData(copyUserData);
     if (copyUserData.password !== '' && copyUserData.password === copyUserData.passwordConfirm) {
-      setUpdatePassword('ok')
+      setUpdatePassword('ok');
     } else if (copyUserData.password === '' && copyUserData.passwordConfirm === '') {
-      setUpdatePassword('noNeed')
+      setUpdatePassword('noNeed');
     } else {
-      setUpdatePassword('wrong')
+      setUpdatePassword('wrong');
     }
-  }
+  };
   const handleImageChange = (info: any) => {
     if (info.file.status === 'uploading') {
-      setLoading(true)
-      return
+      setLoading(true);
+      return;
     }
     if (info.file.status === 'done') {
       getBase64(info.file.originFileObj, async (imageUrlVal: TImageUrl) => {
-        setImageUrl(imageUrlVal as string)
-        setLoading(false)
-      })
+        setImageUrl(imageUrlVal as string);
+        setLoading(false);
+      });
     }
-  }
+  };
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+    e.preventDefault();
+    setIsSubmitting(true);
     if (userData.userName === '' || userData.displayName === '' || userData.email === '') {
-      console.error('項目を入れてください')
-      return
+      console.error('項目を入れてください');
+      return;
     }
     // User Nameチェック
-    const userByUserName = await db.collection('users').where('userName', '==', userData.userName).get()
+    const userByUserName = await db.collection('users').where('userName', '==', userData.userName).get();
     if (!userByUserName.empty && loginUser.id !== userByUserName.docs[0].id) {
-      toast('このユーザーネームは既に使われています', { type: toast.TYPE.ERROR })
-      setIsSubmitting(false)
-      return
+      toast('このユーザーネームは既に使われています', { type: toast.TYPE.ERROR });
+      setIsSubmitting(false);
+      return;
     }
-    const saveData: any = {}
+    const saveData: any = {};
     // Password
     if (updatePassword === 'ok') {
       // password更新処理
-      const user = firebase.auth().currentUser
+      const user = firebase.auth().currentUser;
       try {
-        await user!.updatePassword(userData.password)
+        await user!.updatePassword(userData.password);
       } catch (err) {
-        console.error('パスワード更新時にエラーが発生しました')
+        console.error('パスワード更新時にエラーが発生しました');
       }
     }
     // 画像
-    saveData.picture = loginUser.picture
+    saveData.picture = loginUser.picture;
     if (imageUrl !== '') {
-      const imageUrlDb = await uploadImage(`${loginUser.id}.png`, imageUrl, firebase)
-      saveData.picture = imageUrlDb
+      await uploadImage(`/users/${loginUser.id}.png`, imageUrl, firebase);
+      saveData.hasImage = true;
     }
-    saveData.userName = userData.userName
-    saveData.displayName = userData.displayName
-    saveData.email = userData.email
-    saveData.id = loginUser.id
-    await db.collection('users').doc(loginUser.id).update(saveData)
-    dispatch(loginUserAction(saveData))
-    setIsSubmitting(false)
-    toast('保存が正常に完了しました', { type: toast.TYPE.DEFAULT })
-  }
+    saveData.userName = userData.userName;
+    saveData.displayName = userData.displayName;
+    saveData.email = userData.email;
+    saveData.id = loginUser.id;
+    await db.collection('users').doc(loginUser.id).update(saveData);
+    dispatch(loginUserAction(saveData));
+    setIsSubmitting(false);
+    toast('保存が正常に完了しました', { type: toast.TYPE.DEFAULT });
+  };
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
       <div className="ant-upload-text">Upload</div>
     </div>
-  )
+  );
   useEffect(() => {
     setUserData({
       userName: loginUser.userName,
@@ -122,8 +122,8 @@ const Settings = () => {
       email: loginUser.email,
       password: '',
       passwordConfirm: '',
-    })
-  }, [loginUser])
+    });
+  }, [loginUser]);
   return (
     <>
       <ToastContainer autoClose={4000} />
@@ -236,9 +236,9 @@ const Settings = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Settings
+export default Settings;
 
-type TImageUrl = string | null
+type TImageUrl = string | null;
