@@ -5,10 +5,10 @@ const CommentAddButton: React.FC<IProps> = ({ handleAddCommentButtonClick, comme
     <button
       onClick={handleAddCommentButtonClick}
       className="rounded-full text-xs ml-8 py-1 px-2 focus:outline-none hover:bg-gray-200">
-      <span role="img" aria-label="絵文字">
+      <span role="img" aria-label="emoji">
         💬
       </span>
-      {commentCount > 0 && commentCount}
+      <span className="ml-1">{commentCount > 0 && commentCount}</span>
     </button>
   );
 };

@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { ITodoNew } from '../interfaces/ITodo';
-import extractTag from '../plugins/extractTag';
+// import extractTag from '../plugins/extractTag';
 import { FirestoreContext } from './FirestoreContextProvider';
 import { Link } from 'react-router-dom';
 import ReactHashtag from 'react-hashtag';
+import ProjectItem from './ProjectItem';
 import CommentAddForm from './CommentAddForm';
 import CommentAddButton from './CommentAddButton';
 
 const TodoForShow: React.FC<IProps> = ({ todo }) => {
   const db = useContext(FirestoreContext);
   let text = todo.text;
-  const tag = extractTag(text);
+  // const tag = extractTag(text);
   const [showCommentForm, setShowCommentForm] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
 
@@ -34,13 +35,11 @@ const TodoForShow: React.FC<IProps> = ({ todo }) => {
             checked={todo.checked}
             disabled
           />
-          {tag !== null ? (
+          {/* {todo.tag !== null ? (
             <span className="ml-3">
               <ReactHashtag
                 renderHashtag={(hashtagValue: string) => (
-                  <Link
-                    to={`/project/${hashtagValue.slice(1)}`}
-                    className="bg-blue-200 p-1 ml-3 rounded text-blue-700">
+                  <Link to={`/project/${hashtagValue.slice(1)}`} className="bg-blue-200 p-1 ml-3 rounded text-blue-700">
                     {hashtagValue}
                   </Link>
                 )}>
@@ -49,11 +48,13 @@ const TodoForShow: React.FC<IProps> = ({ todo }) => {
             </span>
           ) : (
             <span className="ml-3">{text}</span>
-          )}
+          )} */}
+          <span className="ml-3">{text}</span>
         </label>
       </div>
-      <div className="mt-1">
+      <div className="mt-1 flex items-center">
         <CommentAddButton commentCount={commentCount} handleAddCommentButtonClick={handleAddCommentButtonClick} />
+        {todo.tag !== '' && todo.tag !== null && <ProjectItem tag={todo.tag as string} />}
       </div>
       <div className="ml-8">
         <CommentAddForm show={showCommentForm} todo={todo} />
