@@ -49,7 +49,8 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
       userId: loginUser.id,
     };
     // Set tag
-    if (todo.tag !== '' || todo.tag !== null) {
+    if (todo.tag !== '' && todo.tag !== null && todo.tag !== undefined) {
+      console.log('here');
       todoObj.tag = todo.tag;
     }
     await db.collection('todos').doc(id).set(todoObj);
