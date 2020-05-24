@@ -2,12 +2,10 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment-timezone';
 import getUnixTime from '../plugins/getUnixTime';
-// import extractTag from '../plugins/extractTag';
 import { FirestoreContext } from './FirestoreContextProvider';
 import { addMyTodos } from '../store/action';
 import generateUuid from '../plugins/generateUuid';
 import IInitialState from '../interfaces/IInitialState';
-// import { ITodoNew, defaultTodo } from '../interfaces/ITodo';
 import IProject from '../interfaces/IProject';
 
 const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
@@ -17,7 +15,6 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
   const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [projects, setProjects] = useState<IProject[]>([]);
-  // const [text, setText] = useState('');
   const [todo, setTodo] = useState<{ [key: string]: string }>({});
   useEffect(() => {
     const getProjects = async () => {

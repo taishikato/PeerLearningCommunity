@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { ITodoNew } from '../interfaces/ITodo';
 import { useSelector, useDispatch } from 'react-redux';
 import { FirestoreContext } from './FirestoreContextProvider';
-// import extractTag from '../plugins/extractTag';
 import IInitialState from '../interfaces/IInitialState';
 import { editMyTodo, removeMyTodos } from '../store/action';
 import IProject from '../interfaces/IProject';
@@ -14,7 +13,6 @@ const EditTodo: React.FC<IProps> = ({ closeModal, todo }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(false);
-  // const [text, setText] = useState(todo.text);
   const todoRef = db.collection('todos').doc(todo.id);
   const [editedTodo, setEditedTodo] = useState<{ [key: string]: string }>({});
   const [projects, setProjects] = useState<IProject[]>([]);
@@ -36,7 +34,6 @@ const EditTodo: React.FC<IProps> = ({ closeModal, todo }) => {
     const name = e.target.name;
     const value = e.target.value;
     const copyiedTodo = { ...todo, [name]: value };
-    // setText(value);
     setEditedTodo({ text: copyiedTodo.text, tag: copyiedTodo.tag as string });
     if (name === 'text' && value === '') return setIsAddButtonDisabled(true);
     return setIsAddButtonDisabled(false);
@@ -46,9 +43,6 @@ const EditTodo: React.FC<IProps> = ({ closeModal, todo }) => {
     e.preventDefault();
     setIsSubmitting(true);
     const todoObj: { [key: string]: string } = { text: editedTodo.text, tag: editedTodo.tag };
-    // Set tag
-    // const tag = extractTag(text)
-    // if (tag !== null) todoObj.tag = tag.slice(1)
     // Save
     await todoRef.update(todoObj);
     todoObj.id = todo.id;
