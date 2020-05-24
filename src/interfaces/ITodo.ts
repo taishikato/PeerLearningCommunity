@@ -1,7 +1,7 @@
 export default interface ITodo {
-  id: string
-  text: string
-  checked: boolean
+  id: string;
+  text: string;
+  checked: boolean;
 }
 
 export const defaultTodo = {
@@ -11,13 +11,14 @@ export const defaultTodo = {
   userId: '',
   createdDate: '',
   created: 0,
-}
+};
 
 export interface ITodoNew {
-  id: string
-  text: string
-  checked: boolean
-  userId: string
-  createdDate: string
-  created: number
+  id: string;
+  text: string;
+  checked: boolean;
+  userId: string;
+  createdDate: string;
+  created: number;
+  tag?: string;
 }

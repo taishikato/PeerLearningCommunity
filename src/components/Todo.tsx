@@ -7,6 +7,7 @@ import EditButton from './EditButton';
 import { editMyTodo } from '../store/action';
 import CommentAddForm from './CommentAddForm';
 import CommentAddButton from './CommentAddButton';
+import ProjectItem from './ProjectItem';
 
 const Todo: React.FC<IProps> = ({ todo }) => {
   const db = useContext(FirestoreContext);
@@ -52,8 +53,9 @@ const Todo: React.FC<IProps> = ({ todo }) => {
           <span className="ml-3 text-sm">{todoState.text}</span>
         </label>
       </div>
-      <div className="mt-1">
+      <div className="mt-1 flex flex-wrap items-center">
         <CommentAddButton commentCount={commentCount} handleAddCommentButtonClick={handleAddCommentButtonClick} />
+        {todoState.tag !== '' && todoState.tag !== null && <ProjectItem tag={todoState.tag as string} />}
         <EditButton todo={todoState} />
       </div>
       <div className="ml-8">
