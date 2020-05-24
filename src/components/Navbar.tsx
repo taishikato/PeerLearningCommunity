@@ -1,41 +1,41 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import Modal from 'react-modal'
-import { Link, RouteComponentProps } from 'react-router-dom'
-import TodoAdd from './TodoAdd'
-import SignupForm from './SignupForm'
-import LoginForm from './LoginForm'
-import IInitialState from '../interfaces/IInitialState'
-import firebase from '../plugins/firebase'
-import 'firebase/auth'
-import { withRouter } from 'react-router'
-import ProjectAdd from './ProjectAdd'
-import logo from '../assets/images/logo.png'
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import Modal from 'react-modal';
+import { Link, RouteComponentProps } from 'react-router-dom';
+import TodoAdd from './TodoAdd';
+import SignupForm from './SignupForm';
+import LoginForm from './LoginForm';
+import IInitialState from '../interfaces/IInitialState';
+import firebase from '../plugins/firebase';
+import 'firebase/auth';
+import { withRouter } from 'react-router';
+import ProjectAdd from './ProjectAdd';
+// import logo from '../assets/images/logo.png';
 
 const Navbar: React.FC<RouteComponentProps> = props => {
-  const isLogin = useSelector<IInitialState, IInitialState['isLogin']>(state => state.isLogin)
-  const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser)
-  const [isOpen, setIsOpen] = useState(false)
-  const [isOpenDropDown, setIsOpenDropDown] = React.useState(false)
-  const [isPostModalOpen, setIsPostModalOpen] = useState(false)
-  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false)
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
-  const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false)
-  const handleDropDown = () => setIsOpenDropDown(!isOpenDropDown)
-  const handleHumburger = () => setIsOpen(!isOpen)
+  const isLogin = useSelector<IInitialState, IInitialState['isLogin']>(state => state.isLogin);
+  const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenDropDown, setIsOpenDropDown] = React.useState(false);
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
+  const handleDropDown = () => setIsOpenDropDown(!isOpenDropDown);
+  const handleHumburger = () => setIsOpen(!isOpen);
   const logout = async () => {
-    await firebase.auth().signOut()
-  }
+    await firebase.auth().signOut();
+  };
   React.useEffect(() => {
-    if (isOpenDropDown) handleDropDown()
-    if (isOpen) handleHumburger()
-  }, [props.location])
+    if (isOpenDropDown) handleDropDown();
+    if (isOpen) handleHumburger();
+  }, [props.location]);
   return (
     <>
       <nav className="flex flex-wrap items-center px-6 py-4 text-gray-800 bg-white border-b-2 border-gray-300">
         <div className="mr-6">
-          <Link to="/" className="font-extrabold text-green-400">
-            <img src={logo} alt="ロゴ" width="130px" />
+          <Link to="/" id="logo" className="font-semibold text-lg text-gray-700">
+            Makerslog
           </Link>
         </div>
         <div className="ml-auto block lg:hidden">
@@ -56,23 +56,16 @@ const Navbar: React.FC<RouteComponentProps> = props => {
             <button
               className="ml-auto rounded font-semibold py-2 px-5 focus:outline-none bg-gray-200"
               onClick={() => setIsAddProjectModalOpen(true)}>
-              プロジェクトを追加
+              Add Project
             </button>
           )}
           {isLogin && (
             <button
               className="ml-2 bg-green-400 rounded font-semibold text-white py-2 px-5 focus:outline-none"
               onClick={() => setIsPostModalOpen(true)}>
-              タスクを追加
+              Add TODO
             </button>
           )}
-          {/* {isLogin && myTask.todos[0].id !== '' && (
-            <button
-              className="ml-auto bg-green-400 rounded-full font-bold text-white py-2 px-5 focus:outline-none"
-              onClick={() => setIsEditModalOpen(true)}>
-              今日のタスクを編集
-            </button>
-          )} */}
           <div className="mt-4 ml-4 lg:mt-0">
             {isLogin ? (
               <div className="relative">
@@ -88,18 +81,18 @@ const Navbar: React.FC<RouteComponentProps> = props => {
                   <Link
                     to={`/@${loginUser.userName}`}
                     className="block px-4 py-2 text-gray-800 cursor-pointer hover:bg-indigo-500 hover:text-white">
-                    プロフィール
+                    Profile
                   </Link>
                   <Link
                     to="/settings"
                     className="block px-4 py-2 text-gray-800 cursor-pointer hover:bg-indigo-500 hover:text-white">
-                    設定
+                    Settings
                   </Link>
                   <a
                     onClick={logout}
                     href="/"
                     className="cursor-pointer block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white">
-                    ログアウト
+                    Logout
                   </a>
                 </div>
               </div>
@@ -108,12 +101,12 @@ const Navbar: React.FC<RouteComponentProps> = props => {
                 <button
                   onClick={() => setIsSignupModalOpen(true)}
                   className="bg-green-400 text-white py-2 px-5 font-semibold rounded focus:outline-none">
-                  サインアップ
+                  Sign up
                 </button>
                 <button
                   onClick={() => setIsLoginModalOpen(true)}
                   className="ml-3 py-2 px-5 font-semibold rounded text-gray-600 hover:text-gray-900 focus:outline-none">
-                  ログイン
+                  Login
                 </button>
               </>
             )}
@@ -216,7 +209,7 @@ const Navbar: React.FC<RouteComponentProps> = props => {
         <ProjectAdd closeModal={() => setIsAddProjectModalOpen(false)} />
       </Modal>
     </>
-  )
-}
+  );
+};
 
-export default withRouter(Navbar)
+export default withRouter(Navbar);

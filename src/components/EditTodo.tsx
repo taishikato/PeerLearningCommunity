@@ -62,7 +62,7 @@ const EditTodo: React.FC<IProps> = ({ closeModal, todo }) => {
   return (
     <div>
       <div className="bg-gray-200 py-3 border-b border-gray-300">
-        <p className="text-2xl w-10/12 m-auto">編集</p>
+        <p className="text-2xl w-10/12 m-auto">Edit TODO</p>
       </div>
       <form onSubmit={handleSubmit} className="mt-6">
         <div className="w-10/12 m-auto mb-3">
@@ -107,19 +107,19 @@ const EditTodo: React.FC<IProps> = ({ closeModal, todo }) => {
                 <button
                   disabled
                   className="px-5 p-2 rounded text-white bg-green-200 rounded font-semibold cursor-not-allowed">
-                  送信中…
+                  Submitting
                 </button>
               )}
               {isAddButtonDisabled && !isSubmitting && (
                 <button
                   disabled
                   className="px-5 p-2 rounded text-white bg-green-200 rounded font-semibold cursor-not-allowed">
-                  更新
+                  Update
                 </button>
               )}
               {!isAddButtonDisabled && !isSubmitting && (
                 <input
-                  value="更新"
+                  value="Update"
                   type="submit"
                   className="px-5 p-2 rounded text-white bg-green-400 hover:bg-green-500 rounded font-semibold cursor-pointer focus:outline-none"
                 />
@@ -130,13 +130,13 @@ const EditTodo: React.FC<IProps> = ({ closeModal, todo }) => {
                 <button
                   disabled
                   className="px-5 p-2 rounded rounded font-semibold bg-red-200 text-white cursor-not-allowed">
-                  削除中…
+                  Deleting
                 </button>
               ) : (
                 <button
                   onClick={deleteTodo}
                   className="px-5 p-2 rounded rounded font-semibold bg-red-500 text-white hover:bg-red-600 focus:outline-none">
-                  削除
+                  Delete
                 </button>
               )}
             </div>

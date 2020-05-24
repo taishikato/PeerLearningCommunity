@@ -61,16 +61,15 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
   return (
     <div>
       <div className="bg-gray-200 py-3 border-b border-gray-300">
-        <p className="text-2xl w-10/12 m-auto">新規タスク</p>
+        <p className="text-2xl w-10/12 m-auto">New TODO</p>
       </div>
       <form onSubmit={handleSubmit} className="mt-6">
         <div className="w-10/12 m-auto mb-3">
           <input
-            className="w-full border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
+            className="w-full border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hover:border-gray-300"
             id="inline-full-name"
             type="text"
-            placeholder="Reduxを組み込む"
-            // value={text}
+            placeholder="Add an amazing feature"
             name="text"
             onChange={e => handleFormChange(e)}
           />
@@ -80,7 +79,7 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
             <select
               onChange={e => handleFormChange(e)}
               name="tag"
-              className="block appearance-none w-full bg-white border-2 border-gray-200 hover:border-gray-300 px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:shadow-outline">
+              className="block appearance-none w-full bg-white border-2 border-gray-200 text-gray-700 hover:border-gray-300 px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:shadow-outline">
               <option hidden>Your Project</option>
               <option value="">None</option>
               {projects.map(project => (
@@ -103,17 +102,17 @@ const PostModalContent: React.FC<IProps> = ({ closeModal }) => {
               <button
                 disabled
                 className="px-5 p-2 rounded text-white bg-green-200 rounded font-semibold cursor-not-allowed">
-                送信中…
+                Submitting…
               </button>
             )}
             {isAddButtonDisabled && !isSubmitting && (
               <button disabled className="px-5 p-2 rounded text-white bg-green-200 font-semibold cursor-not-allowed">
-                追加
+                Add
               </button>
             )}
             {!isAddButtonDisabled && !isSubmitting && (
               <input
-                value="追加"
+                value="Add"
                 type="submit"
                 className="px-5 p-2 rounded text-white bg-green-400 hover:bg-green-500 font-semibold focus:outline-none"
               />

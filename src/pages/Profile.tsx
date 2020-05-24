@@ -74,7 +74,7 @@ const Profile = () => {
             </div>
           </div>
           <div className="h-full bg-gray-100 px-3 md:px-6 lg:px-6">
-            <div className="font-semibold text-lg py-5">プロジェクト</div>
+            <div className="font-semibold text-lg py-5">Projects</div>
             <ul className="flex flex-wrap -mx-2">
               {projects.map(project => (
                 <li className="px-2">

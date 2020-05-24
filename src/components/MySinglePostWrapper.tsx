@@ -77,7 +77,7 @@ const MySinglePostWrapper: React.FC<IProps> = ({ setLoading }) => {
                   <button
                     onClick={() => setIsPostModalOpen(true)}
                     className="px-6 py-2 bg-green-400 rounded-full text-white font-bold focus:outline-none">
-                    今日のタスクを追加する
+                    Add TODO
                   </button>
                 </div>
               ) : (
@@ -85,15 +85,15 @@ const MySinglePostWrapper: React.FC<IProps> = ({ setLoading }) => {
                   <button
                     onClick={() => setIsLoginModalOpen(true)}
                     className="text-blue-500 hover:underline focus:outline-none">
-                    ログイン
+                    Login
                   </button>
-                  または
+                  &nbsp;or&nbsp;
                   <button
                     onClick={() => setIsSignupModalOpen(true)}
                     className="text-blue-500 hover:underline focus:outline-none">
-                    サインアップ
+                    Sign up
                   </button>
-                  してタスクを追加する
+                  &nbsp;to add TODO
                 </div>
               )}
             </>

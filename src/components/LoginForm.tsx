@@ -37,7 +37,7 @@ const LoginForm: React.FC<IProps> = ({ closeModal }) => {
         } else if (code === 'auth/user-not-found') {
           setErrCode(USER_NOT_FOUND);
         } else {
-          toast('エラーが発生しました。時間をおいて再度お試しください', { type: toast.TYPE.ERROR });
+          toast('An error occured. Please try again.', { type: toast.TYPE.ERROR });
         }
       }
     } finally {
@@ -49,12 +49,12 @@ const LoginForm: React.FC<IProps> = ({ closeModal }) => {
       <ToastContainer autoClose={4000} />
       <div className="modal-content py-4 text-left px-6">
         <div className="flex justify-between items-center pb-3">
-          <p className="text-2xl font-bold">ログイン</p>
+          <p className="text-2xl font-bold">Login</p>
         </div>
         <form onSubmit={onSubmit} className="bg-white rounded mb-4">
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-              メールアドレス
+              Email
             </label>
             <input
               className="appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-0"
@@ -64,12 +64,12 @@ const LoginForm: React.FC<IProps> = ({ closeModal }) => {
               onChange={e => handleChange(e, 'email')}
             />
             {errCode === USER_NOT_FOUND && (
-              <p className="text-red-500 text-xs italic">このメールアドレスを持つユーザーは存在しません</p>
+              <p className="text-red-500 text-xs italic">There is no user corresponding to this email.</p>
             )}
           </div>
           <div className="mb-6">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-              パスワード
+              Password
             </label>
             <input
               className="appearance-none border-2 border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
@@ -77,25 +77,25 @@ const LoginForm: React.FC<IProps> = ({ closeModal }) => {
               type="password"
               onChange={e => handleChange(e, 'password')}
             />
-            {errCode === WRONG_PW && <p className="text-red-500 text-xs italic">有効ではないパスワードです</p>}
+            {errCode === WRONG_PW && <p className="text-red-500 text-xs italic">The password is invalid.</p>}
           </div>
           <div className="flex items-end items-center">
             {isSubmitting ? (
               <button className="bg-green-200 text-white font-bold py-2 px-5 rounded cursor-not-allowed focus:outline-none">
-                送信中…
+                Submitting…
               </button>
             ) : (
               <input
                 className="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-5 rounded cursor-pointer focus:outline-none focus:shadow-outline"
                 type="submit"
-                value="ログイン"
+                value="Login"
               />
             )}
             <Link
               to="/reset-password"
               onClick={() => closeModal()}
               className="ml-3 text-blue-500 font-semibold text-sm hover:underline">
-              パスワードを忘れた方はこちら
+              Forgot password?
             </Link>
           </div>
         </form>

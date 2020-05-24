@@ -33,7 +33,7 @@ const Top = () => {
                   <div className="mx-3 mb-5 pb-3 border-b border-gray-400">
                     <ProfilBar />
                   </div>
-                  <h3 className="font-semibold text-base mb-4 px-3">自分のタスク</h3>
+                  <h3 className="font-semibold text-base mb-4 px-3">My TODOs</h3>
                 </>
               )}
               <MySinglePostWrapper setLoading={setLoadingMyTask} />
@@ -45,7 +45,7 @@ const Top = () => {
                 <SinglePostWrapper setLoading={setLoadingTimeline} />
               </div>
               <div className="h-full px-2 w-full mt-6 md:w-4/12 lg:w-4/12 md:mt-0 lg:mt-0">
-                <h3 className="font-semibold text-base mb-4">最近追加されたプロジェクト</h3>
+                <h3 className="font-semibold text-base mb-4">New Projects</h3>
                 <RecentProjects />
                 {/* <h3 className="font-medium text-lg mb-5">
                 連続更新記録（修理中）{' '}

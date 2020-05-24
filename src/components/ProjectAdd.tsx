@@ -87,18 +87,18 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
   return (
     <div>
       <div className="bg-gray-200 py-3 border-b border-gray-300">
-        <p className="text-2xl w-10/12 m-auto">新規プロジェクト</p>
+        <p className="text-2xl w-10/12 m-auto">New Project</p>
       </div>
       <form onSubmit={handleSubmit} className="mt-6">
         <div className="w-10/12 m-auto">
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-              名前
+              Name
             </label>
             <input
               className="w-full border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
               type="text"
-              placeholder="次世代Instagram"
+              placeholder="Shouter"
               value={project.name as string}
               name="name"
               onChange={e => handleFormChange(e)}
@@ -106,7 +106,7 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-              簡単な説明
+              Tagline
             </label>
             <input
               className="w-full border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
@@ -114,7 +114,7 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
               name="description"
               value={project.description as string}
               onChange={e => handleFormChange(e)}
-              placeholder="VRgram"
+              placeholder="Shout your thoughts on the Internet"
             />
           </div>
           <div className="mb-4">
@@ -127,12 +127,12 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
               name="url"
               value={project.url as string}
               onChange={e => handleFormChange(e)}
-              placeholder="https://vrgram.com/"
+              placeholder="https://shouter.com/"
             />
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-              画像
+              Icon
             </label>
             <Upload
               name="avatar"
@@ -151,7 +151,7 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-              タグ（To Doに#を付けて投稿することでTo Doとプロジェクトを紐付けることができます）
+              tag
             </label>
             <input
               className="w-full border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
@@ -159,9 +159,9 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
               name="tag"
               value={project.tag as string}
               onChange={e => handleFormChange(e)}
-              placeholder="vrgram"
+              placeholder="#shouter"
             />
-            {duplicateTag && <p className="text-sm text-red-500">このタグは既に使用されています</p>}
+            {duplicateTag && <p className="text-sm text-red-500">This tag is already taken.</p>}
           </div>
         </div>
 
@@ -172,19 +172,19 @@ const AddProject: React.FC<IProps> = ({ closeModal }) => {
                 <button
                   disabled
                   className="px-5 p-2 rounded text-white bg-green-200 rounded font-semibold cursor-not-allowed">
-                  送信中…
+                  Submitting…
                 </button>
               )}
               {isAddButtonDisabled && !isSubmitting && (
                 <button
                   disabled
                   className="px-5 p-2 rounded text-white bg-green-200 rounded font-semibold cursor-not-allowed">
-                  追加
+                  Add
                 </button>
               )}
               {!isAddButtonDisabled && !isSubmitting && (
                 <input
-                  value="追加"
+                  value="Add"
                   type="submit"
                   className="px-5 p-2 rounded text-white bg-green-400 hover:bg-green-500 rounded font-semibold cursor-pointer focus:outline-none"
                 />

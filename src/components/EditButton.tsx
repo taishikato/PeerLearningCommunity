@@ -8,7 +8,7 @@ const EditButton: React.FC<IProps> = ({ todo }) => {
   return (
     <>
       <button onClick={() => setIsModalOpen(true)} className="px-2 py-1 text-xs focus:outline-none hover:underline">
-        編集
+        Edit
       </button>
       <Modal
         isOpen={isModalOpen}

@@ -55,8 +55,8 @@ const Todo: React.FC<IProps> = ({ todo }) => {
       </div>
       <div className="mt-1 flex flex-wrap items-center">
         <CommentAddButton commentCount={commentCount} handleAddCommentButtonClick={handleAddCommentButtonClick} />
-        {todoState.tag !== '' && todoState.tag !== null && <ProjectItem tag={todoState.tag as string} />}
         <EditButton todo={todoState} />
+        {todoState.tag !== '' && todoState.tag !== null && <ProjectItem tag={todoState.tag as string} />}
       </div>
       <div className="ml-8">
         <CommentAddForm show={showCommentForm} todo={todo} />

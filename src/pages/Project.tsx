@@ -122,7 +122,7 @@ const Project = () => {
             </div>
             {todos.length > 0 && (
               <div className="mt-10">
-                <div className="font-medium text-lg mb-3">未完TODO</div>
+                <div className="font-medium text-lg mb-3">Undone TODO</div>
                 {todos.map(todo => (
                   <div key={todo.id} className="border-2 rounded border-gray-300 p-3 mb-3">
                     <Todo todo={todo} />
@@ -132,7 +132,7 @@ const Project = () => {
             )}
             {doneTodos.length > 0 && !loading && (
               <div className="mt-10">
-                <div className="font-medium text-lg mb-3">完了TODO</div>
+                <div className="font-medium text-lg mb-3">Done TODO</div>
                 {doneTodos.map(todo => (
                   <div key={todo.id} className="border-2 rounded border-gray-300 p-3 mb-3">
                     <TodoForShow todo={todo} />
@@ -143,16 +143,16 @@ const Project = () => {
             {doneTodos.length === 0 && !loading && (
               <div className="text-center mb-5">
                 <img src={thinkingImage} className="w-20 h-20 m-auto" alt="" />
-                <p className="text-gray-500 font-semibold text-sm mt-1">まだTODOはありません</p>
+                <p className="text-gray-500 font-semibold text-sm mt-1">No TODO yet</p>
               </div>
             )}
           </div>
           <div className="w-full md:w-4/12 lg:w-4/12">
             <div className="p-4 border-2 border-gray-300 rounded">
-              <div className="text-sm font-semibold mb-3">作成者</div>
+              <div className="text-sm font-semibold mb-3">Creator</div>
               <div className="flex items-center">
                 <Link to={`/@${maker.userName}`}>
-                  <img src={maker.picture} alt="プロフィール写真" className="rounded-full w-10 h-10" />
+                  <img src={maker.picture} alt="Profile" className="rounded-full w-10 h-10" />
                 </Link>
                 <Link to={`/@${maker.userName}`}>
                   <div className="ml-2">{maker.displayName}</div>
