@@ -11,6 +11,7 @@ import Settings from './pages/Settings';
 import Project from './pages/Project';
 import Profile from './pages/Profile';
 import ResetPassword from './pages/ResetPassword';
+import SidebarMenu from './components/Common/SidebarMenu';
 
 const store = initializeStore();
 
@@ -23,13 +24,20 @@ const App = () => {
             <FirestoreContextProvider>
               <ScrollToTop>
                 <Navbar />
-                <Switch>
-                  <Route component={Top} exact path="/" />
-                  <Route component={Settings} exact path="/settings" />
-                  <Route component={Project} exact path="/project/:tag" />
-                  <Route component={Profile} exact path="/@:username" />
-                  <Route component={ResetPassword} exact path="/reset-password" />
-                </Switch>
+                <div className="flex flex-wrap h-full">
+                  <div className="w-full md:w-3/12 lg:w-3/12 bg-gray-100 pt-10">
+                    <SidebarMenu />
+                  </div>
+                  <div className="w-full md:w-9/12 lg:w-9/12 bg-white">
+                    <Switch>
+                      <Route component={Top} exact path="/" />
+                      <Route component={Settings} exact path="/settings" />
+                      <Route component={Project} exact path="/project/:tag" />
+                      <Route component={Profile} exact path="/@:username" />
+                      <Route component={ResetPassword} exact path="/reset-password" />
+                    </Switch>
+                  </div>
+                </div>
               </ScrollToTop>
             </FirestoreContextProvider>
           </BrowserRouter>

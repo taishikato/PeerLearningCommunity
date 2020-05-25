@@ -11,7 +11,7 @@ import IInitialState from '../interfaces/IInitialState';
 import { ITodoNew } from '../interfaces/ITodo';
 import { setMyTodos } from '../store/action';
 
-const MySinglePostWrapper: React.FC<IProps> = ({ setLoading }) => {
+const MySinglePostWrapper = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = React.useState(true);
   const [isPostModalOpen, setIsPostModalOpen] = React.useState(false);
@@ -25,7 +25,7 @@ const MySinglePostWrapper: React.FC<IProps> = ({ setLoading }) => {
   React.useEffect(() => {
     if (!isLogin) {
       setIsLoading(false);
-      setLoading(false);
+      // setLoading(false);
       return;
     }
     const getTodo = async () => {
@@ -33,7 +33,7 @@ const MySinglePostWrapper: React.FC<IProps> = ({ setLoading }) => {
       if (todosStore[0] !== undefined && todosStore[0].id !== '') {
         setTodosState(todosStore as ITodoNew[]);
         setIsLoading(false);
-        setLoading(false);
+        // setLoading(false);
         return;
       }
       const todos = await db
@@ -43,17 +43,17 @@ const MySinglePostWrapper: React.FC<IProps> = ({ setLoading }) => {
         .get();
       if (todos.empty) {
         setIsLoading(false);
-        setLoading(false);
+        // setLoading(false);
         return;
       }
       const todoData = todos.docs.map(doc => doc.data());
       dispatch(setMyTodos(todoData as ITodoNew[]));
       setTodosState(todosStore as ITodoNew[]);
       setIsLoading(false);
-      setLoading(false);
+      // setLoading(false);
     };
     getTodo();
-  }, [loginUser.id, setIsLoading, isLogin, db, dispatch, setTodosState, todosStore, setLoading]);
+  }, [loginUser.id, setIsLoading, isLogin, db, dispatch, setTodosState, todosStore]);
   return (
     <>
       <div className="list-individual mx-3">
@@ -64,7 +64,7 @@ const MySinglePostWrapper: React.FC<IProps> = ({ setLoading }) => {
             <>
               {todosState[0] !== undefined ? (
                 <>
-                  <ul className="bg-white mb-5">
+                  <ul className="mb-5">
                     {todosState.map(todo => (
                       <li key={todo.id} className="todo-component-wrapper border-b border-gray-300 mb-3 pb-3">
                         <Todo todo={todo} />
@@ -177,6 +177,6 @@ const MySinglePostWrapper: React.FC<IProps> = ({ setLoading }) => {
 
 export default MySinglePostWrapper;
 
-interface IProps {
-  setLoading: (val: boolean) => void;
-}
+// interface IProps {
+//   setLoading: (val: boolean) => void;
+// }
