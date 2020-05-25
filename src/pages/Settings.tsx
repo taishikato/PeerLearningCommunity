@@ -73,13 +73,13 @@ const Settings = () => {
     e.preventDefault();
     setIsSubmitting(true);
     if (userData.userName === '' || userData.displayName === '' || userData.email === '') {
-      console.error('項目を入れてください');
+      console.error('Please fill out');
       return;
     }
     // User Nameチェック
     const userByUserName = await db.collection('users').where('userName', '==', userData.userName).get();
     if (!userByUserName.empty && loginUser.id !== userByUserName.docs[0].id) {
-      toast('このユーザーネームは既に使われています', { type: toast.TYPE.ERROR });
+      toast('This username is already taken.', { type: toast.TYPE.ERROR });
       setIsSubmitting(false);
       return;
     }
@@ -91,7 +91,7 @@ const Settings = () => {
       try {
         await user!.updatePassword(userData.password);
       } catch (err) {
-        console.error('パスワード更新時にエラーが発生しました');
+        console.error('An error occured when it is updating your password. Please try again.');
       }
     }
     // 画像
@@ -107,7 +107,7 @@ const Settings = () => {
     await db.collection('users').doc(loginUser.id).update(saveData);
     dispatch(loginUserAction(saveData));
     setIsSubmitting(false);
-    toast('保存が正常に完了しました', { type: toast.TYPE.DEFAULT });
+    toast('Saved successfully', { type: toast.TYPE.DEFAULT });
   };
   const uploadButton = (
     <div>
@@ -129,25 +129,12 @@ const Settings = () => {
       <ToastContainer autoClose={4000} />
       <div className="mt-10 m-auto mb-10">
         <div className="w-11/12 md:w-5/12 lg:w-5/12 m-auto">
-          <h2 className="text-2xl font-medium mb-5">設定</h2>
+          <h2 className="text-2xl font-medium mb-5">Settings</h2>
           <div className="border-2 border-gray-200 p-5 rounded">
             <form onSubmit={onSubmit} className="bg-white rounded mb-4">
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-                  ユーザーネーム
-                </label>
-                <input
-                  className="appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-0"
-                  id="userName"
-                  type="text"
-                  placeholder=""
-                  value={userData.userName}
-                  onChange={e => handleChange(e, 'userName')}
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-                  表示名
+                  Display Name
                 </label>
                 <input
                   className="appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-0"
@@ -160,7 +147,20 @@ const Settings = () => {
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-                  メールアドレス
+                  Username
+                </label>
+                <input
+                  className="appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-0"
+                  id="userName"
+                  type="text"
+                  placeholder=""
+                  value={userData.userName}
+                  onChange={e => handleChange(e, 'userName')}
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+                  Email
                 </label>
                 <input
                   className="appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-0"
@@ -176,7 +176,7 @@ const Settings = () => {
               </div>
               <div className="mb-6">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-                  プロフィール写真
+                  Profile Image
                 </label>
                 <Upload
                   name="avatar"
@@ -191,7 +191,7 @@ const Settings = () => {
               </div>
               <div className="mb-6">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-                  新しいパスワード
+                  New Password
                 </label>
                 <input
                   className="appearance-none border-2 border-gray-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -205,7 +205,7 @@ const Settings = () => {
               </div>
               <div className="mb-6">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-                  新しいパスワード（確認）{updatePassword === 'ok' && <span className="text-green-500 text-xs">✓</span>}
+                  New Password（confirm）{updatePassword === 'ok' && <span className="text-green-500 text-xs">✓</span>}
                   {updatePassword === 'wrong' && <span className="text-red-500 text-xs">x</span>}
                 </label>
                 <input
@@ -220,14 +220,14 @@ const Settings = () => {
               </div>
               <div className="flex items-end justify-between">
                 {isSubmitting ? (
-                  <button className="bg-blue-200 text-white font-bold py-2 px-4 rounded-full cursor-not-allowed focus:outline-none">
-                    送信中…
+                  <button className="w-full bg-green-200 text-white font-bold py-2 px-4 rounded-full cursor-not-allowed focus:outline-none">
+                    Saving…
                   </button>
                 ) : (
                   <input
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full focus:outline-none focus:shadow-outline"
+                    className="w-full bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-6 rounded-full focus:outline-none focus:shadow-outline"
                     type="submit"
-                    value="保存"
+                    value="Save"
                   />
                 )}
               </div>

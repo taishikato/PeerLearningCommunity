@@ -79,7 +79,7 @@ const SinglePostWrapper: React.FC<IProps> = ({ setLoading }) => {
             <div key={postObj.date} className="mb-5">
               <h3 className="text-lg mb-5">{moment(postObj.date).tz('Asia/Tokyo').format('MM月DD日(ddd)')}</h3>
               {postObj.todoByUser.length === 0 ? (
-                <>まだToDoはありません</>
+                <>No TODO</>
               ) : (
                 postObj.todoByUser.map((todoData: any) => (
                   <div key={todoData.user.userName} className="bg-white rounded mb-4 border-2 border-gray-300">
@@ -112,13 +112,13 @@ const SinglePostWrapper: React.FC<IProps> = ({ setLoading }) => {
           ))}
           {loadingMoreTimeline ? (
             <button className="border px-6 py-2 rounded-full block m-auto bg-green-200 text-white focus:outline-none cursor-not-allowed	">
-              取得中…
+              Fetching…
             </button>
           ) : (
             <button
               onClick={getMoreTodos}
               className="border border-green-400 px-6 py-2 rounded-full block m-auto hover:bg-green-400 hover:text-white focus:outline-none">
-              もっと見る
+              Load more tasks
             </button>
           )}
         </>

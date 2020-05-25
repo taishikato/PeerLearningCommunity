@@ -13,9 +13,9 @@ const ResetPassword = () => {
     e.preventDefault();
     try {
       await auth.sendPasswordResetEmail(email);
-      toast('メール送信が正常に完了しました。', { type: toast.TYPE.DEFAULT });
+      toast('Email has been sent successfully.', { type: toast.TYPE.DEFAULT });
     } catch (err) {
-      toast('エラーが発生しました。再度お試しください。', { type: toast.TYPE.ERROR });
+      toast('An error occured. Please try again later.', { type: toast.TYPE.ERROR });
     }
   };
   return (
@@ -23,19 +23,19 @@ const ResetPassword = () => {
       <ToastContainer autoClose={4000} />
       <div className="h-full py-6">
         <div className="h-full m-auto w-11/12 md:w-5/12 lg:w-5/12">
-          <h2 className="text-lg font-semibold mb-3">パスワードのリセット</h2>
+          <h2 className="text-lg font-semibold mb-3">Reset the password</h2>
           <div className="bg-white rounded">
-            <p className="mb-2">入力されたメールアドレス宛に、パスワードリセット用のURLを送信します。</p>
+            <p className="mb-2">We send you an URL to reset your password to your email.</p>
             <form onSubmit={submit}>
               <input
                 type="email"
                 onChange={handleChange}
-                placeholder="メールアドレス"
+                placeholder="Email"
                 className="appearance-none border-2 border-gray-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
               />
               <input
                 type="submit"
-                value="送信"
+                value="Send"
                 className="w-full px-6 py-2 rounded m-auto bg-green-400 cursor-pointer text-white hover:bg-green-500 focus:outline-none"
               />
             </form>
