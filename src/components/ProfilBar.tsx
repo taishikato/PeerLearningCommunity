@@ -7,7 +7,7 @@ const ProfilBar = () => {
   const loginUser = useSelector<IInitialState, IInitialState['loginUser']>(state => state.loginUser);
   return (
     <div className="flex items-center">
-      <Link to={`@${loginUser.userName}`}>
+      <Link to={`/@${loginUser.userName}`}>
         <img src={loginUser.picture} className="rounded-full w-6 h-6" alt="" />
       </Link>
       <Link to={`@${loginUser.userName}`}>

@@ -5,7 +5,7 @@ import SinglePostWrapper from '../components/SinglePostWrapper';
 // import MySinglePostWrapper from '../components/MySinglePostWrapper';
 import RecentProjects from '../components/RecentProjects';
 // import Streak from '../components/Streak';
-import Footer from '../components/Footer';
+import Footer from '../components/Common/Footer';
 // import ProfilBar from '../components/ProfilBar';
 import dog from '../assets/images/dog.gif';
 

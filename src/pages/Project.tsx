@@ -92,7 +92,7 @@ const Project = () => {
   return (
     <>
       {loadingPage ? (
-        <div className="bg-gray-100 h-full w-full flex items-center justify-center flex-col">
+        <div className="h-full w-full flex items-center justify-center flex-col">
           <img src={dog} alt="" className="rounded-lg w-64" />
           <p>Loading…</p>
         </div>

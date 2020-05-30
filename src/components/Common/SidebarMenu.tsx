@@ -7,6 +7,7 @@ import ProfilBar from '../ProfilBar';
 import IInitialState from '../../interfaces/IInitialState';
 import { FirestoreContext } from '../FirestoreContextProvider';
 import serviceImage from '../../assets/images/service.svg';
+import Footer from './Footer';
 import asyncForEach from '../../plugins/asyncForEach';
 import firebase from '../../plugins/firebase';
 import 'firebase/storage';
@@ -120,6 +121,7 @@ const SidebarMenu = () => {
               </li>
             ))}
           </ul>
+          <Footer />
         </>
       ) : (
         <div className="pl-6">Loading…</div>

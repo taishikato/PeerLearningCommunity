@@ -61,7 +61,7 @@ const Profile = () => {
   return (
     <>
       {loadingPage ? (
-        <div className="bg-gray-100 h-full w-full flex items-center justify-center flex-col">
+        <div className="h-full w-full flex items-center justify-center flex-col">
           <img src={dog} alt="" className="rounded-lg w-64" />
           <p>Loading…</p>
         </div>
@@ -73,7 +73,7 @@ const Profile = () => {
               <p className="font-semibold text-lg ml-5 text-white">{user.displayName}</p>
             </div>
           </div>
-          <div className="h-full bg-gray-100 px-3 md:px-6 lg:px-6">
+          <div className="h-full px-3 md:px-6 lg:px-6">
             <div className="font-semibold text-lg py-5">Projects</div>
             <ul className="flex flex-wrap -mx-2">
               {projects.map(project => (
